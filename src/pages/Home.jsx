@@ -1,5 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import Hero from '../components/sections/Hero';
+import ClientLogos from '../components/sections/ClientLogos';
 import ServicesOverview from '../components/sections/ServicesOverview';
 import WhyUs from '../components/sections/WhyUs';
 import ProcessSteps from '../components/sections/ProcessSteps';
@@ -13,12 +14,12 @@ const localBusinessSchema = {
   '@context': 'https://schema.org',
   '@type': 'ProfessionalService',
   name: 'SolarPlan Ireland',
-  description: 'Expert solar planning application services across Ireland. Glint & glare analysis, LVIA reports, PV planning drawings and solar farm planning permission specialists.',
+  description: 'Expert solar planning application services across Ireland. Glint & glare analysis, Landscape Plans, PV planning drawings and solar farm planning permission specialists.',
   url: SITE_URL,
   logo: `${SITE_URL}/favicon.svg`,
   image: DEFAULT_OG_IMAGE,
-  telephone: '+912212345678',
-  email: 'info@solarplanireland.ie',
+  telephone: '+919082276147',
+  email: 'info@solarplanningireland.com',
   address: {
     '@type': 'PostalAddress',
     addressLocality: 'Mumbai',
@@ -32,7 +33,7 @@ const localBusinessSchema = {
   knowsAbout: [
     'Solar Planning Application Ireland',
     'Glint and Glare Analysis',
-    'LVIA Reports',
+    'Landscape Plans',
     'PV Planning Drawings',
     'An Bord Pleanala',
     'Solar Farm Planning Permission Ireland',
@@ -75,10 +76,10 @@ const faqSchema = {
     },
     {
       '@type': 'Question',
-      name: 'What is an LVIA and when is it required for solar?',
+      name: 'What is a Landscape Plan and do I need one for my solar application?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'A Landscape and Visual Impact Assessment (LVIA) evaluates the visual impact of a development on the surrounding landscape. For ground-mounted solar farms in Ireland, it is almost always required by the planning authority.',
+        text: 'A Landscape Plan shows proposed planting, screening, and mitigation measures for a solar development. It is almost always required for ground-mounted solar farms in Ireland. We produce Landscape Plans based on your LVIA or arboriculture report.',
       },
     },
     {
@@ -86,7 +87,7 @@ const faqSchema = {
       name: 'How much does solar planning documentation cost?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'A glint and glare assessment for a medium-scale solar farm typically starts from €3,000–€5,000. A full LVIA starts from €5,000–€8,000. A planning drawing package starts from €2,500. Contact us for a free tailored quote.',
+        text: 'A glint and glare assessment for a medium-scale solar farm typically starts from €3,000–€5,000. A Landscape Plan starts from €2,000–€4,000. A planning drawing package starts from €2,500. Contact us for a free tailored quote.',
       },
     },
   ],
@@ -99,11 +100,11 @@ export default function Home() {
     <>
       <Helmet>
         <title>Solar Planning Application Ireland | Expert Consultants | SolarPlan Ireland</title>
-        <meta name="description" content="Ireland's specialist solar planning application consultants. Glint & glare analysis, LVIA reports, PV planning drawings — 94% first-application approval rate. Free quote within 1 business day." />
-        <meta name="keywords" content="solar planning application ireland, solar planning permission ireland, glint glare analysis ireland, solar farm planning ireland, LVIA solar ireland, An Bord Pleanala solar" />
+        <meta name="description" content="B2B solar planning outsourcing partner for Ireland. Glint & glare reports, Landscape Plans, PV drawings — delivered to your standard, on your timeline. Trusted by planning consultants and developers." />
+        <meta name="keywords" content="solar planning outsourcing ireland, solar planning partner ireland, glint glare analysis ireland, solar farm planning ireland, landscape plan solar ireland, planning consultant outsourcing" />
         <link rel="canonical" href={PAGE_URL} />
         <meta property="og:title" content="Solar Planning Application Ireland | Expert Consultants | SolarPlan Ireland" />
-        <meta property="og:description" content="Ireland's specialist solar planning application consultants. Glint & glare analysis, LVIA reports, PV planning drawings — 94% first-application approval rate." />
+        <meta property="og:description" content="Ireland's specialist solar planning application consultants. Glint & glare analysis, Landscape Plans, PV planning drawings — 94% first-application approval rate." />
         <meta property="og:url" content={PAGE_URL} />
         <meta property="og:image" content={DEFAULT_OG_IMAGE} />
         <meta name="twitter:card" content="summary_large_image" />
@@ -114,6 +115,7 @@ export default function Home() {
         <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
       </Helmet>
       <Hero />
+      <ClientLogos />
       <ServicesOverview />
       <WhyUs />
       <ProcessSteps />

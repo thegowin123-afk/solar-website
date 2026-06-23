@@ -3,33 +3,33 @@ import SectionHeader from '../ui/SectionHeader';
 const steps = [
   {
     number: '01',
-    title: 'Free Consultation',
-    desc: 'Tell us about your project. We\'ll assess what planning documentation is required and provide a fixed-fee quote — no surprises.',
+    title: 'Initial Brief',
+    desc: 'Send us your project brief — site location, scale, and what reports you need. We turn around a fixed-fee proposal within one business day.',
   },
   {
     number: '02',
-    title: 'Proposal & Kick-off',
-    desc: 'Accept our proposal and we assign a dedicated consultant. We\'ll agree the programme, data requirements, and key milestones.',
+    title: 'Onboarding & Kick-off',
+    desc: 'We assign a dedicated consultant to your account. We agree deliverables, timelines, and how you\'d like reports branded — your way.',
   },
   {
     number: '03',
-    title: 'Survey & Analysis',
-    desc: 'Our specialists carry out the required analysis — site visits, modelling, data gathering — to the standard required by your planning authority.',
+    title: 'Technical Analysis',
+    desc: 'Our specialists carry out glint & glare modelling, landscape plan drafting, or PV design — to the standard required by Irish planning authorities.',
   },
   {
     number: '04',
-    title: 'Draft Report Delivery',
-    desc: 'We deliver a draft report for your review. Two rounds of revisions are included. We address all your comments before final sign-off.',
+    title: 'Draft for Your Review',
+    desc: 'You receive a draft report to review on behalf of your client. Two revision rounds included. We incorporate all feedback before sign-off.',
   },
   {
     number: '05',
-    title: 'Planning Submission',
-    desc: 'We prepare a planning-ready submission pack and can liaise directly with your planning agent or solicitor for a seamless application.',
+    title: 'Final Delivery',
+    desc: 'Final reports delivered in your preferred format — ready to submit under your brand or as standalone technical appendices.',
   },
   {
     number: '06',
-    title: 'Post-Submission Support',
-    desc: 'We respond to further information requests and planning authority queries. We support you through to final decision — and beyond.',
+    title: 'Ongoing Partnership',
+    desc: 'We stay available post-submission for further information responses, planning queries, and your next project in the pipeline.',
   },
 ];
 
@@ -42,9 +42,9 @@ export default function ProcessSteps() {
       }} />
       <div className="container-custom relative z-10">
         <SectionHeader
-          eyebrow="Our Process"
-          title="How We Work"
-          subtitle="A clear, transparent process from first enquiry to planning permission — designed around the realities of Irish planning timelines."
+          eyebrow="How We Partner"
+          title="Integrated Into Your Workflow From Day One"
+          subtitle="A simple, transparent process designed to fit around your business — not the other way around."
           light
         />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

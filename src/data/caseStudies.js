@@ -6,11 +6,11 @@ export const caseStudies = [
     county: 'Offaly',
     projectType: 'Ground-Mounted Solar Farm',
     capacity: '45MW',
-    services: ['Ground-Mounted Design', 'Glint & Glare Analysis', 'LVIA Report', 'Planning Drawings'],
+    services: ['Ground-Mounted Design', 'Glint & Glare Analysis', 'Landscape Plan', 'Planning Drawings'],
     challenge:
       'A 45MW ground-mounted solar farm on greenfield agricultural land in the Irish midlands. The site bordered a classified scenic route and was within 500m of twelve residential properties, triggering significant glint/glare and landscape concerns from the local authority.',
     solution:
-      'We produced a comprehensive glint and glare assessment using 3D ray-tracing modelling that demonstrated zero impact on all road users and residential receptors due to the panel tilt angle and anti-reflective coating specification. Our LVIA included 14 photomontages, a ZTV analysis, and a detailed planting scheme that provided year-round screening within five years.',
+      'We produced a comprehensive glint and glare assessment using 3D ray-tracing modelling that demonstrated zero impact on all road users and residential receptors due to the panel tilt angle and anti-reflective coating specification. Working from the client\'s LVIA, our Landscape Plan included a detailed planting scheme that provided year-round screening within five years.',
     outcome:
       'Planning permission granted at first application. No further information request issued. Construction commenced within 90 days of permission.',
     stats: {
@@ -19,7 +19,7 @@ export const caseStudies = [
       homesSupplied: '12,000',
       planningDuration: '18 weeks',
     },
-    tags: ['Ground-Mounted', 'LVIA', 'Glint & Glare', 'Large Scale'],
+    tags: ['Ground-Mounted', 'Landscape Plan', 'Glint & Glare', 'Large Scale'],
     image: '/images/case-study-1.jpg',
     year: 2023,
   },
@@ -30,11 +30,11 @@ export const caseStudies = [
     county: 'Roscommon',
     projectType: 'Agri-voltaic Ground-Mounted',
     capacity: '12MW',
-    services: ['Ground-Mounted Design', 'Planning Drawings', 'LVIA Report'],
+    services: ['Ground-Mounted Design', 'Planning Drawings', 'Landscape Plan'],
     challenge:
       'A cattle farmer sought to install a 12MW solar array while maintaining grazing for livestock beneath and between panels. The dual land-use design needed to satisfy both agricultural and planning requirements, with specific concern about the visual impact on the surrounding drumlin landscape.',
     solution:
-      'Our team designed a bespoke elevated mounting system with 2.5m clearance to allow free movement of cattle. Panel spacing was optimised for grass growth and grazing efficiency. The LVIA demonstrated that the low drumlin topography limited visibility from public roads to less than 400m.',
+      'Our team designed a bespoke elevated mounting system with 2.5m clearance to allow free movement of cattle. Panel spacing was optimised for grass growth and grazing efficiency. Working from the client\'s LVIA findings, our Landscape Plan showed that the low drumlin topography limited visibility from public roads and proposed native hedgerow planting accordingly.',
     outcome:
       'Permission granted with conditions. The installation now generates farm income alongside continued sheep grazing, with the farmer reporting improved grass retention in areas shaded by panels during summer.',
     stats: {
@@ -43,7 +43,7 @@ export const caseStudies = [
       homesSupplied: '3,200',
       planningDuration: '14 weeks',
     },
-    tags: ['Agri-voltaic', 'Rural', 'LVIA', 'Innovative Design'],
+    tags: ['Agri-voltaic', 'Rural', 'Landscape Plan', 'Innovative Design'],
     image: '/images/case-study-2.jpg',
     year: 2023,
   },
@@ -97,25 +97,25 @@ export const caseStudies = [
   },
   {
     id: 5,
-    slug: 'heritage-landscape-lvia',
-    title: 'Heritage Landscape — Sensitive LVIA Study',
+    slug: 'heritage-landscape-plan',
+    title: 'Heritage Landscape — Sensitive Landscape Plan',
     county: 'Kilkenny',
     projectType: 'Ground-Mounted Solar Farm',
     capacity: '18MW',
-    services: ['LVIA Report', 'Planning Drawings', 'Glint & Glare Analysis'],
+    services: ['Landscape Plan', 'Planning Drawings', 'Glint & Glare Analysis'],
     challenge:
-      'An 18MW solar farm adjacent to a Recorded Monument and within the setting of a Protected Structure required a highly sensitive LVIA. A local residents\' group was vocal in opposition, and the planning authority had previously refused a smaller solar farm in the same electoral area.',
+      'An 18MW solar farm adjacent to a Recorded Monument and within the setting of a Protected Structure required a highly sensitive Landscape Plan. A local residents\' group was vocal in opposition, and the planning authority had previously refused a smaller solar farm in the same electoral area.',
     solution:
-      'We engaged with the planning authority pre-application to establish the appropriate scope and methodology for the LVIA. A heritage impact assessment was commissioned alongside our LVIA. We proposed a 100m exclusion zone around the monument and a structured planting plan that would eventually screen the solar arrays from the Protected Structure\'s principal elevation. Photomontages were produced from all 16 submitted viewpoints.',
+      'We engaged with the planning authority pre-application to establish the appropriate scope for the Landscape Plan. Working from the client\'s LVIA and heritage impact assessment, we produced a Landscape Plan proposing a 100m exclusion zone around the monument and a structured planting scheme that would eventually screen the solar arrays from the Protected Structure\'s principal elevation.',
     outcome:
-      'An Bord Pleanála granted planning permission following an oral hearing, citing the quality of the LVIA and heritage mitigation measures as key factors in the decision. The residents\' group submission was addressed point-by-point in our technical rebuttal report.',
+      'An Bord Pleanála granted planning permission following an oral hearing, citing the quality of the Landscape Plan and heritage mitigation measures as key factors in the decision. The residents\' group submission was addressed point-by-point in our technical rebuttal report.',
     stats: {
       capacity: '18MW',
       panels: '36,000',
       homesSupplied: '4,800',
       planningDuration: '32 weeks',
     },
-    tags: ['Heritage', 'LVIA', 'Sensitive Site', 'An Bord Pleanála'],
+    tags: ['Heritage', 'Landscape Plan', 'Sensitive Site', 'An Bord Pleanála'],
     image: '/images/case-study-5.jpg',
     year: 2024,
   },
@@ -126,11 +126,11 @@ export const caseStudies = [
     county: 'Cork',
     projectType: 'Ground-Mounted Solar Farm',
     capacity: '5MW',
-    services: ['Ground-Mounted Design', 'Planning Drawings', 'LVIA Report'],
+    services: ['Ground-Mounted Design', 'Planning Drawings', 'Landscape Plan'],
     challenge:
       'A community co-operative sought planning permission for a 5MW solar farm to provide electricity to 200 local households. Budget constraints required an efficient, cost-effective planning package without compromising quality.',
     solution:
-      'We tailored our service package to the project scale, combining planning drawings and LVIA into a streamlined single submission document. Our local authority pre-application consultation identified that the main planning concern was road visibility; we repositioned panels 30m from the road boundary and added a native hedgerow reinforcement plan.',
+      'We tailored our service package to the project scale, combining planning drawings and Landscape Plan into a streamlined single submission document. Our local authority pre-application consultation identified that the main planning concern was road visibility; we repositioned panels 30m from the road boundary and added a native hedgerow reinforcement plan based on the client\'s arboriculture report.',
     outcome:
       'Planning granted in 12 weeks — the fastest turnaround of any project on our books. Community co-op operational and selling electricity to local homes since Q3 2024.',
     stats: {

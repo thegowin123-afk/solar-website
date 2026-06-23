@@ -9,9 +9,9 @@ export default function ServicesOverview() {
     <section className="py-24 bg-gray-50">
       <div className="container-custom">
         <SectionHeader
-          eyebrow="What We Do"
-          title="Solar Planning Services"
-          subtitle="Specialist technical reports and design services for every stage of your solar planning journey — prepared to the highest standard for Irish planning authorities."
+          eyebrow="What We Deliver"
+          title="Technical Services for Your Solar Pipeline"
+          subtitle="Specialist reports and design services your business can rely on — prepared to Irish planning authority standard and delivered on your timeline."
         />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
           {services.map((service) => (

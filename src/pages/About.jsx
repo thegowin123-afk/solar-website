@@ -18,10 +18,10 @@ const team = [
   },
   {
     name: 'Priya Sharma',
-    role: 'Lead Landscape Architect & LVIA Specialist',
-    bio: 'Qualified landscape architect with specialist expertise in LVIA methodology for solar, wind, and infrastructure projects. Trained to Irish EPA and UK SNH guidelines.',
+    role: 'Lead Landscape Architect & Landscape Plans Specialist',
+    bio: 'Qualified landscape architect specialising in Landscape Plans for solar planning applications. Works from client-supplied LVIA and arboriculture reports to produce planning-standard landscape drawings accepted across Ireland.',
     initials: 'PS',
-    qualifications: ['BLA (Hons)', 'LVIA Specialist', 'GIS & ZTV Modelling'],
+    qualifications: ['BLA (Hons)', 'Landscape Plans Specialist', 'GIS & ZTV Modelling'],
   },
   {
     name: 'Ankit Mehta',
@@ -44,14 +44,14 @@ const qualifications = [
   'An Bord Pleanála Process Expertise',
   'ISO 9001 Quality Management',
   'IAA Aviation Assessment Protocol',
-  'EPA LVIA Guidelines Compliant',
+  'Landscape Plan Production',
   'AutoCAD & GIS Professionals',
 ];
 
 const milestones = [
-  { year: '2016', event: 'SolarPlan Ireland founded in Mumbai as an Irish planning outsourcing specialist' },
-  { year: '2018', event: 'First utility-scale solar farm planning package delivered to Irish developer' },
-  { year: '2020', event: '50 projects completed milestone across 20+ Irish counties' },
+  { year: '2019', event: 'Founded in Mumbai as Svaero Cadetics LLP — an Irish solar planning outsourcing specialist' },
+  { year: '2020', event: 'First utility-scale solar farm planning package delivered to Irish developer' },
+  { year: '2021', event: '50 projects completed milestone across 15+ Irish counties' },
   { year: '2021', event: 'Expanded to full EIAR coordination and multi-disciplinary packages' },
   { year: '2022', event: 'First successful An Bord Pleanála oral hearing support delivered remotely' },
   { year: '2024', event: '150+ projects across all 31 Irish counties and Northern Ireland' },
@@ -61,7 +61,7 @@ const whyOutsource = [
   {
     icon: TrendingDown,
     title: '30–50% Cost Saving',
-    desc: 'Our Mumbai-based team delivers the same quality of Irish planning documentation at significantly lower cost than Dublin-based consultancies — without cutting corners.',
+    desc: 'Our India-based (Mumbai) team delivers the same quality of Irish planning documentation at significantly lower cost than Dublin-based consultancies — without cutting corners.',
   },
   {
     icon: Clock,
@@ -85,10 +85,10 @@ export default function About() {
     <>
       <Helmet>
         <title>About SolarPlan Ireland | Solar Planning Application Specialists Since 2016</title>
-        <meta name="description" content="SolarPlan Ireland — Mumbai-based solar planning application specialists. Expert glint & glare, LVIA, and PV planning drawings for Irish solar projects. 150+ projects, 94% approval rate." />
+        <meta name="description" content="SolarPlan Ireland — India-based (Mumbai) solar planning application specialists. Expert glint & glare, Landscape Plans, and PV planning drawings for Irish solar projects. 150+ projects, 94% approval rate." />
         <link rel="canonical" href={PAGE_URL} />
         <meta property="og:title" content="About SolarPlan Ireland | Solar Planning Application Specialists" />
-        <meta property="og:description" content="Mumbai-based solar planning specialists. Expert glint & glare, LVIA, and PV planning drawings for Irish solar projects, at outsourcing rates." />
+        <meta property="og:description" content="India-based (Mumbai) solar planning specialists. Expert glint & glare, Landscape Plans, and PV planning drawings for Irish solar projects, at outsourcing rates." />
         <meta property="og:url" content={PAGE_URL} />
         <meta property="og:image" content={DEFAULT_OG_IMAGE} />
         <meta name="twitter:card" content="summary_large_image" />
@@ -107,9 +107,9 @@ export default function About() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
               <span className="inline-block text-xs font-bold tracking-widest uppercase mb-3 px-3 py-1 rounded-full bg-gold-100 text-gold-700">Our Story</span>
-              <h2 className="section-title text-left">Mumbai Expertise, Irish Planning Results</h2>
+              <h2 className="section-title text-left">India Expertise, Irish Planning Results</h2>
               <p className="text-gray-600 leading-relaxed mb-5">
-                SolarPlan Ireland was founded in Mumbai in 2016 with a clear purpose: to bring world-class solar planning documentation to the Irish market at outsourcing rates. Our founder had spent years working directly with Irish planning authorities and understood exactly what documentation was needed to get solar projects approved — and that this work could be done better and more affordably from India.
+                SolarPlan Ireland was founded in Mumbai in 2019 under the name Svaero Cadetics LLP, with a clear purpose: to bring world-class solar planning documentation to the Irish market at outsourcing rates. Our founder had spent years working directly with Irish planning authorities and understood exactly what documentation was needed to get solar projects approved — and that this work could be done better and more affordably from India.
               </p>
               <p className="text-gray-600 leading-relaxed mb-5">
                 Our team is trained specifically in Irish planning law, An Bord Pleanála procedures, and the technical requirements of every county council in the Republic and Northern Ireland. We don't do generalist environmental consulting — every report we produce is designed and written for the Irish planning system.
@@ -122,7 +122,7 @@ export default function About() {
                   { value: '150+', label: 'Projects Completed' },
                   { value: '94%', label: 'First-Application Approval' },
                   { value: '30–50%', label: 'Client Cost Saving' },
-                  { value: '31', label: 'Irish Counties Served' },
+                  { value: '15+', label: 'Irish Counties Served' },
                 ].map(({ value, label }) => (
                   <div key={label} className="p-4 bg-gray-50 rounded-xl text-center">
                     <p className="text-2xl font-heading font-bold text-gold-600">{value}</p>
@@ -136,7 +136,7 @@ export default function About() {
               {/* Why outsource panel */}
               <div className="p-6 bg-forest-950 rounded-2xl text-white">
                 <Globe className="w-8 h-8 text-gold-400 mb-3" />
-                <h3 className="font-heading font-bold text-xl mb-2">Why Outsource to Mumbai?</h3>
+                <h3 className="font-heading font-bold text-xl mb-2">Why Outsource to India?</h3>
                 <p className="text-gray-300 leading-relaxed text-sm">
                   India has one of the world's largest pools of engineering and planning talent. Our Mumbai team combines that deep technical capability with specialist training in Irish planning requirements — giving Irish clients the best of both worlds: premium quality at outsourcing rates.
                 </p>
@@ -163,7 +163,7 @@ export default function About() {
           <div className="text-center mb-14">
             <span className="inline-block text-xs font-bold tracking-widest uppercase mb-3 px-3 py-1 rounded-full bg-gold-100 text-gold-700">The Outsourcing Advantage</span>
             <h2 className="section-title">Why Irish Solar Developers Choose Us</h2>
-            <p className="section-subtitle">Outsourcing your solar planning documentation to our Mumbai team means faster delivery, lower cost, and no compromise on quality.</p>
+            <p className="section-subtitle">Outsourcing your solar planning documentation to our India-based team means faster delivery, lower cost, and no compromise on quality.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {whyOutsource.map(({ icon: Icon, title, desc }) => (
@@ -183,9 +183,9 @@ export default function About() {
       <section className="py-24 bg-white">
         <div className="container-custom">
           <div className="text-center mb-14">
-            <span className="inline-block text-xs font-bold tracking-widest uppercase mb-3 px-3 py-1 rounded-full bg-gold-100 text-gold-700">Our Mumbai Team</span>
+            <span className="inline-block text-xs font-bold tracking-widest uppercase mb-3 px-3 py-1 rounded-full bg-gold-100 text-gold-700">Our India-Based Team</span>
             <h2 className="section-title">The SolarPlan Ireland Team</h2>
-            <p className="section-subtitle">Engineers, landscape architects, and planning specialists — all trained specifically in Irish planning requirements and based in Mumbai.</p>
+            <p className="section-subtitle">Engineers, landscape architects, and planning specialists — all trained specifically in Irish planning requirements and based in India (Mumbai).</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {team.map((member) => (
@@ -234,7 +234,7 @@ export default function About() {
         <div className="container-custom">
           <div className="text-center mb-12">
             <h2 className="section-title">What Our Irish Clients Say</h2>
-            <p className="section-subtitle">Irish developers, farmers, and planning consultants on working with our Mumbai team.</p>
+            <p className="section-subtitle">Irish developers, farmers, and planning consultants on working with our India-based team.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.slice(3).map((t) => (
@@ -246,7 +246,7 @@ export default function About() {
 
       <CTABanner
         title="Ready to Cut Your Planning Costs Without Cutting Quality?"
-        subtitle="Get a free quote from our Mumbai team. Same-quality reports as a Dublin agency — at outsourcing rates. Reply within one business day."
+        subtitle="Get a free quote from our India-based team. Same-quality reports as a Dublin agency — at outsourcing rates. Reply within one business day."
       />
     </>
   );

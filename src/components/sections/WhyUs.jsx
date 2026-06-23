@@ -4,42 +4,42 @@ import StatCard from '../ui/StatCard';
 
 const reasons = [
   {
-    icon: Globe,
-    title: 'Mumbai-Based, Irish Planning Focused',
-    desc: 'Our Mumbai team is trained exclusively in Irish planning law and the requirements of all 31 local authorities — this is all we do.',
+    icon: Users,
+    title: 'Built for Business Partners',
+    desc: 'We work exclusively with planning consultants, developers, and solar contractors — not direct consumers. Your business is our business.',
   },
   {
     icon: TrendingDown,
-    title: '30–50% Cost Saving',
-    desc: 'Outsourcing rates without outsourcing quality. Our clients get the same standard of report as a top Dublin agency, at significantly lower cost.',
+    title: 'Expand Capacity Without Overhead',
+    desc: 'Add Irish solar planning expertise to your service offering without hiring. We scale with your pipeline, project by project.',
   },
   {
     icon: FileCheck,
-    title: 'First-Application Success',
-    desc: 'Over 94% of our planning applications are approved without further information requests. Our reports proactively address every planning concern.',
+    title: '94% First-Submission Approval',
+    desc: 'Our reports are written to satisfy Irish planning authorities at first submission — protecting your reputation and your clients\' timelines.',
   },
   {
     icon: Zap,
-    title: 'Faster Turnaround',
-    desc: 'Our IST working day overlaps with Irish afternoons — meaning work progresses overnight and is often ready before your Irish morning begins.',
+    title: 'Overnight Turnaround',
+    desc: 'Our India-based team in Mumbai works while Ireland sleeps. Briefs sent in the afternoon are progressed overnight and ready for your morning review.',
   },
   {
     icon: Award,
-    title: 'Specialist Expertise',
-    desc: 'Engineers, landscape architects, and planning specialists — all trained specifically in Irish planning requirements and standards.',
+    title: 'White-Label Ready',
+    desc: 'Our reports are delivered under your brand or as standalone technical documents — seamlessly integrated into your planning submission.',
   },
   {
-    icon: Users,
-    title: 'Dedicated Project Teams',
-    desc: 'A named consultant on every project. You always know who you\'re working with and can expect a response within one business day.',
+    icon: Globe,
+    title: 'Dedicated Account Management',
+    desc: 'A named consultant on every project. Direct communication, no account handoffs, and a response within one business day — always.',
   },
 ];
 
 const stats = [
   { value: '150+', label: 'Projects Completed' },
-  { value: '8yrs', label: 'Irish Planning Experience' },
+  { value: '6+yrs', label: 'Irish Planning Experience' },
   { value: '94%', label: 'First-Application Approval Rate' },
-  { value: '31', label: 'Counties Served' },
+  { value: '15+', label: 'Counties Served' },
 ];
 
 export default function WhyUs() {
@@ -47,9 +47,9 @@ export default function WhyUs() {
     <section className="py-24 bg-white">
       <div className="container-custom">
         <SectionHeader
-          eyebrow="Why Choose Us"
-          title="Irish Planning Expertise, Mumbai Efficiency"
-          subtitle="We're a Mumbai-based outsourcing company that specialises exclusively in Irish solar planning documentation. Same quality as a Dublin agency — at a fraction of the cost."
+          eyebrow="Why Partner With Us"
+          title="The Outsourcing Partner Behind Ireland's Solar Pipeline"
+          subtitle="We integrate directly into your workflow — extending your capacity, protecting your margins, and delivering technical reports your clients can depend on."
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">

@@ -2,9 +2,9 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Phone } from 'lucide-react';
 
 export default function CTABanner({
-  title = 'Ready to Accelerate Your Solar Project?',
-  subtitle = 'Get a free, no-obligation consultation with one of our specialists today. We\'ll assess your project and outline exactly what documentation you need.',
-  primaryLabel = 'Get a Free Quote',
+  title = 'Ready to Add Irish Solar Planning Capacity to Your Business?',
+  subtitle = 'Partner with our India-based team in Mumbai and deliver more for your clients — without increasing your overheads. Get a tailored proposal within one business day.',
+  primaryLabel = 'Start a Partnership',
   primaryTo = '/contact',
 }) {
   return (
@@ -25,9 +25,9 @@ export default function CTABanner({
               {primaryLabel}
               <ArrowRight className="w-5 h-5" />
             </Link>
-            <a href="tel:+912212345678" className="btn-outline-white text-base py-4 px-8">
+            <a href="tel:+919082276147" className="btn-outline-white text-base py-4 px-8">
               <Phone className="w-5 h-5" />
-              Call Mumbai Office
+              Call India Office
             </a>
           </div>
         </div>

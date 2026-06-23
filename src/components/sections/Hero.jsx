@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, CheckCircle, Star, Shield, Clock, TrendingDown } from 'lucide-react';
 
 const trustBadges = [
-  { icon: CheckCircle, text: '150+ Irish Projects' },
-  { icon: TrendingDown, text: '30–50% Cheaper Than Dublin' },
+  { icon: CheckCircle, text: '150+ Projects Delivered' },
+  { icon: TrendingDown, text: '30–50% Lower Than Dublin Rates' },
   { icon: Shield, text: 'An Bord Pleanála Accepted' },
   { icon: Clock, text: '2–4 Week Turnaround' },
 ];
@@ -44,26 +44,26 @@ export default function Hero() {
         <div className="max-w-3xl">
           <div className="inline-flex items-center gap-2 bg-gold-500/20 border border-gold-500/30 rounded-full px-4 py-2 mb-7">
             <span className="w-2 h-2 rounded-full bg-gold-400 animate-pulse" />
-            <span className="text-gold-300 text-sm font-medium">Mumbai-Based · Irish Solar Planning Specialists</span>
+            <span className="text-gold-300 text-sm font-medium">For Planning Consultants · Developers · Solar Contractors</span>
           </div>
 
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-white leading-tight mb-6 text-balance">
-            Expert Solar Planning{' '}
-            <span className="text-gold-400">Documentation</span>{' '}
-            That Gets Approved
+            Your Dedicated{' '}
+            <span className="text-gold-400">Solar Planning</span>{' '}
+            Partner in Ireland
           </h1>
 
           <p className="text-xl text-gray-300 leading-relaxed mb-8 max-w-2xl">
-            A Mumbai-based outsourcing company specialising exclusively in Irish solar planning. Glint &amp; glare analysis, LVIA reports, and PV planning drawings — at outsourcing rates, without compromising quality.
+            We are the India-based outsourcing team (Mumbai) behind Irish solar planning applications. Glint &amp; glare reports, Landscape Plans, and PV drawings — delivered to your standard, on your timeline, at outsourcing rates.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 mb-12">
             <Link to="/contact" className="btn-primary text-base py-4 px-8">
-              Get a Free Consultation
+              Partner With Us
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link to="/case-studies" className="btn-outline-white text-base py-4 px-8">
-              View Our Projects
+              See Our Work
             </Link>
           </div>
 

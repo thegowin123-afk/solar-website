@@ -16,9 +16,9 @@ export const testimonials = [
     role: 'Senior Project Manager',
     company: 'Utilities Contractor, Munster',
     quote:
-      'The LVIA report produced for our Tipperary project was exceptionally thorough. The photomontages and ZTV mapping clearly demonstrated the limited visual impact of the development and convinced a initially skeptical planning authority.',
+      'The Landscape Plan produced for our Tipperary project was exceptionally thorough. Working from our LVIA, the planting scheme and ZTV mapping clearly demonstrated the limited visual impact of the development and convinced an initially skeptical planning authority.',
     rating: 5,
-    projectType: 'Solar Farm LVIA',
+    projectType: 'Solar Farm Landscape Plan',
     county: 'Tipperary',
   },
   {

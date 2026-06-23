@@ -38,7 +38,7 @@ export default function Footer() {
               </div>
             </Link>
             <p className="text-sm text-gray-400 leading-relaxed mb-6">
-              Mumbai-based solar planning outsourcing specialists. We deliver expert Irish planning documentation — glint &amp; glare, LVIA, PV drawings — at outsourcing rates, without compromising on quality.
+              India-based solar planning outsourcing specialists (Mumbai). We deliver expert Irish planning documentation — glint &amp; glare, Landscape Plans, PV drawings — at outsourcing rates, without compromising on quality.
             </p>
             <div className="flex gap-3">
               {[
@@ -83,7 +83,6 @@ export default function Footer() {
                 { label: 'About Us', to: '/about' },
                 { label: 'Case Studies', to: '/case-studies' },
                 { label: 'Blog & Resources', to: '/blog' },
-                { label: 'Pricing', to: '/pricing' },
                 { label: 'Contact', to: '/contact' },
               ].map(({ label, to }) => (
                 <li key={label}>
@@ -98,7 +97,7 @@ export default function Footer() {
               {['Dublin', 'Cork', 'Kildare', 'Tipperary', 'Offaly'].map((county) => (
                 <li key={county}>
                   <Link
-                    to={`/solar-planning-${county.toLowerCase()}`}
+                    to={`/solar-planning/${county.toLowerCase()}`}
                     className="text-sm text-gray-400 hover:text-gold-400 transition-colors"
                   >
                     Solar Planning {county}
@@ -115,16 +114,19 @@ export default function Footer() {
               <li className="flex items-start gap-3">
                 <Phone className="w-4 h-4 text-gold-400 mt-0.5 flex-shrink-0" />
                 <div>
-                  <a href="tel:+912212345678" className="text-sm text-gray-400 hover:text-gold-400 transition-colors block">
-                    +91 22 1234 5678
+                  <a href="tel:+919082276147" className="text-sm text-gray-400 hover:text-gold-400 transition-colors block">
+                    +91 90822 76147
+                  </a>
+                  <a href="https://wa.me/919082276147" target="_blank" rel="noopener noreferrer" className="text-xs text-green-400 hover:text-green-300 transition-colors">
+                    💬 WhatsApp
                   </a>
                   <span className="text-xs text-gray-500">Mon–Fri 9:00am–6:00pm IST</span>
                 </div>
               </li>
               <li className="flex items-start gap-3">
                 <Mail className="w-4 h-4 text-gold-400 mt-0.5 flex-shrink-0" />
-                <a href="mailto:info@solarplanireland.ie" className="text-sm text-gray-400 hover:text-gold-400 transition-colors">
-                  info@solarplanireland.ie
+                <a href="mailto:info@solarplanningireland.com" className="text-sm text-gray-400 hover:text-gold-400 transition-colors">
+                  info@solarplanningireland.com
                 </a>
               </li>
               <li className="flex items-start gap-3">

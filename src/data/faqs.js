@@ -1,42 +1,42 @@
 export const faqs = [
   {
-    question: 'Do I need planning permission for solar panels in Ireland?',
+    question: 'Who do you work with?',
     answer:
-      'It depends on the size and type of installation. Many domestic rooftop solar systems are exempt from planning permission under Schedule 2 of the Planning and Development Regulations. However, ground-mounted solar farms almost always require full planning permission, and commercial rooftop systems may require it depending on size and roof type. We can assess your project and advise on exemption eligibility.',
+      'We work exclusively with businesses — planning consultants, solar developers, EPC contractors, land agents, and energy companies. We do not work directly with end consumers. If you are a business that needs reliable Irish solar planning documentation delivered to your standard and timeline, we are the right partner.',
   },
   {
-    question: 'How long does a solar planning application take in Ireland?',
+    question: 'Can you deliver reports under our brand?',
     answer:
-      'A standard local authority planning application has an 8-week determination period, but this can be extended if a further information request is issued (which resets the clock). Well-prepared applications with all required technical reports rarely receive further information requests. Our goal is to get your application approved at first submission. For Strategic Infrastructure Developments (large solar farms going directly to An Bord Pleanála), the process typically takes 12–24 months.',
+      "We regularly produce reports that are submitted under our partner's letterhead and brand as part of their planning submission. We can also deliver standalone technical appendices if you prefer. We discuss your preferred format at kick-off and work to it consistently across every project.",
   },
   {
-    question: 'What is a glint and glare report and is it always needed?',
+    question: 'Can you handle multiple projects at the same time?',
     answer:
-      'A glint and glare assessment uses computer modelling to predict whether solar panels will cause problematic reflections that could affect neighbouring properties, road users, or aviation. It is not a legal requirement for every application, but planning authorities in Ireland routinely request it for ground-mounted solar farms and some commercial rooftop systems. Submitting a glint and glare report proactively (rather than in response to a further information request) significantly reduces planning risk.',
+      'Yes — our India-based team is structured to run multiple concurrent projects across different Irish counties and project types. If you have a pipeline of projects, we can agree a framework arrangement and a dedicated team to manage your volume with consistent quality and turnaround.',
   },
   {
-    question: 'What is an LVIA and when is it required for solar?',
+    question: 'What is a glint and glare report and when is it needed?',
     answer:
-      'A Landscape and Visual Impact Assessment (LVIA) evaluates the visual impact of a development on the surrounding landscape. For ground-mounted solar farms in Ireland, it is almost always required by the planning authority. Even for applications where it is not explicitly requested, a high-quality LVIA demonstrating minimal visual impact greatly strengthens the application.',
+      'A glint and glare assessment uses computer modelling to predict whether solar panels will cause problematic reflections affecting neighbouring properties, road users, or aviation. Irish planning authorities routinely request it for ground-mounted solar farms and some commercial rooftop systems. Submitting proactively — rather than in response to a further information request — significantly reduces planning risk for your client.',
   },
   {
-    question: 'Can I put solar panels on agricultural land in Ireland?',
+    question: 'What is a Landscape Plan and how do you produce it?',
     answer:
-      'Yes, but it requires careful planning. Irish planning policy has historically been cautious about removing agricultural land from food production. The most planning-friendly approach is agri-voltaic design — combining solar generation with continued agricultural use beneath and between panels. Our team can advise on the best approach for your land and help you prepare a strong planning application.',
+      "A Landscape Plan is a planning-standard drawing showing proposed planting, screening, and landscape mitigation measures. We produce it from the LVIA or arboriculture report your specialist or your client's consultant has already prepared — send us those documents and we translate the findings into a clear drawing set accepted by all Irish planning authorities.",
   },
   {
-    question: 'How much does solar planning documentation cost?',
+    question: 'How quickly can you turn around a report?',
     answer:
-      'Costs vary significantly with project scale and complexity. A glint and glare assessment for a medium-scale solar farm typically starts from €3,000–€5,000. A full LVIA starts from €5,000–€8,000. A complete planning drawing package starts from €2,500. For a comprehensive planning submission package for a utility-scale solar farm, budget €20,000–€60,000 depending on scale and whether EIA is required. Contact us for a free, tailored quote for your project.',
+      'Our standard turnaround for a glint and glare assessment is 2–4 weeks from receipt of complete site drawings. Landscape Plans typically take 2–3 weeks. Expedited delivery in 7–10 working days is available for urgent planning deadlines — contact us to discuss your programme.',
   },
   {
-    question: 'Do you work across all of Ireland including Northern Ireland?',
+    question: 'Do you cover all of Ireland including Northern Ireland?',
     answer:
-      'Yes, we work on projects throughout the Republic of Ireland and Northern Ireland. Our team is familiar with both the Republic\'s planning system (An Bord Pleanála, local authorities) and Northern Ireland\'s system (Planning Appeals Commission, local councils). Cross-border project experience is an increasing part of our workload as grid infrastructure is developed.',
+      "Yes. We work on projects throughout the Republic of Ireland and Northern Ireland. Our team is trained in both the Republic's planning system (An Bord Pleanála, local authorities) and Northern Ireland's system (Planning Appeals Commission, local councils).",
   },
   {
-    question: 'How quickly can you turn around a glint and glare report?',
+    question: 'How do we get started?',
     answer:
-      'Our standard turnaround for a glint and glare assessment is 2–4 weeks from receipt of complete site drawings. For urgent planning deadlines, we can often offer expedited delivery in 7–10 working days — please contact us to discuss your timeline.',
+      'Send us a brief — project location, scale, and what reports you need. We will respond within one business day with a fixed-fee proposal. No lengthy procurement process, no sales calls unless you want one. Most partners are fully onboarded and receiving work within 48 hours of first contact.',
   },
 ];

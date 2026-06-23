@@ -12,7 +12,6 @@ const navLinks = [
   },
   { label: 'Case Studies', to: '/case-studies' },
   { label: 'Blog', to: '/blog' },
-  { label: 'Pricing', to: '/pricing' },
   { label: 'About', to: '/about' },
 ];
 
@@ -116,13 +115,13 @@ export default function Header() {
           {/* CTA + mobile toggle */}
           <div className="flex items-center gap-3">
             <a
-              href="tel:+912212345678"
+              href="tel:+919082276147"
               className={`hidden md:flex items-center gap-1.5 text-sm font-medium transition-colors ${
                 scrolled ? 'text-gray-600 hover:text-gold-600' : 'text-white/80 hover:text-white'
               }`}
             >
               <Phone className="w-4 h-4" />
-              <span>+91 22 1234 5678</span>
+              <span>+91 90822 76147</span>
             </a>
             <Link to="/contact" className="hidden md:block btn-primary py-2 px-4 text-sm">
               Free Consultation
@@ -176,9 +175,9 @@ export default function Header() {
               </div>
             ))}
             <div className="pt-3 border-t border-gray-100 flex flex-col gap-2">
-              <a href="tel:+912212345678" className="flex items-center gap-2 px-4 py-3 text-gray-700">
+              <a href="tel:+919082276147" className="flex items-center gap-2 px-4 py-3 text-gray-700">
                 <Phone className="w-4 h-4 text-gold-500" />
-                +91 22 1234 5678
+                +91 90822 76147
               </a>
               <Link to="/contact" className="btn-primary text-center mx-4">
                 Free Consultation

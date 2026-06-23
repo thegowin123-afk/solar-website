@@ -140,37 +140,36 @@ We work with building owners, energy contractors, and facilities managers on pro
       'Structural design and planning services for commercial rooftop solar installations across Ireland. Building regulations compliant.',
   },
   {
-    id: 'lvia',
-    slug: 'landscape-lvia-reports',
-    title: 'Landscape & LVIA Reports',
-    shortTitle: 'LVIA',
-    tagline: 'Landscape integration that satisfies planners and communities',
+    id: 'landscape-plan',
+    slug: 'landscape-plans',
+    title: 'Landscape Plans',
+    shortTitle: 'Landscape Plans',
+    tagline: 'Landscape plans that complement your LVIA or arboriculture report',
     description:
-      'Landscape and Visual Impact Assessment (LVIA) reports prepared by qualified landscape architects for solar planning applications throughout Ireland. We identify, assess, and mitigate visual impacts to the satisfaction of planning authorities.',
-    longDescription: `A high-quality LVIA is often the deciding factor in a contested solar planning application. Our landscape architects have extensive experience with the Irish landscape assessment guidelines (EPA, DoHPLG) and the sensitivities of Irish rural and peri-urban landscapes.
+      'We produce detailed Landscape Plans for solar planning applications in Ireland. Where clients supply an LVIA or arboriculture report, we use those findings to prepare planting schemes and landscape integration drawings that satisfy planning authorities.',
+    longDescription: `When your consultant or ecologist has prepared an LVIA or arboriculture report, we translate those findings into a clear, planning-standard Landscape Plan. Our drawings show proposed planting, screening, and mitigation measures in a format accepted by all 31 Irish county councils and An Bord Pleanála.
 
-We produce standalone LVIA chapters or complete Environmental Impact Assessment Reports (EIAR) for projects requiring EIA. Our reports are written for planning authority audiences but are also designed to stand up to scrutiny at An Bord Pleanála oral hearings.`,
+We do not prepare LVIA or arboriculture reports ourselves — instead we work from the documents your specialists have already produced and ensure the landscape plan submitted with your application accurately reflects their recommendations.`,
     icon: 'TreePine',
     color: 'gold',
     heroImage: '/images/lvia-hero.jpg',
     features: [
-      'Landscape character assessment',
-      'Visual impact assessment (viewpoints, photomontages)',
-      'Zone of Theoretical Visibility (ZTV) mapping',
-      'EIAR chapter preparation',
-      'Landscape mitigation planting plans',
-      'An Bord Pleanála oral hearing support',
+      'Planting and screening plans based on your LVIA or arboriculture report',
+      'Native hedgerow and tree planting schemes',
+      'Landscape mitigation drawings to planning-authority standard',
+      'Coordination with your LVIA or arboriculture consultant',
+      'Phased planting schedules',
+      'Revision support during planning process',
     ],
     deliverables: [
-      'LVIA report (standalone or EIAR chapter)',
-      'Viewpoint photomontages',
-      'ZTV maps and GIS data',
-      'Landscape mitigation plan',
+      'Landscape Plan drawing (PDF & DWG)',
+      'Planting schedule',
+      'Mitigation measures drawing',
     ],
-    timeframe: '4–8 weeks',
-    seoTitle: 'Solar LVIA Reports Ireland | Landscape Visual Impact Assessment',
+    timeframe: '2–4 weeks',
+    seoTitle: 'Landscape Plans for Solar Planning Ireland',
     seoDescription:
-      'Qualified landscape architects preparing LVIA reports for solar planning applications in Ireland. EPA guidelines compliant.',
+      'Landscape plans for solar planning applications in Ireland, prepared from your LVIA or arboriculture report. Accepted by all 31 county councils.',
   },
 ];
 

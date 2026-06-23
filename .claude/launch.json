@@ -2,11 +2,11 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "solar-nextjs",
+      "name": "solar-website",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
-      "cwd": "C:\\Users\\Admin\\OneDrive\\Documents\\solar-nextjs",
-      "port": 3000
+      "cwd": "C:\\Users\\Admin\\OneDrive\\Documents\\Solar website",
+      "port": 5173
     }
   ]
 }

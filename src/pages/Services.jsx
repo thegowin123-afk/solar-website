@@ -10,21 +10,21 @@ import { SITE_URL, DEFAULT_OG_IMAGE } from '../lib/seo';
 const PAGE_URL = `${SITE_URL}/services`;
 
 const targetMarkets = [
-  { title: 'Developers & Energy Companies', desc: 'Utility-scale ground-mounted projects from feasibility through An Bord Pleanála.' },
-  { title: 'Farmers & Landowners', desc: 'Agri-voltaic designs that balance energy income with continued agricultural use.' },
-  { title: 'Contractors & Installers', desc: 'Planning drawings and structural design for rooftop and ground-mounted installations.' },
-  { title: 'Planning Consultants', desc: 'Technical solar reports to complement your planning strategy and application.' },
+  { title: 'Planning Consultants', desc: 'Outsource technical solar reports to us and deliver a complete planning package to your clients — under your brand.' },
+  { title: 'Solar Developers & Energy Companies', desc: 'We handle the technical documentation so your team can focus on land, grid, and finance — we deliver the planning pack.' },
+  { title: 'EPC Contractors & Installers', desc: 'Need planning drawings fast? We integrate directly with your project team and turn around documentation to your programme.' },
+  { title: 'Land Agents & Advisors', desc: 'Supporting landowners and farmers exploring solar options? We provide the technical reports your clients need to get planning.' },
 ];
 
 export default function Services() {
   return (
     <>
       <Helmet>
-        <title>Solar Planning Services Ireland | Glint & Glare, LVIA, PV Drawings | SolarPlan Ireland</title>
-        <meta name="description" content="Expert solar planning services across Ireland: glint & glare analysis, PV planning drawings, ground and roof-mounted solar design, and LVIA reports. Accepted by An Bord Pleanála and all 31 county councils." />
+        <title>Solar Planning Services Ireland | Glint & Glare, Landscape Plans, PV Drawings | SolarPlan Ireland</title>
+        <meta name="description" content="Expert solar planning services across Ireland: glint & glare analysis, PV planning drawings, ground and roof-mounted solar design, and Landscape Plans. Accepted by An Bord Pleanála and all 31 county councils." />
         <link rel="canonical" href={PAGE_URL} />
         <meta property="og:title" content="Solar Planning Services Ireland | SolarPlan Ireland" />
-        <meta property="og:description" content="Expert solar planning services across Ireland: glint & glare analysis, PV planning drawings, ground and roof-mounted solar design, and LVIA reports." />
+        <meta property="og:description" content="Expert solar planning services across Ireland: glint & glare analysis, PV planning drawings, ground and roof-mounted solar design, and Landscape Plans." />
         <meta property="og:url" content={PAGE_URL} />
         <meta property="og:image" content={DEFAULT_OG_IMAGE} />
         <meta name="twitter:card" content="summary_large_image" />

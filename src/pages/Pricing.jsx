@@ -24,7 +24,7 @@ const packages = [
       { text: 'Building regulations compliance check', included: true },
       { text: 'Email support', included: true },
       { text: 'Glint & glare assessment', included: false },
-      { text: 'LVIA report', included: false },
+      { text: 'Landscape Plan', included: false },
       { text: 'Planning application management', included: false },
     ],
     cta: 'Get a Quote',
@@ -45,26 +45,26 @@ const packages = [
       { text: 'Pre-application consultation support', included: true },
       { text: 'Further information response', included: true },
       { text: 'Dedicated project consultant', included: true },
-      { text: 'LVIA report', included: false },
+      { text: 'Landscape Plan', included: false },
       { text: 'EIAR coordination', included: false },
     ],
     cta: 'Get a Quote',
     to: '/contact',
   },
   {
-    name: 'Full LVIA',
+    name: 'Planning + Landscape Plan',
     tagline: 'Landscape-sensitive solar farms',
-    price: 'From €9,500',
+    price: 'From €6,500',
     period: 'per project',
     color: 'forest',
     popular: false,
-    description: 'Everything in Planning, plus a full Landscape and Visual Impact Assessment — ideal for sites with landscape sensitivity, scenic routes, or protected areas nearby.',
+    description: 'Everything in Planning, plus a Landscape Plan drawn from your LVIA or arboriculture report — ideal for sites with landscape sensitivity, scenic routes, or protected areas nearby.',
     features: [
       { text: 'Full planning drawing package', included: true },
       { text: 'Glint & glare assessment', included: true },
-      { text: 'LVIA report (up to 10 viewpoints)', included: true },
-      { text: 'ZTV mapping & photomontages', included: true },
-      { text: 'Landscape mitigation plan', included: true },
+      { text: 'Landscape Plan (from your LVIA / arboriculture report)', included: true },
+      { text: 'Planting schedule', included: true },
+      { text: 'Landscape mitigation drawing', included: true },
       { text: 'Planning & design statement', included: true },
       { text: 'Dedicated project consultant', included: true },
       { text: 'EIAR coordination', included: false },
@@ -84,7 +84,7 @@ const packages = [
       { text: 'Full EIAR chapter coordination', included: true },
       { text: 'Multi-disciplinary team management', included: true },
       { text: 'An Bord Pleanála pre-application', included: true },
-      { text: 'LVIA (unlimited viewpoints)', included: true },
+      { text: 'Landscape Plan (unlimited revisions)', included: true },
       { text: 'Glint & glare (full aviation protocol)', included: true },
       { text: 'Natura Impact Statement', included: true },
       { text: 'Oral hearing technical support', included: true },
@@ -96,7 +96,7 @@ const packages = [
 ];
 
 const addOns = [
-  { name: 'Additional LVIA viewpoints', price: '€350 each' },
+  { name: 'Landscape Plan (from client LVIA / arboriculture report)', price: 'From €2,000' },
   { name: 'Photomontage (single viewpoint)', price: 'From €600' },
   { name: 'Aviation glint assessment (IAA protocol)', price: 'From €1,800' },
   { name: 'County council pre-application meeting support', price: 'From €850' },
@@ -136,11 +136,11 @@ export default function Pricing() {
         <title>Solar Planning Application Costs Ireland | Pricing | SolarPlan Ireland</title>
         <meta
           name="description"
-          content="Transparent pricing for solar planning application documentation in Ireland. Fixed-fee glint & glare, LVIA, planning drawings — from €1,500. Free quote today."
+          content="Transparent pricing for solar planning application documentation in Ireland. Fixed-fee glint & glare, Landscape Plans, planning drawings — from €1,500. Free quote today."
         />
         <link rel="canonical" href={PAGE_URL} />
         <meta property="og:title" content="Solar Planning Application Costs Ireland | SolarPlan Ireland Pricing" />
-        <meta property="og:description" content="Transparent pricing for solar planning documentation in Ireland. Fixed-fee glint & glare, LVIA, planning drawings — from €1,500." />
+        <meta property="og:description" content="Transparent pricing for solar planning documentation in Ireland. Fixed-fee glint & glare, Landscape Plans, planning drawings — from €1,500." />
         <meta property="og:url" content={PAGE_URL} />
         <meta property="og:image" content={DEFAULT_OG_IMAGE} />
         <meta name="twitter:card" content="summary_large_image" />
@@ -264,7 +264,7 @@ export default function Pricing() {
             <Link to="/contact" className="btn-primary py-4 px-8">
               Get a Free Quote <ArrowRight className="w-5 h-5" />
             </Link>
-            <a href="tel:+912212345678" className="btn-secondary py-4 px-8">
+            <a href="tel:+919082276147" className="btn-secondary py-4 px-8">
               <Phone className="w-5 h-5" /> Call Mumbai Office
             </a>
           </div>

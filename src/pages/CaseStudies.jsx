@@ -71,10 +71,10 @@ export default function CaseStudies() {
     <>
       <Helmet>
         <title>Solar Planning Application Case Studies Ireland | SolarPlan Ireland</title>
-        <meta name="description" content="Real solar planning application success stories from SolarPlan Ireland. Ground-mounted solar farms, rooftop installations, and complex LVIA cases across Ireland." />
+        <meta name="description" content="Real solar planning application success stories from SolarPlan Ireland. Ground-mounted solar farms, rooftop installations, and Landscape Plan cases across Ireland." />
         <link rel="canonical" href={PAGE_URL} />
         <meta property="og:title" content="Solar Planning Case Studies Ireland | SolarPlan Ireland" />
-        <meta property="og:description" content="Real solar planning application success stories. Ground-mounted solar farms, rooftop installations, and complex LVIA cases across Ireland." />
+        <meta property="og:description" content="Real solar planning application success stories. Ground-mounted solar farms, rooftop installations, and Landscape Plan cases across Ireland." />
         <meta property="og:url" content={PAGE_URL} />
         <meta property="og:image" content={DEFAULT_OG_IMAGE} />
         <meta name="twitter:card" content="summary_large_image" />
@@ -94,7 +94,7 @@ export default function CaseStudies() {
             {[
               { value: '150+', label: 'Projects Completed' },
               { value: '400MW+', label: 'Capacity Approved' },
-              { value: '31', label: 'Counties Served' },
+              { value: '15+', label: 'Counties Served' },
               { value: '94%', label: 'First-Application Success' },
             ].map(({ value, label }) => (
               <div key={label}>

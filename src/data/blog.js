@@ -48,7 +48,7 @@ A typical solar farm planning application in Ireland requires:
 - Elevation drawings of panels and mounting structures
 - Photomontages and visualisations
 - Glint and glare assessment
-- Landscape and Visual Impact Assessment (LVIA)
+- Landscape Plan (prepared from client LVIA or arboriculture report)
 - Ecological impact assessment
 - Archaeology and cultural heritage assessment (where required)
 - Traffic impact assessment (for construction phase)
@@ -88,7 +88,7 @@ Securing a grid connection offer from EirGrid or ESB Networks is a critical para
 This is the most commonly raised planning concern for solar farms in Ireland. A professional glint and glare assessment is almost always required and should be submitted with the initial application.
 
 ### Visual Impact
-In Ireland's predominantly rural landscape, visual impact is a key concern. A high-quality LVIA with realistic photomontages is essential. Robust planting and screening proposals significantly improve planning outcomes.
+In Ireland's predominantly rural landscape, visual impact is a key concern. A Landscape Plan with robust planting and screening proposals — drawn from your LVIA findings — significantly improves planning outcomes.
 
 ### Landscape Character
 Local development plans often identify sensitive landscape areas. Understanding the local landscape character assessment and positioning your development to avoid or mitigate impacts is crucial.
@@ -203,8 +203,8 @@ Agri-voltaic mounting systems require:
 - Corrosion-resistant materials suitable for livestock environments
 - Appropriate foundations that do not interfere with drainage
 
-### LVIA Considerations
-Elevated panels may have greater visual impact than ground-level installations, particularly in open landscape settings. A high-quality LVIA with accurate photomontages is essential.
+### Landscape Plan Considerations
+Elevated panels may have greater visual impact than ground-level installations, particularly in open landscape settings. A Landscape Plan drawn from your LVIA findings and accurate photomontages is essential.
 
 ## Income Potential
 
@@ -260,7 +260,7 @@ A full EIAR for a solar farm typically includes:
 5. **Air and climate** — construction dust, greenhouse gas calculations
 6. **Material assets** — infrastructure, land use, grid connection
 7. **Cultural heritage** — archaeology and built heritage
-8. **Landscape and visual** — the LVIA chapter
+8. **Landscape and visual** — the landscape chapter (Landscape Plan and photomontages)
 9. **Cumulative effects** — in combination with other projects
 10. **Interactions between the above** — often overlooked but important
 

@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 
 // Lazy-load all pages for optimal code splitting
@@ -12,7 +12,6 @@ const CaseStudyDetail = lazy(() => import('./pages/CaseStudyDetail'));
 const Blog         = lazy(() => import('./pages/Blog'));
 const BlogPost     = lazy(() => import('./pages/BlogPost'));
 const Contact      = lazy(() => import('./pages/Contact'));
-const Pricing      = lazy(() => import('./pages/Pricing'));
 const CountyPage   = lazy(() => import('./pages/CountyPage'));
 const NotFound     = lazy(() => import('./pages/NotFound'));
 
@@ -42,8 +41,8 @@ export default function App() {
           <Route path="/blog"                   element={<Blog />} />
           <Route path="/blog/:slug"             element={<BlogPost />} />
           <Route path="/contact"                element={<Contact />} />
-          <Route path="/pricing"                element={<Pricing />} />
-          <Route path="/solar-planning-:county" element={<CountyPage />} />
+          <Route path="/pricing"                element={<Navigate to="/contact" replace />} />
+          <Route path="/solar-planning/:county" element={<CountyPage />} />
           <Route path="*"                       element={<NotFound />} />
         </Routes>
       </Suspense>

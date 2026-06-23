@@ -167,8 +167,8 @@ export default function ServiceDetail() {
                 <div className="mt-4 p-5 bg-gold-50 border border-gold-200 rounded-2xl">
                   <p className="text-sm font-semibold text-forest-900 mb-1">Need to talk it through?</p>
                   <p className="text-xs text-gray-600 mb-3">Our consultants are happy to discuss your project by phone before you commit to anything.</p>
-                  <a href="tel:+912212345678" className="btn-primary text-sm py-2.5 px-4 w-full justify-center">
-                    Call +91 22 1234 5678
+                  <a href="tel:+919082276147" className="btn-primary text-sm py-2.5 px-4 w-full justify-center">
+                    Call +91 90822 76147
                   </a>
                 </div>
               </div>

@@ -64,10 +64,10 @@ export default function Blog() {
     <>
       <Helmet>
         <title>Solar Planning Application Ireland Blog | Guides & Resources | SolarPlan Ireland</title>
-        <meta name="description" content="Expert guides on solar planning applications in Ireland. Planning permission, LVIA, glint & glare, EIAR — practical advice from Ireland's specialist solar planning consultants." />
+        <meta name="description" content="Expert guides on solar planning applications in Ireland. Planning permission, Landscape Plans, glint & glare, EIAR — practical advice from Ireland's specialist solar planning consultants." />
         <link rel="canonical" href={PAGE_URL} />
         <meta property="og:title" content="Solar Planning Ireland Blog | SolarPlan Ireland Resources" />
-        <meta property="og:description" content="Expert guides on solar planning applications in Ireland. Planning permission, LVIA, glint & glare, EIAR." />
+        <meta property="og:description" content="Expert guides on solar planning applications in Ireland. Planning permission, Landscape Plans, glint & glare, EIAR." />
         <meta property="og:url" content={PAGE_URL} />
         <meta property="og:image" content={DEFAULT_OG_IMAGE} />
         <meta name="twitter:card" content="summary_large_image" />
