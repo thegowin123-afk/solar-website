@@ -297,7 +297,7 @@ function DrawingStep({ location, polygon, onPolygonChange }) {
         )}
       </div>
 
-      <div ref={mapDivRef} className="w-full rounded-xl overflow-hidden border border-gray-200" style={{ height: '440px' }} />
+      <div ref={mapDivRef} className="w-full rounded-xl border border-gray-200" style={{ height: '440px' }} />
 
       {polygon?.length >= 3 && (
         <div className="bg-green-50 border border-green-200 rounded-xl p-3 flex items-center gap-2 text-sm text-green-800">
