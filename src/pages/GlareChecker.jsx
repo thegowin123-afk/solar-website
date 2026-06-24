@@ -500,145 +500,122 @@ function ParamsStep({ params, onChange }) {
   );
 }
 
-// Path-based receptor types (drawn as polylines); others are point-based
-const PATH_TYPES = new Set(['road', 'railway', 'aviation', 'atct']);
+// Default eye heights (m) by receptor type
+const DEFAULT_HEIGHTS = { road: 1.2, residential: 1.5, railway: 1.8, aviation: 100, atct: 10, other: 1.5 };
 
 // ─── Step 4: Receptors ──────────────────────────────────────────────────────
 function ReceptorsStep({ location, polygon, receptors, onReceptorsChange }) {
   const mapDivRef = useRef(null);
   const mapRef = useRef(null);
-  const overlaysRef = useRef([]);       // markers + polylines on map
-  const polygonOverlayRef = useRef(null);
-  const pathPointsRef = useRef([]);     // points being drawn for a path receptor
-  const pathMarkersRef = useRef([]);    // temp dots while drawing path
-  const pathLineRef = useRef(null);     // temp polyline while drawing path
+  const markersRef = useRef([]);
   const clickListenerRef = useRef(null);
   const [addingType, setAddingType] = useState('road');
-  const [addingMode, setAddingMode] = useState(false); // 'point' | 'path' | false
+  const [placingOnMap, setPlacingOnMap] = useState(false);
+  const [autoDetecting, setAutoDetecting] = useState(false);
+  const [editingId, setEditingId] = useState(null);
 
-  const isPathType = (type) => PATH_TYPES.has(type);
+  // Centre of polygon for search
+  const centre = polygon?.length
+    ? { lat: polygon.reduce((s, p) => s + p.lat, 0) / polygon.length, lng: polygon.reduce((s, p) => s + p.lng, 0) / polygon.length }
+    : location;
 
   useEffect(() => {
     if (!location || !mapDivRef.current || mapRef.current) return;
     loadGoogleMaps().then((google) => {
       const bounds = new google.maps.LatLngBounds();
       if (polygon?.length) polygon.forEach(p => bounds.extend(p));
-      else bounds.extend({ lat: location.lat, lng: location.lng });
-
+      else bounds.extend(location);
       const map = new google.maps.Map(mapDivRef.current, { mapTypeId: 'hybrid', tilt: 0 });
-      map.fitBounds(bounds, 80);
+      map.fitBounds(bounds, 100);
       mapRef.current = map;
-
       if (polygon?.length >= 3) {
-        polygonOverlayRef.current = new google.maps.Polygon({
-          paths: polygon, fillColor: '#2d6a4f', fillOpacity: 0.35,
-          strokeColor: '#2d6a4f', strokeWeight: 2, map,
-        });
+        new google.maps.Polygon({ paths: polygon, fillColor: '#2d6a4f', fillOpacity: 0.35, strokeColor: '#2d6a4f', strokeWeight: 2, map });
       }
-      renderOverlays(google, map);
+      renderMarkers(google, map, receptors);
     });
   }, [location, polygon]);
 
-  const renderOverlays = (google, map) => {
-    overlaysRef.current.forEach(o => o.setMap(null));
-    overlaysRef.current = [];
-    receptors.forEach(rec => drawReceptorOverlay(google, map, rec));
-  };
-
-  const drawReceptorOverlay = (google, map, rec) => {
-    const typeConf = RECEPTOR_TYPES.find(t => t.value === rec.type);
-    const color = typeConf?.color || '#6b7280';
-    if (rec.path && rec.path.length >= 2) {
-      // Polyline receptor
-      const line = new google.maps.Polyline({
-        path: rec.path, strokeColor: color, strokeWeight: 4, strokeOpacity: 0.85, map,
-      });
-      overlaysRef.current.push(line);
-      // Label at midpoint
-      const mid = rec.path[Math.floor(rec.path.length / 2)];
-      const marker = new google.maps.Marker({
-        position: mid, map, title: rec.name,
-        icon: { path: google.maps.SymbolPath.CIRCLE, scale: 9, fillColor: color, fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 },
-        label: { text: rec.type[0].toUpperCase(), color: '#fff', fontSize: '10px', fontWeight: 'bold' },
-      });
-      overlaysRef.current.push(marker);
-    } else if (rec.lat != null) {
-      const marker = new google.maps.Marker({
+  const renderMarkers = (google, map, recs) => {
+    markersRef.current.forEach(m => m.setMap(null));
+    markersRef.current = [];
+    recs.forEach(rec => {
+      const typeConf = RECEPTOR_TYPES.find(t => t.value === rec.type);
+      const m = new google.maps.Marker({
         position: { lat: rec.lat, lng: rec.lng }, map, title: rec.name,
-        icon: { path: google.maps.SymbolPath.CIRCLE, scale: 9, fillColor: color, fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 },
+        icon: { path: google.maps.SymbolPath.CIRCLE, scale: 9, fillColor: typeConf?.color || '#6b7280', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 },
         label: { text: rec.type[0].toUpperCase(), color: '#fff', fontSize: '10px', fontWeight: 'bold' },
       });
-      overlaysRef.current.push(marker);
-    }
-  };
-
-  const stopAdding = () => {
-    const google = window.google; const map = mapRef.current;
-    if (clickListenerRef.current) { google.maps.event.removeListener(clickListenerRef.current); clickListenerRef.current = null; }
-    pathMarkersRef.current.forEach(m => m.setMap(null)); pathMarkersRef.current = [];
-    if (pathLineRef.current) { pathLineRef.current.setMap(null); pathLineRef.current = null; }
-    pathPointsRef.current = [];
-    if (map) map.setOptions({ draggableCursor: null });
-    setAddingMode(false);
-  };
-
-  const startAdding = () => {
-    const google = window.google; const map = mapRef.current;
-    if (!google || !map) return;
-    stopAdding();
-    const pathType = isPathType(addingType);
-    setAddingMode(pathType ? 'path' : 'point');
-    map.setOptions({ draggableCursor: 'crosshair' });
-
-    clickListenerRef.current = google.maps.event.addListener(map, 'click', (e) => {
-      const pt = { lat: e.latLng.lat(), lng: e.latLng.lng() };
-      const typeConf = RECEPTOR_TYPES.find(t => t.value === addingType);
-      const color = typeConf?.color || '#6b7280';
-
-      if (!pathType) {
-        // Point receptor — single click
-        const id = `rec-${Date.now()}`;
-        const newRec = { id, type: addingType, name: `${typeConf?.label} ${receptors.length + 1}`, lat: pt.lat, lng: pt.lng };
-        onReceptorsChange([...receptors, newRec]);
-        drawReceptorOverlay(google, map, newRec);
-        stopAdding();
-      } else {
-        // Path receptor — multi-click, double-click to finish
-        const pts = [...pathPointsRef.current, pt];
-        pathPointsRef.current = pts;
-
-        const dot = new google.maps.Marker({
-          position: pt, map,
-          icon: { path: google.maps.SymbolPath.CIRCLE, scale: pts.length === 1 ? 7 : 5, fillColor: color, fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 },
-        });
-        pathMarkersRef.current.push(dot);
-
-        if (pathLineRef.current) pathLineRef.current.setMap(null);
-        if (pts.length >= 2) {
-          pathLineRef.current = new google.maps.Polyline({ path: pts, strokeColor: color, strokeWeight: 3, strokeOpacity: 0.7, map });
-        }
-      }
+      markersRef.current.push(m);
     });
-
-    // Double-click to finish path
-    if (isPathType(addingType)) {
-      google.maps.event.addListenerOnce(map, 'dblclick', () => {
-        const pts = pathPointsRef.current;
-        if (pts.length >= 2) {
-          const typeConf = RECEPTOR_TYPES.find(t => t.value === addingType);
-          const id = `rec-${Date.now()}`;
-          const newRec = { id, type: addingType, name: `${typeConf?.label} ${receptors.length + 1}`, path: pts, lat: pts[0].lat, lng: pts[0].lng };
-          onReceptorsChange([...receptors, newRec]);
-          stopAdding();
-          drawReceptorOverlay(google, map, newRec);
-        }
-      });
-    }
   };
 
   useEffect(() => {
-    if (mapRef.current && window.google) renderOverlays(window.google, mapRef.current);
+    if (mapRef.current && window.google) renderMarkers(window.google, mapRef.current, receptors);
   }, [receptors]);
+
+  const startPlacing = () => {
+    const map = mapRef.current; if (!map || !window.google) return;
+    if (clickListenerRef.current) window.google.maps.event.removeListener(clickListenerRef.current);
+    map.setOptions({ draggableCursor: 'crosshair' });
+    setPlacingOnMap(true);
+    clickListenerRef.current = window.google.maps.event.addListener(map, 'click', (e) => {
+      const typeConf = RECEPTOR_TYPES.find(t => t.value === addingType);
+      const newRec = {
+        id: `rec-${Date.now()}`, type: addingType,
+        name: `${typeConf?.label} ${receptors.length + 1}`,
+        lat: e.latLng.lat(), lng: e.latLng.lng(),
+        height: DEFAULT_HEIGHTS[addingType] ?? 1.5,
+      };
+      onReceptorsChange([...receptors, newRec]);
+      window.google.maps.event.removeListener(clickListenerRef.current);
+      map.setOptions({ draggableCursor: null });
+      setPlacingOnMap(false);
+    });
+  };
+
+  const autoDetect = async () => {
+    if (!window.google || !mapRef.current) return;
+    setAutoDetecting(true);
+    const google = window.google;
+    const service = new google.maps.places.PlacesService(mapRef.current);
+    const searchRadius = 500;
+
+    const searches = [
+      { keyword: 'road', type: 'road' },
+      { keyword: 'residential house', type: 'residential' },
+      { keyword: 'airport', type: 'aviation' },
+      { keyword: 'railway station', type: 'railway' },
+    ];
+
+    const found = [];
+    await Promise.all(searches.map(s => new Promise(resolve => {
+      service.nearbySearch({ location: centre, radius: searchRadius, keyword: s.keyword }, (results, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK && results?.length) {
+          const top = results.slice(0, s.type === 'aviation' ? 2 : 1);
+          top.forEach(r => {
+            const typeConf = RECEPTOR_TYPES.find(t => t.value === s.type);
+            found.push({
+              id: `rec-${Date.now()}-${Math.random()}`, type: s.type,
+              name: r.name || typeConf?.label,
+              lat: r.geometry.location.lat(), lng: r.geometry.location.lng(),
+              height: DEFAULT_HEIGHTS[s.type] ?? 1.5,
+            });
+          });
+        }
+        resolve();
+      });
+    })));
+
+    // Deduplicate by type keeping first
+    const seen = new Set(receptors.map(r => r.type));
+    const newRecs = found.filter(r => !seen.has(r.type));
+    onReceptorsChange([...receptors, ...newRecs]);
+    setAutoDetecting(false);
+  };
+
+  const updateReceptor = (id, field, value) => {
+    onReceptorsChange(receptors.map(r => r.id === id ? { ...r, [field]: field === 'height' ? parseFloat(value) || 0 : value } : r));
+  };
 
   const removeReceptor = (id) => {
     onReceptorsChange(receptors.filter(r => r.id !== id));
@@ -648,93 +625,100 @@ function ReceptorsStep({ location, polygon, receptors, onReceptorsChange }) {
     <div className="space-y-4">
       <div>
         <h2 className="text-xl font-heading font-bold text-forest-900 mb-1">Add Receptors</h2>
-        <p className="text-sm text-gray-600">Mark nearby roads, houses, railways, and aviation receptors. Click on the map to place them, or add manually.</p>
+        <p className="text-sm text-gray-600">Add nearby sensitive receptors — roads, residential buildings, airports, railways. Set the eye/sensor height for each.</p>
       </div>
 
-      <div className="grid lg:grid-cols-[1fr_320px] gap-4">
+      <div className="grid lg:grid-cols-[1fr_380px] gap-4">
         {/* Map */}
         <div>
-          <div ref={mapDivRef} className="w-full rounded-xl overflow-hidden border border-gray-200" style={{ height: '400px' }} />
-
-          {/* Map toolbar */}
-          <div className="mt-3 flex flex-wrap items-center gap-2">
-            <select
-              value={addingType}
-              onChange={e => { setAddingType(e.target.value); if (addingMode) stopAdding(); }}
-              className="text-sm border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold-400"
+          <div ref={mapDivRef} className="w-full rounded-xl overflow-hidden border border-gray-200" style={{ height: '380px' }} />
+          <div className="mt-3 flex flex-wrap gap-2">
+            <button
+              onClick={autoDetect}
+              disabled={autoDetecting}
+              className="flex items-center gap-1.5 text-sm font-medium px-4 py-2 rounded-lg border bg-gold-500 text-white border-gold-500 hover:bg-gold-600 transition-colors disabled:opacity-60"
             >
-              {RECEPTOR_TYPES.map(t => (
-                <option key={t.value} value={t.value}>{t.label}</option>
-              ))}
-            </select>
-            {!addingMode ? (
-              <button
-                onClick={startAdding}
-                className="flex items-center gap-1.5 text-sm font-medium px-4 py-2 rounded-lg border bg-white text-forest-900 border-forest-300 hover:bg-forest-50 transition-colors"
-              >
-                <MapPin className="w-4 h-4" />
-                {isPathType(addingType) ? 'Draw path on map' : 'Click map to place'}
+              {autoDetecting ? <RotateCcw className="w-4 h-4 animate-spin" /> : <Sun className="w-4 h-4" />}
+              {autoDetecting ? 'Detecting…' : 'Auto-detect nearby'}
+            </button>
+            <div className="flex items-center gap-2">
+              <select value={addingType} onChange={e => setAddingType(e.target.value)}
+                className="text-sm border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold-400">
+                {RECEPTOR_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+              </select>
+              <button onClick={startPlacing} disabled={placingOnMap}
+                className={`flex items-center gap-1.5 text-sm font-medium px-4 py-2 rounded-lg border transition-colors ${placingOnMap ? 'bg-forest-900 text-white border-forest-900' : 'bg-white text-forest-900 border-forest-300 hover:bg-forest-50'}`}>
+                <MapPin className="w-4 h-4" />{placingOnMap ? 'Click map…' : 'Place on map'}
               </button>
-            ) : (
-              <button
-                onClick={stopAdding}
-                className="flex items-center gap-1.5 text-sm font-medium px-4 py-2 rounded-lg border bg-forest-900 text-white border-forest-900 transition-colors"
-              >
-                <MapPin className="w-4 h-4" /> Done
-              </button>
-            )}
+            </div>
           </div>
-          {addingMode === 'point' && (
+          {placingOnMap && (
             <p className="text-xs text-forest-700 mt-2 bg-forest-50 border border-forest-200 rounded-lg px-3 py-2">
-              Click on the map to place a <strong>{RECEPTOR_TYPES.find(t => t.value === addingType)?.label}</strong> point.
-            </p>
-          )}
-          {addingMode === 'path' && (
-            <p className="text-xs text-forest-700 mt-2 bg-forest-50 border border-forest-200 rounded-lg px-3 py-2">
-              Click on the map to trace the <strong>{RECEPTOR_TYPES.find(t => t.value === addingType)?.label}</strong> path. <strong>Double-click</strong> to finish.
+              Click on the map to place a <strong>{RECEPTOR_TYPES.find(t => t.value === addingType)?.label}</strong> receptor.
             </p>
           )}
         </div>
 
         {/* Receptor list */}
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-semibold text-gray-700">Receptors ({receptors.length})</p>
-          </div>
+        <div className="flex flex-col gap-3">
+          <p className="text-sm font-semibold text-gray-700">Receptors ({receptors.length})</p>
           {receptors.length === 0 ? (
             <div className="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center text-gray-400 text-sm">
-              No receptors added yet.<br />Use the map or "Add manually" button.
+              No receptors yet. Click <strong>Auto-detect</strong> or place manually.
             </div>
           ) : (
-            <div className="space-y-2 max-h-96 overflow-y-auto pr-1">
+            <div className="space-y-2 max-h-[360px] overflow-y-auto pr-1">
               {receptors.map(rec => {
                 const typeConf = RECEPTOR_TYPES.find(t => t.value === rec.type);
+                const isEditing = editingId === rec.id;
                 return (
-                  <div key={rec.id} className="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-3 py-2">
-                    <span className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
-                      style={{ backgroundColor: typeConf?.color || '#6b7280' }}>
-                      {rec.type[0].toUpperCase()}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-800 truncate">{rec.name}</p>
-                      <p className="text-xs text-gray-400">{rec.lat.toFixed(4)}, {rec.lng.toFixed(4)}</p>
+                  <div key={rec.id} className="bg-white border border-gray-200 rounded-xl p-3 space-y-2">
+                    <div className="flex items-center gap-2">
+                      <span className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
+                        style={{ backgroundColor: typeConf?.color || '#6b7280' }}>
+                        {rec.type[0].toUpperCase()}
+                      </span>
+                      {isEditing ? (
+                        <input value={rec.name} onChange={e => updateReceptor(rec.id, 'name', e.target.value)}
+                          className="flex-1 text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-gold-400" />
+                      ) : (
+                        <p className="flex-1 text-sm font-medium text-gray-800 truncate">{rec.name}</p>
+                      )}
+                      <button onClick={() => setEditingId(isEditing ? null : rec.id)} className="text-gray-400 hover:text-gray-600 text-xs px-1">
+                        {isEditing ? 'Done' : 'Edit'}
+                      </button>
+                      <button onClick={() => removeReceptor(rec.id)} className="text-gray-300 hover:text-red-500">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </div>
-                    <button onClick={() => removeReceptor(rec.id)} className="text-gray-300 hover:text-red-500 flex-shrink-0">
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                    <div className="flex items-center gap-3 text-xs text-gray-500">
+                      <span>{rec.lat.toFixed(4)}, {rec.lng.toFixed(4)}</span>
+                      <label className="flex items-center gap-1 ml-auto">
+                        <span className="text-gray-600 font-medium">Eye height:</span>
+                        <input type="number" min="0" step="0.1" value={rec.height ?? DEFAULT_HEIGHTS[rec.type] ?? 1.5}
+                          onChange={e => updateReceptor(rec.id, 'height', e.target.value)}
+                          className="w-16 border border-gray-300 rounded px-1.5 py-0.5 text-xs focus:outline-none focus:ring-1 focus:ring-gold-400" />
+                        <span>m</span>
+                      </label>
+                    </div>
+                    {isEditing && (
+                      <select value={rec.type} onChange={e => updateReceptor(rec.id, 'type', e.target.value)}
+                        className="w-full text-xs border border-gray-300 rounded px-2 py-1 focus:outline-none">
+                        {RECEPTOR_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                      </select>
+                    )}
                   </div>
                 );
               })}
             </div>
           )}
-
-          <div className="mt-4 bg-gray-50 rounded-xl p-3">
-            <p className="text-xs font-semibold text-gray-600 mb-2">Legend</p>
-            <div className="space-y-1.5">
+          <div className="bg-gray-50 rounded-xl p-3">
+            <p className="text-xs font-semibold text-gray-600 mb-2">Default eye heights</p>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-1">
               {RECEPTOR_TYPES.map(t => (
-                <div key={t.value} className="flex items-center gap-2 text-xs text-gray-600">
-                  <span className="w-4 h-4 rounded-full flex-shrink-0" style={{ backgroundColor: t.color }} />
-                  {t.label}
+                <div key={t.value} className="flex items-center gap-1.5 text-xs text-gray-500">
+                  <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: t.color }} />
+                  {t.label}: {DEFAULT_HEIGHTS[t.value]}m
                 </div>
               ))}
             </div>
