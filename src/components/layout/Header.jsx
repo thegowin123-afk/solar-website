@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { Menu, X, Sun, ChevronDown, Phone } from 'lucide-react';
+import { Menu, X, Sun, ChevronDown, Phone, Zap } from 'lucide-react';
 import { services } from '../../data/services';
 
 const navLinks = [
@@ -14,6 +14,7 @@ const navLinks = [
   { label: 'Blog', to: '/blog' },
   { label: 'Portfolio', to: '/portfolio' },
   { label: 'About', to: '/about' },
+  { label: 'Glare Checker', to: '/solar-glare-risk-checker', highlight: true },
 ];
 
 export default function Header() {
@@ -93,6 +94,15 @@ export default function Header() {
                     </div>
                   )}
                 </div>
+              ) : link.highlight ? (
+                <NavLink
+                  key={link.label}
+                  to={link.to}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-gold-500 text-white hover:bg-gold-600 transition-colors ml-1"
+                >
+                  <Zap className="w-3.5 h-3.5" />
+                  {link.label}
+                </NavLink>
               ) : (
                 <NavLink
                   key={link.label}
