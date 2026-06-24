@@ -54,6 +54,13 @@ export default function App() {
           <Route path="/pricing"                element={<Navigate to="/contact" replace />} />
           <Route path="/solar-planning/:county" element={<CountyPage />} />
 
+          {/* Redirects for old/short service URLs */}
+          <Route path="/pv-planning-drawings"     element={<Navigate to="/solar-pv-planning-drawings-ireland" replace />} />
+          <Route path="/glint-and-glare"          element={<Navigate to="/glint-and-glare-assessment-ireland" replace />} />
+          <Route path="/landscape-plans"          element={<Navigate to="/landscape-plan-solar-pv-ireland" replace />} />
+          <Route path="/upload"                   element={<Navigate to="/contact" replace />} />
+          <Route path="/upload-pv-layout"         element={<Navigate to="/contact" replace />} />
+
           {/* SEO service pages */}
           <Route path="/solar-pv-planning-drawings-ireland"        element={<SolarPVPlanningDrawings />} />
           <Route path="/glint-and-glare-assessment-ireland"        element={<GlintAndGlareAssessment />} />
