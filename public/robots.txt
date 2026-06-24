@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.solarplanningapplicationireland.com/sitemap.xml
+Sitemap: https://www.solarplanningireland.com/sitemap.xml

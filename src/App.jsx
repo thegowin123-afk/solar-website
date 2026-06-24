@@ -15,6 +15,16 @@ const Contact      = lazy(() => import('./pages/Contact'));
 const CountyPage   = lazy(() => import('./pages/CountyPage'));
 const NotFound     = lazy(() => import('./pages/NotFound'));
 
+// SEO service pages
+const SolarPVPlanningDrawings       = lazy(() => import('./pages/seo/SolarPVPlanningDrawings'));
+const GlintAndGlareAssessment       = lazy(() => import('./pages/seo/GlintAndGlareAssessment'));
+const GlintAndGlareReport           = lazy(() => import('./pages/seo/GlintAndGlareReport'));
+const SolarGlarePreSimulation       = lazy(() => import('./pages/seo/SolarGlarePreSimulation'));
+const GroundMountedSolarPlanning    = lazy(() => import('./pages/seo/GroundMountedSolarPlanning'));
+const RooftopSolarPlanningApplication = lazy(() => import('./pages/seo/RooftopSolarPlanningApplication'));
+const SolarFarmPlanningDrawings     = lazy(() => import('./pages/seo/SolarFarmPlanningDrawings'));
+const LandscapePlanSolarPV         = lazy(() => import('./pages/seo/LandscapePlanSolarPV'));
+
 // Minimal full-page loading spinner shown between route transitions
 function PageLoader() {
   return (
@@ -43,6 +53,17 @@ export default function App() {
           <Route path="/contact"                element={<Contact />} />
           <Route path="/pricing"                element={<Navigate to="/contact" replace />} />
           <Route path="/solar-planning/:county" element={<CountyPage />} />
+
+          {/* SEO service pages */}
+          <Route path="/solar-pv-planning-drawings-ireland"        element={<SolarPVPlanningDrawings />} />
+          <Route path="/glint-and-glare-assessment-ireland"        element={<GlintAndGlareAssessment />} />
+          <Route path="/glint-and-glare-report-ireland"            element={<GlintAndGlareReport />} />
+          <Route path="/solar-glare-pre-simulation"                element={<SolarGlarePreSimulation />} />
+          <Route path="/ground-mounted-solar-planning-ireland"     element={<GroundMountedSolarPlanning />} />
+          <Route path="/rooftop-solar-planning-application-ireland" element={<RooftopSolarPlanningApplication />} />
+          <Route path="/solar-farm-planning-drawings-ireland"      element={<SolarFarmPlanningDrawings />} />
+          <Route path="/landscape-plan-solar-pv-ireland"          element={<LandscapePlanSolarPV />} />
+
           <Route path="*"                       element={<NotFound />} />
         </Routes>
       </Suspense>

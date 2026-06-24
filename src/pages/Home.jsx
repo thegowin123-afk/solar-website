@@ -14,7 +14,7 @@ const localBusinessSchema = {
   '@context': 'https://schema.org',
   '@type': 'ProfessionalService',
   name: 'SolarPlan Ireland',
-  description: 'Expert solar planning application services across Ireland. Glint & glare analysis, Landscape Plans, PV planning drawings and solar farm planning permission specialists.',
+  description: 'Solar PV planning drawings, glint and glare assessments, glare pre-simulation and planning support for solar PV projects in Ireland.',
   url: SITE_URL,
   logo: `${SITE_URL}/favicon.svg`,
   image: DEFAULT_OG_IMAGE,
@@ -30,20 +30,14 @@ const localBusinessSchema = {
     '@type': 'Country',
     name: 'Ireland',
   },
-  knowsAbout: [
-    'Solar Planning Application Ireland',
-    'Glint and Glare Analysis',
-    'Landscape Plans',
-    'PV Planning Drawings',
-    'An Bord Pleanala',
-    'Solar Farm Planning Permission Ireland',
+  serviceType: [
+    'Solar PV planning drawings',
+    'Glint and glare assessment',
+    'Glint and glare report',
+    'Solar glare pre-simulation',
+    'Landscape plan support',
   ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.9',
-    reviewCount: '47',
-    bestRating: '5',
-  },
+  provider: { '@type': 'Organization', name: 'SVAERO Cadetics LLP' },
 };
 
 const faqSchema = {
@@ -99,17 +93,18 @@ export default function Home() {
   return (
     <>
       <Helmet>
-        <title>Solar Planning Application Ireland | Expert Consultants | SolarPlan Ireland</title>
-        <meta name="description" content="B2B solar planning outsourcing partner for Ireland. Glint & glare reports, Landscape Plans, PV drawings — delivered to your standard, on your timeline. Trusted by planning consultants and developers." />
-        <meta name="keywords" content="solar planning outsourcing ireland, solar planning partner ireland, glint glare analysis ireland, solar farm planning ireland, landscape plan solar ireland, planning consultant outsourcing" />
+        <title>Solar PV Planning Drawings &amp; Glint and Glare Reports Ireland | SolarPlan Ireland</title>
+        <meta name="description" content="Council-ready solar PV planning drawings, ForgeSolar glint and glare assessments, glare pre-simulation and landscape plan support for rooftop and ground-mounted solar PV projects across Ireland." />
+        <meta name="robots" content="index, follow" />
         <link rel="canonical" href={PAGE_URL} />
-        <meta property="og:title" content="Solar Planning Application Ireland | Expert Consultants | SolarPlan Ireland" />
-        <meta property="og:description" content="Ireland's specialist solar planning application consultants. Glint & glare analysis, Landscape Plans, PV planning drawings — 94% first-application approval rate." />
+        <meta property="og:title" content="Solar PV Planning Drawings &amp; Glint and Glare Reports Ireland | SolarPlan Ireland" />
+        <meta property="og:description" content="Council-ready solar PV planning drawings, ForgeSolar glint and glare assessments and landscape plan support for solar projects across Ireland." />
         <meta property="og:url" content={PAGE_URL} />
+        <meta property="og:type" content="website" />
         <meta property="og:image" content={DEFAULT_OG_IMAGE} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Solar Planning Application Ireland | SolarPlan Ireland" />
-        <meta name="twitter:description" content="Ireland's specialist solar planning application consultants. 94% first-application approval rate." />
+        <meta name="twitter:title" content="Solar PV Planning Drawings &amp; Glint and Glare Reports Ireland" />
+        <meta name="twitter:description" content="Council-ready solar PV planning drawings, ForgeSolar glint and glare assessments and landscape plan support across Ireland." />
         <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
         <script type="application/ld+json">{JSON.stringify(localBusinessSchema)}</script>
         <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>

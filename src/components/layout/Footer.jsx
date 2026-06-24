@@ -38,7 +38,7 @@ export default function Footer() {
               </div>
             </Link>
             <p className="text-sm text-gray-400 leading-relaxed mb-6">
-              India-based solar planning outsourcing specialists (Mumbai). We deliver expert Irish planning documentation — glint &amp; glare, Landscape Plans, PV drawings — at outsourcing rates, without compromising on quality.
+              SolarPlan Ireland is a specialist solar PV planning support service by SVAERO Cadetics LLP, providing planning drawings, glint and glare reports and solar planning documentation support for projects across Ireland.
             </p>
             <div className="flex gap-3">
               {[
@@ -62,13 +62,19 @@ export default function Footer() {
           <div>
             <h3 className="font-heading font-semibold text-white mb-4">Our Services</h3>
             <ul className="space-y-2">
-              {services.map((s) => (
-                <li key={s.id}>
-                  <Link
-                    to={`/services/${s.slug}`}
-                    className="text-sm text-gray-400 hover:text-gold-400 transition-colors"
-                  >
-                    {s.shortTitle}
+              {[
+                { label: 'Solar PV Planning Drawings Ireland', to: '/solar-pv-planning-drawings-ireland' },
+                { label: 'Glint and Glare Assessment Ireland', to: '/glint-and-glare-assessment-ireland' },
+                { label: 'Glint and Glare Report Ireland', to: '/glint-and-glare-report-ireland' },
+                { label: 'Solar Glare Pre-Simulation', to: '/solar-glare-pre-simulation' },
+                { label: 'Ground-Mounted Solar Planning Ireland', to: '/ground-mounted-solar-planning-ireland' },
+                { label: 'Rooftop Solar Planning Application Ireland', to: '/rooftop-solar-planning-application-ireland' },
+                { label: 'Solar Farm Planning Drawings Ireland', to: '/solar-farm-planning-drawings-ireland' },
+                { label: 'Landscape Plan Solar PV Ireland', to: '/landscape-plan-solar-pv-ireland' },
+              ].map(({ label, to }) => (
+                <li key={to}>
+                  <Link to={to} className="text-sm text-gray-400 hover:text-gold-400 transition-colors">
+                    {label}
                   </Link>
                 </li>
               ))}

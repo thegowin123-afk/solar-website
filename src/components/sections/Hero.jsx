@@ -48,22 +48,22 @@ export default function Hero() {
           </div>
 
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-white leading-tight mb-6 text-balance">
-            Your Dedicated{' '}
-            <span className="text-gold-400">Solar Planning</span>{' '}
-            Partner in Ireland
+            Solar PV Planning Drawings &amp;{' '}
+            <span className="text-gold-400">Glint and Glare Reports</span>{' '}
+            in Ireland
           </h1>
 
           <p className="text-xl text-gray-300 leading-relaxed mb-8 max-w-2xl">
-            We are the India-based outsourcing team (Mumbai) behind Irish solar planning applications. Glint &amp; glare reports, Landscape Plans, and PV drawings — delivered to your standard, on your timeline, at outsourcing rates.
+            Council-ready solar planning application drawings, ForgeSolar glint and glare assessments, glare pre-simulation, and landscape plan support for rooftop and ground-mounted solar PV projects across Ireland.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 mb-12">
             <Link to="/contact" className="btn-primary text-base py-4 px-8">
-              Partner With Us
+              Request a Quote
               <ArrowRight className="w-5 h-5" />
             </Link>
-            <Link to="/case-studies" className="btn-outline-white text-base py-4 px-8">
-              See Our Work
+            <Link to="/services" className="btn-outline-white text-base py-4 px-8">
+              View Services
             </Link>
           </div>
 
