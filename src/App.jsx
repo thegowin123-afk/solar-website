@@ -16,6 +16,8 @@ const CountyPage   = lazy(() => import('./pages/CountyPage'));
 const Portfolio    = lazy(() => import('./pages/Portfolio'));
 const NotFound     = lazy(() => import('./pages/NotFound'));
 
+const GlareChecker    = lazy(() => import('./pages/GlareChecker'));
+
 // Sample pages
 const GlintGlareSample   = lazy(() => import('./pages/samples/GlintGlareSample'));
 const PVDrawingsSample   = lazy(() => import('./pages/samples/PVDrawingsSample'));
@@ -77,6 +79,9 @@ export default function App() {
           <Route path="/rooftop-solar-planning-application-ireland" element={<RooftopSolarPlanningApplication />} />
           <Route path="/solar-farm-planning-drawings-ireland"      element={<SolarFarmPlanningDrawings />} />
           <Route path="/landscape-plan-solar-pv-ireland"          element={<LandscapePlanSolarPV />} />
+
+          {/* Tools */}
+          <Route path="/solar-glare-risk-checker" element={<GlareChecker />} />
 
           {/* Sample pages */}
           <Route path="/samples/glint-and-glare-report" element={<GlintGlareSample />} />
