@@ -1,7 +1,6 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { Loader } from '@googlemaps/js-api-loader';
 import {
   MapPin, ChevronRight, ChevronLeft, AlertTriangle, CheckCircle,
   Sun, Eye, FileText, Phone, Mail, User, Building2, MessageSquare,
@@ -37,16 +36,21 @@ const STEPS = [
   { id: 5, label: 'Results' },
 ];
 
-let mapsLoader = null;
-function getMapsLoader() {
-  if (!mapsLoader) {
-    mapsLoader = new Loader({
-      apiKey: MAPS_API_KEY,
-      version: 'weekly',
-      libraries: ['places', 'drawing'],
-    });
-  }
-  return mapsLoader;
+// Load Google Maps via script tag — avoids bundler issues
+let mapsPromise = null;
+function loadGoogleMaps() {
+  if (mapsPromise) return mapsPromise;
+  mapsPromise = new Promise((resolve, reject) => {
+    if (window.google?.maps) { resolve(window.google); return; }
+    const cb = '__gmapsReady__';
+    window[cb] = () => { resolve(window.google); delete window[cb]; };
+    const s = document.createElement('script');
+    s.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=places,drawing&callback=${cb}&loading=async`;
+    s.async = true;
+    s.onerror = () => { mapsPromise = null; reject(new Error('Failed to load Google Maps')); };
+    document.head.appendChild(s);
+  });
+  return mapsPromise;
 }
 
 // ─── Subcomponents ──────────────────────────────────────────────────────────
@@ -117,7 +121,7 @@ function LocationStep({ location, onLocationSelect }) {
       setMapError('Google Maps API key not configured. Set VITE_GOOGLE_MAPS_API_KEY in your environment variables.');
       return;
     }
-    getMapsLoader().load().then((google) => {
+    loadGoogleMaps().then((google) => {
       setMapsReady(true);
       if (inputRef.current) {
         autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
@@ -204,7 +208,7 @@ function DrawingStep({ location, polygon, onPolygonChange }) {
   useEffect(() => {
     if (!location || !mapDivRef.current || mapRef.current) return;
 
-    getMapsLoader().load().then((google) => {
+    loadGoogleMaps().then((google) => {
       const map = new google.maps.Map(mapDivRef.current, {
         center: { lat: location.lat, lng: location.lng },
         zoom: 17,
@@ -430,7 +434,7 @@ function ReceptorsStep({ location, polygon, receptors, onReceptorsChange }) {
 
   useEffect(() => {
     if (!location || !mapDivRef.current || mapRef.current) return;
-    getMapsLoader().load().then((google) => {
+    loadGoogleMaps().then((google) => {
       // Compute bounds from polygon + location
       const bounds = new google.maps.LatLngBounds();
       if (polygon?.length) {
