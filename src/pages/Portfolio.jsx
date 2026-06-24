@@ -156,8 +156,13 @@ export default function Portfolio() {
         <meta property="og:title" content="Portfolio — Sample Solar Planning Deliverables | SolarPlan Ireland" />
         <meta property="og:description" content="Types of solar planning deliverables we produce for projects across Ireland." />
         <meta property="og:url" content={PAGE_URL} />
+        <meta property="og:type" content="website" />
         <meta property="og:image" content={DEFAULT_OG_IMAGE} />
+        <meta name="robots" content="index, follow" />
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Portfolio — Sample Solar Planning Deliverables | SolarPlan Ireland" />
+        <meta name="twitter:description" content="Types of solar planning deliverables we produce for projects across Ireland." />
+        <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
         <script type="application/ld+json">{JSON.stringify(pageSchema)}</script>
       </Helmet>
 

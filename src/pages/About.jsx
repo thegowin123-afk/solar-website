@@ -90,8 +90,12 @@ export default function About() {
         <meta property="og:title" content="About SolarPlan Ireland | Solar Planning Application Specialists" />
         <meta property="og:description" content="India-based (Mumbai) solar planning specialists. Expert glint & glare, Landscape Plans, and PV planning drawings for Irish solar projects, at outsourcing rates." />
         <meta property="og:url" content={PAGE_URL} />
+        <meta property="og:type" content="website" />
         <meta property="og:image" content={DEFAULT_OG_IMAGE} />
+        <meta name="robots" content="index, follow" />
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="About SolarPlan Ireland | Solar Planning Application Specialists" />
+        <meta name="twitter:description" content="India-based (Mumbai) solar planning specialists. Expert glint & glare, Landscape Plans, and PV planning drawings for Irish solar projects, at outsourcing rates." />
         <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
       </Helmet>
 

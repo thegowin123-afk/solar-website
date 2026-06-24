@@ -52,8 +52,12 @@ export default function Contact() {
         <meta property="og:title" content="Contact SolarPlan Ireland | Free Solar Planning Quote" />
         <meta property="og:description" content="Get a free solar planning application quote within one business day. Glint & glare, Landscape Plans, PV drawings for Irish solar projects." />
         <meta property="og:url" content={PAGE_URL} />
+        <meta property="og:type" content="website" />
         <meta property="og:image" content={DEFAULT_OG_IMAGE} />
+        <meta name="robots" content="index, follow" />
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Contact SolarPlan Ireland | Free Solar Planning Quote" />
+        <meta name="twitter:description" content="Get a free solar planning application quote within one business day. Glint & glare, Landscape Plans, PV drawings for Irish solar projects." />
         <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
       </Helmet>
 

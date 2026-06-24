@@ -73,6 +73,11 @@ export default function App() {
           <Route path="/solar-farm-planning-drawings-ireland"      element={<SolarFarmPlanningDrawings />} />
           <Route path="/landscape-plan-solar-pv-ireland"          element={<LandscapePlanSolarPV />} />
 
+          {/* Legal pages — redirect to home until dedicated pages exist */}
+          <Route path="/privacy"                element={<Navigate to="/" replace />} />
+          <Route path="/terms"                  element={<Navigate to="/" replace />} />
+          <Route path="/sitemap"                element={<Navigate to="/sitemap.xml" replace />} />
+
           <Route path="*"                       element={<NotFound />} />
         </Routes>
       </Suspense>

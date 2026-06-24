@@ -83,8 +83,12 @@ export default function ServiceDetail() {
         <meta property="og:title" content={service.seoTitle} />
         <meta property="og:description" content={service.seoDescription} />
         <meta property="og:url" content={pageUrl} />
+        <meta property="og:type" content="website" />
         <meta property="og:image" content={DEFAULT_OG_IMAGE} />
+        <meta name="robots" content="index, follow" />
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={service.seoTitle} />
+        <meta name="twitter:description" content={service.seoDescription} />
         <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
         <script type="application/ld+json">{JSON.stringify(serviceSchema)}</script>
         <script type="application/ld+json">{JSON.stringify(breadcrumbSchema)}</script>
