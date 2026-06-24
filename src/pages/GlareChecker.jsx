@@ -202,13 +202,15 @@ function LocationStep({ location, onLocationSelect }) {
 function DrawingStep({ location, polygon, onPolygonChange }) {
   const mapDivRef = useRef(null);
   const mapRef = useRef(null);
-  const drawingMgrRef = useRef(null);
   const polygonRef = useRef(null);
+  const previewLineRef = useRef(null);
+  const markersRef = useRef([]);
+  const clickListenerRef = useRef(null);
+  const drawingPointsRef = useRef([]);
   const [drawingActive, setDrawingActive] = useState(false);
 
   useEffect(() => {
     if (!location || !mapDivRef.current || mapRef.current) return;
-
     loadGoogleMaps().then((google) => {
       const map = new google.maps.Map(mapDivRef.current, {
         center: { lat: location.lat, lng: location.lng },
@@ -219,66 +221,113 @@ function DrawingStep({ location, polygon, onPolygonChange }) {
       mapRef.current = map;
 
       if (polygon && polygon.length >= 3) {
-        polygonRef.current = new google.maps.Polygon({
-          paths: polygon,
-          fillColor: '#2d6a4f',
-          fillOpacity: 0.4,
-          strokeColor: '#2d6a4f',
-          strokeWeight: 2,
-          editable: true,
-          map,
-        });
-        google.maps.event.addListener(polygonRef.current.getPath(), 'set_at', () => {
-          const coords = polygonRef.current.getPath().getArray().map(ll => ({ lat: ll.lat(), lng: ll.lng() }));
-          onPolygonChange(coords);
-        });
+        renderPolygon(google, map, polygon);
       }
-
-      const dm = new google.maps.drawing.DrawingManager({
-        drawingMode: null,
-        drawingControl: false,
-        polygonOptions: {
-          fillColor: '#2d6a4f',
-          fillOpacity: 0.4,
-          strokeColor: '#2d6a4f',
-          strokeWeight: 2,
-          editable: true,
-        },
-      });
-      dm.setMap(map);
-      drawingMgrRef.current = dm;
-
-      google.maps.event.addListener(dm, 'polygoncomplete', (poly) => {
-        if (polygonRef.current) polygonRef.current.setMap(null);
-        polygonRef.current = poly;
-        dm.setDrawingMode(null);
-        setDrawingActive(false);
-        const coords = poly.getPath().getArray().map(ll => ({ lat: ll.lat(), lng: ll.lng() }));
-        onPolygonChange(coords);
-        google.maps.event.addListener(poly.getPath(), 'set_at', () => {
-          const updated = poly.getPath().getArray().map(ll => ({ lat: ll.lat(), lng: ll.lng() }));
-          onPolygonChange(updated);
-        });
-        google.maps.event.addListener(poly.getPath(), 'insert_at', () => {
-          const updated = poly.getPath().getArray().map(ll => ({ lat: ll.lat(), lng: ll.lng() }));
-          onPolygonChange(updated);
-        });
-      });
     });
   }, [location]);
 
+  const renderPolygon = (google, map, coords) => {
+    if (polygonRef.current) polygonRef.current.setMap(null);
+    polygonRef.current = new google.maps.Polygon({
+      paths: coords,
+      fillColor: '#2d6a4f',
+      fillOpacity: 0.4,
+      strokeColor: '#2d6a4f',
+      strokeWeight: 2,
+      editable: true,
+      map,
+    });
+    const trackEdit = () => {
+      const updated = polygonRef.current.getPath().getArray().map(ll => ({ lat: ll.lat(), lng: ll.lng() }));
+      onPolygonChange(updated);
+    };
+    google.maps.event.addListener(polygonRef.current.getPath(), 'set_at', trackEdit);
+    google.maps.event.addListener(polygonRef.current.getPath(), 'insert_at', trackEdit);
+  };
+
+  const clearTempDrawing = (google) => {
+    markersRef.current.forEach(m => m.setMap(null));
+    markersRef.current = [];
+    if (previewLineRef.current) { previewLineRef.current.setMap(null); previewLineRef.current = null; }
+    drawingPointsRef.current = [];
+  };
+
   const startDrawing = () => {
-    if (drawingMgrRef.current && window.google) {
-      drawingMgrRef.current.setDrawingMode(window.google.maps.drawing.OverlayType.POLYGON);
-      setDrawingActive(true);
-    }
+    const google = window.google;
+    const map = mapRef.current;
+    if (!google || !map) return;
+
+    // Clear existing polygon
+    if (polygonRef.current) { polygonRef.current.setMap(null); polygonRef.current = null; }
+    clearTempDrawing(google);
+    onPolygonChange([]);
+    setDrawingActive(true);
+
+    // Change cursor
+    map.setOptions({ draggableCursor: 'crosshair' });
+
+    clickListenerRef.current = google.maps.event.addListener(map, 'click', (e) => {
+      const pt = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+      const pts = drawingPointsRef.current;
+
+      // Check if clicking near first point to close
+      if (pts.length >= 3) {
+        const first = pts[0];
+        const dx = first.lat - pt.lat;
+        const dy = first.lng - pt.lng;
+        if (Math.sqrt(dx * dx + dy * dy) < 0.0003) {
+          // Close polygon
+          google.maps.event.removeListener(clickListenerRef.current);
+          map.setOptions({ draggableCursor: null });
+          clearTempDrawing(google);
+          setDrawingActive(false);
+          renderPolygon(google, map, pts);
+          onPolygonChange([...pts]);
+          return;
+        }
+      }
+
+      drawingPointsRef.current = [...pts, pt];
+
+      // Place marker
+      const marker = new google.maps.Marker({
+        position: pt,
+        map,
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: pts.length === 0 ? 7 : 5,
+          fillColor: pts.length === 0 ? '#f59e0b' : '#2d6a4f',
+          fillOpacity: 1,
+          strokeColor: '#fff',
+          strokeWeight: 2,
+        },
+      });
+      markersRef.current.push(marker);
+
+      // Update preview polyline
+      if (previewLineRef.current) previewLineRef.current.setMap(null);
+      if (drawingPointsRef.current.length >= 2) {
+        previewLineRef.current = new google.maps.Polyline({
+          path: [...drawingPointsRef.current, drawingPointsRef.current[0]],
+          strokeColor: '#2d6a4f',
+          strokeWeight: 2,
+          strokeOpacity: 0.6,
+          map,
+        });
+      }
+    });
   };
 
   const clearPolygon = () => {
-    if (polygonRef.current) {
-      polygonRef.current.setMap(null);
-      polygonRef.current = null;
+    const google = window.google;
+    const map = mapRef.current;
+    if (!google || !map) return;
+    if (clickListenerRef.current) {
+      google.maps.event.removeListener(clickListenerRef.current);
+      map.setOptions({ draggableCursor: null });
     }
+    if (polygonRef.current) { polygonRef.current.setMap(null); polygonRef.current = null; }
+    clearTempDrawing(google);
     onPolygonChange([]);
     setDrawingActive(false);
   };
