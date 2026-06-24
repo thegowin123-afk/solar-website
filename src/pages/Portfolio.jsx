@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { FileText, Eye, Layout, TreePine, ArrowRight, CheckCircle } from 'lucide-react';
+import { FileText, Eye, Layout, TreePine, ArrowRight, CheckCircle, ExternalLink } from 'lucide-react';
 import PageHero from '../components/ui/PageHero';
 import CTABanner from '../components/sections/CTABanner';
 import { SITE_URL, DEFAULT_OG_IMAGE } from '../lib/seo';
@@ -171,6 +171,66 @@ export default function Portfolio() {
         subtitle="The types of planning documents, drawings, and reports we produce for solar PV projects across Ireland"
         breadcrumbs={[{ label: 'Portfolio' }]}
       />
+
+      {/* Sample Documents Section */}
+      <section className="py-20 bg-forest-950 text-white">
+        <div className="container-custom">
+          <div className="max-w-2xl mx-auto text-center mb-14">
+            <p className="text-gold-400 text-sm font-semibold uppercase tracking-widest mb-3">Download Samples</p>
+            <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">View Sample Documents</h2>
+            <p className="text-gray-300 leading-relaxed">
+              Explore sample versions of our three core deliverables. Each sample shows the structure, content, and level of detail we provide — and can be saved as a PDF.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              {
+                icon: Eye,
+                title: 'Glint & Glare Assessment',
+                desc: 'Sample ForgeSolar-based report for a 10MW solar farm in Co. Kildare. Includes methodology, receptor table, and planning conclusions.',
+                pages: '5 sections · Receptor table · Conclusion',
+                to: '/samples/glint-and-glare-report',
+                color: 'gold',
+              },
+              {
+                icon: FileText,
+                title: 'PV Planning Drawing Pack',
+                desc: 'Sample drawing register and schematic layout drawings for a 20MW solar farm in Co. Tipperary. Includes site layout and panel elevations.',
+                pages: 'Drawing register · Site layout · Elevations',
+                to: '/samples/pv-planning-drawings',
+                color: 'forest',
+              },
+              {
+                icon: TreePine,
+                title: 'Landscape Plan',
+                desc: 'Sample Landscape Plan and Planting Schedule for a 15MW solar farm in Co. Offaly. Includes planting plan, species schedule, and management notes.',
+                pages: 'Planting plan · Species table · Management',
+                to: '/samples/landscape-plan',
+                color: 'gold',
+              },
+            ].map(({ icon: Icon, title, desc, pages, to, color }) => (
+              <div key={to} className="bg-forest-900 rounded-2xl p-7 flex flex-col">
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-5 ${color === 'gold' ? 'bg-gold-500' : 'bg-forest-700'}`}>
+                  <Icon className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="font-heading font-bold text-white text-lg mb-2">{title}</h3>
+                <p className="text-gray-400 text-sm leading-relaxed mb-4 flex-1">{desc}</p>
+                <p className="text-xs text-gray-500 mb-5">{pages}</p>
+                <Link
+                  to={to}
+                  className="flex items-center justify-center gap-2 bg-gold-500 hover:bg-gold-600 text-white text-sm font-semibold px-5 py-3 rounded-xl transition-colors"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  View Sample
+                </Link>
+              </div>
+            ))}
+          </div>
+
+          <p className="text-center text-xs text-gray-500 mt-8">All sample documents are for illustration purposes only and do not represent any specific client project.</p>
+        </div>
+      </section>
 
       {/* Sample Deliverables Section */}
       <section className="py-20 bg-white">

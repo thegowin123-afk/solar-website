@@ -16,6 +16,11 @@ const CountyPage   = lazy(() => import('./pages/CountyPage'));
 const Portfolio    = lazy(() => import('./pages/Portfolio'));
 const NotFound     = lazy(() => import('./pages/NotFound'));
 
+// Sample pages
+const GlintGlareSample   = lazy(() => import('./pages/samples/GlintGlareSample'));
+const PVDrawingsSample   = lazy(() => import('./pages/samples/PVDrawingsSample'));
+const LandscapePlanSample = lazy(() => import('./pages/samples/LandscapePlanSample'));
+
 // SEO service pages
 const SolarPVPlanningDrawings       = lazy(() => import('./pages/seo/SolarPVPlanningDrawings'));
 const GlintAndGlareAssessment       = lazy(() => import('./pages/seo/GlintAndGlareAssessment'));
@@ -72,6 +77,11 @@ export default function App() {
           <Route path="/rooftop-solar-planning-application-ireland" element={<RooftopSolarPlanningApplication />} />
           <Route path="/solar-farm-planning-drawings-ireland"      element={<SolarFarmPlanningDrawings />} />
           <Route path="/landscape-plan-solar-pv-ireland"          element={<LandscapePlanSolarPV />} />
+
+          {/* Sample pages */}
+          <Route path="/samples/glint-and-glare-report" element={<GlintGlareSample />} />
+          <Route path="/samples/pv-planning-drawings"   element={<PVDrawingsSample />} />
+          <Route path="/samples/landscape-plan"         element={<LandscapePlanSample />} />
 
           {/* Legal pages — redirect to home until dedicated pages exist */}
           <Route path="/privacy"                element={<Navigate to="/" replace />} />
