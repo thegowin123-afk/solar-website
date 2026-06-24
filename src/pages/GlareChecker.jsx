@@ -500,120 +500,148 @@ function ParamsStep({ params, onChange }) {
   );
 }
 
+// Path-based receptor types (drawn as polylines); others are point-based
+const PATH_TYPES = new Set(['road', 'railway', 'aviation', 'atct']);
+
 // ─── Step 4: Receptors ──────────────────────────────────────────────────────
 function ReceptorsStep({ location, polygon, receptors, onReceptorsChange }) {
   const mapDivRef = useRef(null);
   const mapRef = useRef(null);
-  const markersRef = useRef([]);
+  const overlaysRef = useRef([]);       // markers + polylines on map
   const polygonOverlayRef = useRef(null);
+  const pathPointsRef = useRef([]);     // points being drawn for a path receptor
+  const pathMarkersRef = useRef([]);    // temp dots while drawing path
+  const pathLineRef = useRef(null);     // temp polyline while drawing path
+  const clickListenerRef = useRef(null);
   const [addingType, setAddingType] = useState('road');
-  const [addingMode, setAddingMode] = useState(false);
+  const [addingMode, setAddingMode] = useState(false); // 'point' | 'path' | false
+
+  const isPathType = (type) => PATH_TYPES.has(type);
 
   useEffect(() => {
     if (!location || !mapDivRef.current || mapRef.current) return;
     loadGoogleMaps().then((google) => {
-      // Compute bounds from polygon + location
       const bounds = new google.maps.LatLngBounds();
-      if (polygon?.length) {
-        polygon.forEach(p => bounds.extend(p));
-      } else {
-        bounds.extend({ lat: location.lat, lng: location.lng });
-      }
+      if (polygon?.length) polygon.forEach(p => bounds.extend(p));
+      else bounds.extend({ lat: location.lat, lng: location.lng });
 
-      const map = new google.maps.Map(mapDivRef.current, {
-        mapTypeId: 'hybrid',
-        tilt: 0,
-      });
+      const map = new google.maps.Map(mapDivRef.current, { mapTypeId: 'hybrid', tilt: 0 });
       map.fitBounds(bounds, 80);
       mapRef.current = map;
 
-      // Draw array polygon
       if (polygon?.length >= 3) {
         polygonOverlayRef.current = new google.maps.Polygon({
-          paths: polygon,
-          fillColor: '#2d6a4f',
-          fillOpacity: 0.35,
-          strokeColor: '#2d6a4f',
-          strokeWeight: 2,
-          map,
+          paths: polygon, fillColor: '#2d6a4f', fillOpacity: 0.35,
+          strokeColor: '#2d6a4f', strokeWeight: 2, map,
         });
       }
-
-      // Render existing receptors
-      renderMarkers(google, map);
-
-      // Click to add receptor
-      map.addListener('click', (e) => {
-        if (!addingMode) return;
-        const lat = e.latLng.lat();
-        const lng = e.latLng.lng();
-        const typeConf = RECEPTOR_TYPES.find(t => t.value === addingType);
-        const id = `rec-${Date.now()}`;
-        const newRec = {
-          id, type: addingType,
-          name: `${typeConf?.label || addingType} ${receptors.length + 1}`,
-          lat, lng,
-        };
-        onReceptorsChange([...receptors, newRec]);
-        addMarker(google, map, newRec);
-      });
+      renderOverlays(google, map);
     });
   }, [location, polygon]);
 
-  // Re-render markers when receptors change externally
-  const renderMarkers = (google, map) => {
-    markersRef.current.forEach(m => m.setMap(null));
-    markersRef.current = [];
-    receptors.forEach(rec => addMarker(google, map, rec));
+  const renderOverlays = (google, map) => {
+    overlaysRef.current.forEach(o => o.setMap(null));
+    overlaysRef.current = [];
+    receptors.forEach(rec => drawReceptorOverlay(google, map, rec));
   };
 
-  const addMarker = (google, map, rec) => {
+  const drawReceptorOverlay = (google, map, rec) => {
     const typeConf = RECEPTOR_TYPES.find(t => t.value === rec.type);
-    const marker = new google.maps.Marker({
-      position: { lat: rec.lat, lng: rec.lng },
-      map,
-      title: rec.name,
-      icon: {
-        path: google.maps.SymbolPath.CIRCLE,
-        scale: 9,
-        fillColor: typeConf?.color || '#6b7280',
-        fillOpacity: 1,
-        strokeColor: '#fff',
-        strokeWeight: 2,
-      },
-      label: { text: rec.type[0].toUpperCase(), color: '#fff', fontSize: '10px', fontWeight: 'bold' },
-    });
-    markersRef.current.push(marker);
+    const color = typeConf?.color || '#6b7280';
+    if (rec.path && rec.path.length >= 2) {
+      // Polyline receptor
+      const line = new google.maps.Polyline({
+        path: rec.path, strokeColor: color, strokeWeight: 4, strokeOpacity: 0.85, map,
+      });
+      overlaysRef.current.push(line);
+      // Label at midpoint
+      const mid = rec.path[Math.floor(rec.path.length / 2)];
+      const marker = new google.maps.Marker({
+        position: mid, map, title: rec.name,
+        icon: { path: google.maps.SymbolPath.CIRCLE, scale: 9, fillColor: color, fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 },
+        label: { text: rec.type[0].toUpperCase(), color: '#fff', fontSize: '10px', fontWeight: 'bold' },
+      });
+      overlaysRef.current.push(marker);
+    } else if (rec.lat != null) {
+      const marker = new google.maps.Marker({
+        position: { lat: rec.lat, lng: rec.lng }, map, title: rec.name,
+        icon: { path: google.maps.SymbolPath.CIRCLE, scale: 9, fillColor: color, fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 },
+        label: { text: rec.type[0].toUpperCase(), color: '#fff', fontSize: '10px', fontWeight: 'bold' },
+      });
+      overlaysRef.current.push(marker);
+    }
   };
 
-  // Toggle add mode
-  useEffect(() => {
-    if (mapRef.current) {
-      mapRef.current.setOptions({ draggableCursor: addingMode ? 'crosshair' : '' });
+  const stopAdding = () => {
+    const google = window.google; const map = mapRef.current;
+    if (clickListenerRef.current) { google.maps.event.removeListener(clickListenerRef.current); clickListenerRef.current = null; }
+    pathMarkersRef.current.forEach(m => m.setMap(null)); pathMarkersRef.current = [];
+    if (pathLineRef.current) { pathLineRef.current.setMap(null); pathLineRef.current = null; }
+    pathPointsRef.current = [];
+    if (map) map.setOptions({ draggableCursor: null });
+    setAddingMode(false);
+  };
+
+  const startAdding = () => {
+    const google = window.google; const map = mapRef.current;
+    if (!google || !map) return;
+    stopAdding();
+    const pathType = isPathType(addingType);
+    setAddingMode(pathType ? 'path' : 'point');
+    map.setOptions({ draggableCursor: 'crosshair' });
+
+    clickListenerRef.current = google.maps.event.addListener(map, 'click', (e) => {
+      const pt = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+      const typeConf = RECEPTOR_TYPES.find(t => t.value === addingType);
+      const color = typeConf?.color || '#6b7280';
+
+      if (!pathType) {
+        // Point receptor — single click
+        const id = `rec-${Date.now()}`;
+        const newRec = { id, type: addingType, name: `${typeConf?.label} ${receptors.length + 1}`, lat: pt.lat, lng: pt.lng };
+        onReceptorsChange([...receptors, newRec]);
+        drawReceptorOverlay(google, map, newRec);
+        stopAdding();
+      } else {
+        // Path receptor — multi-click, double-click to finish
+        const pts = [...pathPointsRef.current, pt];
+        pathPointsRef.current = pts;
+
+        const dot = new google.maps.Marker({
+          position: pt, map,
+          icon: { path: google.maps.SymbolPath.CIRCLE, scale: pts.length === 1 ? 7 : 5, fillColor: color, fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 },
+        });
+        pathMarkersRef.current.push(dot);
+
+        if (pathLineRef.current) pathLineRef.current.setMap(null);
+        if (pts.length >= 2) {
+          pathLineRef.current = new google.maps.Polyline({ path: pts, strokeColor: color, strokeWeight: 3, strokeOpacity: 0.7, map });
+        }
+      }
+    });
+
+    // Double-click to finish path
+    if (isPathType(addingType)) {
+      google.maps.event.addListenerOnce(map, 'dblclick', () => {
+        const pts = pathPointsRef.current;
+        if (pts.length >= 2) {
+          const typeConf = RECEPTOR_TYPES.find(t => t.value === addingType);
+          const id = `rec-${Date.now()}`;
+          const newRec = { id, type: addingType, name: `${typeConf?.label} ${receptors.length + 1}`, path: pts, lat: pts[0].lat, lng: pts[0].lng };
+          onReceptorsChange([...receptors, newRec]);
+          stopAdding();
+          drawReceptorOverlay(google, map, newRec);
+        }
+      });
     }
-  }, [addingMode]);
+  };
+
+  useEffect(() => {
+    if (mapRef.current && window.google) renderOverlays(window.google, mapRef.current);
+  }, [receptors]);
 
   const removeReceptor = (id) => {
     onReceptorsChange(receptors.filter(r => r.id !== id));
-    // Remove marker
-    if (mapRef.current && window.google) {
-      renderMarkers(window.google, mapRef.current);
-    }
-  };
-
-  const addManual = () => {
-    const typeConf = RECEPTOR_TYPES.find(t => t.value === addingType);
-    const id = `rec-${Date.now()}`;
-    const newRec = {
-      id, type: addingType,
-      name: `${typeConf?.label} ${receptors.length + 1}`,
-      lat: location.lat + (Math.random() - 0.5) * 0.005,
-      lng: location.lng + (Math.random() - 0.5) * 0.005,
-    };
-    onReceptorsChange([...receptors, newRec]);
-    if (mapRef.current && window.google) {
-      addMarker(window.google, mapRef.current, newRec);
-    }
   };
 
   return (
@@ -632,34 +660,38 @@ function ReceptorsStep({ location, polygon, receptors, onReceptorsChange }) {
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <select
               value={addingType}
-              onChange={e => setAddingType(e.target.value)}
+              onChange={e => { setAddingType(e.target.value); if (addingMode) stopAdding(); }}
               className="text-sm border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold-400"
             >
               {RECEPTOR_TYPES.map(t => (
                 <option key={t.value} value={t.value}>{t.label}</option>
               ))}
             </select>
-            <button
-              onClick={() => setAddingMode(m => !m)}
-              className={`flex items-center gap-1.5 text-sm font-medium px-4 py-2 rounded-lg border transition-colors ${
-                addingMode
-                  ? 'bg-forest-900 text-white border-forest-900'
-                  : 'bg-white text-forest-900 border-forest-300 hover:bg-forest-50'
-              }`}
-            >
-              <MapPin className="w-4 h-4" />
-              {addingMode ? 'Click map to place…' : 'Click map to add'}
-            </button>
-            <button
-              onClick={addManual}
-              className="flex items-center gap-1.5 text-sm font-medium px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
-            >
-              <Plus className="w-4 h-4" /> Add manually
-            </button>
+            {!addingMode ? (
+              <button
+                onClick={startAdding}
+                className="flex items-center gap-1.5 text-sm font-medium px-4 py-2 rounded-lg border bg-white text-forest-900 border-forest-300 hover:bg-forest-50 transition-colors"
+              >
+                <MapPin className="w-4 h-4" />
+                {isPathType(addingType) ? 'Draw path on map' : 'Click map to place'}
+              </button>
+            ) : (
+              <button
+                onClick={stopAdding}
+                className="flex items-center gap-1.5 text-sm font-medium px-4 py-2 rounded-lg border bg-forest-900 text-white border-forest-900 transition-colors"
+              >
+                <MapPin className="w-4 h-4" /> Done
+              </button>
+            )}
           </div>
-          {addingMode && (
+          {addingMode === 'point' && (
             <p className="text-xs text-forest-700 mt-2 bg-forest-50 border border-forest-200 rounded-lg px-3 py-2">
-              Click anywhere on the map to place a <strong>{RECEPTOR_TYPES.find(t => t.value === addingType)?.label}</strong> receptor.
+              Click on the map to place a <strong>{RECEPTOR_TYPES.find(t => t.value === addingType)?.label}</strong> point.
+            </p>
+          )}
+          {addingMode === 'path' && (
+            <p className="text-xs text-forest-700 mt-2 bg-forest-50 border border-forest-200 rounded-lg px-3 py-2">
+              Click on the map to trace the <strong>{RECEPTOR_TYPES.find(t => t.value === addingType)?.label}</strong> path. <strong>Double-click</strong> to finish.
             </p>
           )}
         </div>
