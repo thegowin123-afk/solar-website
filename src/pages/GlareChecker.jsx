@@ -204,6 +204,7 @@ function DrawingStep({ location, polygon, onPolygonChange }) {
   const mapRef = useRef(null);
   const drawingMgrRef = useRef(null);
   const polygonRef = useRef(null);
+  const [drawingActive, setDrawingActive] = useState(false);
 
   useEffect(() => {
     if (!location || !mapDivRef.current || mapRef.current) return;
@@ -217,7 +218,6 @@ function DrawingStep({ location, polygon, onPolygonChange }) {
       });
       mapRef.current = map;
 
-      // If polygon already exists, render it
       if (polygon && polygon.length >= 3) {
         polygonRef.current = new google.maps.Polygon({
           paths: polygon,
@@ -235,12 +235,8 @@ function DrawingStep({ location, polygon, onPolygonChange }) {
       }
 
       const dm = new google.maps.drawing.DrawingManager({
-        drawingMode: polygon?.length ? null : google.maps.drawing.OverlayType.POLYGON,
-        drawingControl: true,
-        drawingControlOptions: {
-          position: google.maps.ControlPosition.TOP_LEFT,
-          drawingModes: [google.maps.drawing.OverlayType.POLYGON],
-        },
+        drawingMode: null,
+        drawingControl: false,
         polygonOptions: {
           fillColor: '#2d6a4f',
           fillOpacity: 0.4,
@@ -253,13 +249,12 @@ function DrawingStep({ location, polygon, onPolygonChange }) {
       drawingMgrRef.current = dm;
 
       google.maps.event.addListener(dm, 'polygoncomplete', (poly) => {
-        // Remove old polygon
         if (polygonRef.current) polygonRef.current.setMap(null);
         polygonRef.current = poly;
         dm.setDrawingMode(null);
+        setDrawingActive(false);
         const coords = poly.getPath().getArray().map(ll => ({ lat: ll.lat(), lng: ll.lng() }));
         onPolygonChange(coords);
-        // Track edits
         google.maps.event.addListener(poly.getPath(), 'set_at', () => {
           const updated = poly.getPath().getArray().map(ll => ({ lat: ll.lat(), lng: ll.lng() }));
           onPolygonChange(updated);
@@ -272,43 +267,76 @@ function DrawingStep({ location, polygon, onPolygonChange }) {
     });
   }, [location]);
 
+  const startDrawing = () => {
+    if (drawingMgrRef.current && window.google) {
+      drawingMgrRef.current.setDrawingMode(window.google.maps.drawing.OverlayType.POLYGON);
+      setDrawingActive(true);
+    }
+  };
+
   const clearPolygon = () => {
     if (polygonRef.current) {
       polygonRef.current.setMap(null);
       polygonRef.current = null;
     }
     onPolygonChange([]);
-    if (drawingMgrRef.current && window.google) {
-      drawingMgrRef.current.setDrawingMode(window.google.maps.drawing.OverlayType.POLYGON);
-    }
+    setDrawingActive(false);
   };
 
   return (
     <div className="space-y-4">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h2 className="text-xl font-heading font-bold text-forest-900">Draw the PV Array</h2>
-          <p className="text-sm text-gray-600 mt-1">Click the polygon tool on the map and trace the boundary of the proposed solar array. Click the first point again to close the shape.</p>
-        </div>
-        {polygon?.length >= 3 && (
-          <button onClick={clearPolygon} className="flex items-center gap-1.5 text-xs text-red-600 hover:text-red-700 border border-red-200 px-3 py-1.5 rounded-lg whitespace-nowrap">
-            <RotateCcw className="w-3.5 h-3.5" /> Redraw
-          </button>
-        )}
+      <div>
+        <h2 className="text-xl font-heading font-bold text-forest-900">Draw the PV Array</h2>
+        <p className="text-sm text-gray-600 mt-1">Use the buttons on the left to draw the boundary of the proposed solar array on the map.</p>
       </div>
 
-      <div ref={mapDivRef} className="w-full rounded-xl border border-gray-200" style={{ height: '440px' }} />
+      <div className="flex gap-3">
+        {/* Toolbar */}
+        <div className="flex flex-col gap-2">
+          <button
+            onClick={startDrawing}
+            disabled={drawingActive}
+            title="Draw polygon"
+            className={`w-10 h-10 rounded-lg border flex items-center justify-center transition-colors ${
+              drawingActive
+                ? 'bg-forest-700 border-forest-700 text-white'
+                : 'bg-white border-gray-300 text-forest-800 hover:bg-forest-50 hover:border-forest-400'
+            }`}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+              <polygon points="12,2 22,8 22,16 12,22 2,16 2,8" />
+            </svg>
+          </button>
+          <button
+            onClick={clearPolygon}
+            disabled={!polygon?.length}
+            title="Clear and redraw"
+            className="w-10 h-10 rounded-lg border border-gray-300 bg-white text-red-500 hover:bg-red-50 hover:border-red-300 flex items-center justify-center transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            <RotateCcw className="w-4 h-4" />
+          </button>
+        </div>
 
-      {polygon?.length >= 3 && (
-        <div className="bg-green-50 border border-green-200 rounded-xl p-3 flex items-center gap-2 text-sm text-green-800">
-          <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0" />
-          Array boundary drawn — {polygon.length} vertices. You can drag the vertices to adjust.
+        {/* Map */}
+        <div ref={mapDivRef} className="flex-1 rounded-xl border border-gray-200" style={{ height: '440px' }} />
+      </div>
+
+      {drawingActive && (
+        <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800 flex gap-2">
+          <Info className="w-4 h-4 flex-shrink-0 mt-0.5" />
+          Click on the map to place polygon points. Click the <strong>first point again</strong> to close the shape.
         </div>
       )}
-      {(!polygon || polygon.length < 3) && (
+      {polygon?.length >= 3 && !drawingActive && (
+        <div className="bg-green-50 border border-green-200 rounded-xl p-3 flex items-center gap-2 text-sm text-green-800">
+          <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0" />
+          Array boundary drawn — {polygon.length} vertices. Drag vertices to adjust, or click <RotateCcw className="w-3 h-3 inline" /> to redraw.
+        </div>
+      )}
+      {(!polygon || polygon.length < 3) && !drawingActive && (
         <div className="bg-blue-50 border border-blue-100 rounded-xl p-3 text-xs text-blue-700 flex gap-2">
           <Info className="w-4 h-4 flex-shrink-0 mt-0.5" />
-          Select the polygon tool (top-centre of the map), then click to trace the array outline. Minimum 3 points required.
+          Click the <strong>polygon icon</strong> on the left to start drawing the array boundary. Minimum 3 points required.
         </div>
       )}
     </div>
