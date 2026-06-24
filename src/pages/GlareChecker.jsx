@@ -238,7 +238,7 @@ function DrawingStep({ location, polygon, onPolygonChange }) {
         drawingMode: polygon?.length ? null : google.maps.drawing.OverlayType.POLYGON,
         drawingControl: true,
         drawingControlOptions: {
-          position: google.maps.ControlPosition.TOP_CENTER,
+          position: google.maps.ControlPosition.TOP_LEFT,
           drawingModes: [google.maps.drawing.OverlayType.POLYGON],
         },
         polygonOptions: {
