@@ -13,6 +13,7 @@ const Blog         = lazy(() => import('./pages/Blog'));
 const BlogPost     = lazy(() => import('./pages/BlogPost'));
 const Contact      = lazy(() => import('./pages/Contact'));
 const CountyPage   = lazy(() => import('./pages/CountyPage'));
+const Portfolio    = lazy(() => import('./pages/Portfolio'));
 const NotFound     = lazy(() => import('./pages/NotFound'));
 
 // SEO service pages
@@ -51,6 +52,7 @@ export default function App() {
           <Route path="/blog"                   element={<Blog />} />
           <Route path="/blog/:slug"             element={<BlogPost />} />
           <Route path="/contact"                element={<Contact />} />
+          <Route path="/portfolio"              element={<Portfolio />} />
           <Route path="/pricing"                element={<Navigate to="/contact" replace />} />
           <Route path="/solar-planning/:county" element={<CountyPage />} />
 

@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
+  <!-- Core pages -->
   <url><loc>https://www.solarplanningireland.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://www.solarplanningireland.com/services</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.solarplanningireland.com/about</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.solarplanningireland.com/contact</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.solarplanningireland.com/portfolio</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://www.solarplanningireland.com/case-studies</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://www.solarplanningireland.com/blog</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+
+  <!-- Service detail pages -->
+  <url><loc>https://www.solarplanningireland.com/services/glint-glare-analysis</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.solarplanningireland.com/services/pv-planning-drawings</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.solarplanningireland.com/services/ground-mounted-solar-design</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.solarplanningireland.com/services/roof-mounted-solar-design</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.solarplanningireland.com/services/landscape-plans</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+
+  <!-- SEO landing pages -->
   <url><loc>https://www.solarplanningireland.com/solar-pv-planning-drawings-ireland</loc><changefreq>monthly</changefreq><priority>0.95</priority></url>
   <url><loc>https://www.solarplanningireland.com/glint-and-glare-assessment-ireland</loc><changefreq>monthly</changefreq><priority>0.95</priority></url>
   <url><loc>https://www.solarplanningireland.com/glint-and-glare-report-ireland</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
@@ -10,11 +26,20 @@
   <url><loc>https://www.solarplanningireland.com/rooftop-solar-planning-application-ireland</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://www.solarplanningireland.com/solar-farm-planning-drawings-ireland</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://www.solarplanningireland.com/landscape-plan-solar-pv-ireland</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.solarplanningireland.com/about</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.solarplanningireland.com/contact</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.solarplanningireland.com/services</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://www.solarplanningireland.com/case-studies</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
-  <url><loc>https://www.solarplanningireland.com/blog</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+
+  <!-- Blog posts -->
+  <url><loc>https://www.solarplanningireland.com/blog/solar-planning-ireland-guide</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.solarplanningireland.com/blog/glint-glare-common-questions</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.solarplanningireland.com/blog/agri-voltaic-ireland-opportunity</loc><changefreq>monthly</changefreq><priority>0.65</priority></url>
+  <url><loc>https://www.solarplanningireland.com/blog/eiar-solar-ireland</loc><changefreq>monthly</changefreq><priority>0.65</priority></url>
+  <url><loc>https://www.solarplanningireland.com/blog/solar-planning-county-guide</loc><changefreq>monthly</changefreq><priority>0.65</priority></url>
+  <url><loc>https://www.solarplanningireland.com/blog/when-is-glint-and-glare-assessment-required-ireland</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.solarplanningireland.com/blog/what-planning-drawings-does-a-solar-farm-need-ireland</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.solarplanningireland.com/blog/forgesolar-glint-glare-methodology-ireland</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.solarplanningireland.com/blog/how-long-does-solar-pv-planning-application-take-ireland</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.solarplanningireland.com/blog/landscape-plans-solar-farms-ireland-what-planners-expect</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- County pages -->
   <url><loc>https://www.solarplanningireland.com/solar-planning/dublin</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
   <url><loc>https://www.solarplanningireland.com/solar-planning/cork</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
   <url><loc>https://www.solarplanningireland.com/solar-planning/kildare</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -23,5 +48,9 @@
   <url><loc>https://www.solarplanningireland.com/solar-planning/meath</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.solarplanningireland.com/solar-planning/wexford</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.solarplanningireland.com/solar-planning/galway</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.solarplanningireland.com/solar-planning/laois</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://www.solarplanningireland.com/solar-planning/westmeath</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://www.solarplanningireland.com/solar-planning/kilkenny</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://www.solarplanningireland.com/solar-planning/limerick</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
 
 </urlset>

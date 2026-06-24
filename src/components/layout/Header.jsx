@@ -12,6 +12,7 @@ const navLinks = [
   },
   { label: 'Case Studies', to: '/case-studies' },
   { label: 'Blog', to: '/blog' },
+  { label: 'Portfolio', to: '/portfolio' },
   { label: 'About', to: '/about' },
 ];
 

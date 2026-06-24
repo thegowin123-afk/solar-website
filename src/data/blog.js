@@ -369,6 +369,454 @@ SolarPlan Ireland carries out planning policy reviews as a standalone service or
     image: '/images/blog-5.jpg',
     featured: false,
   },
+  {
+    id: 6,
+    slug: 'when-is-glint-and-glare-assessment-required-ireland',
+    title: 'When Is a Glint and Glare Assessment Required in Ireland?',
+    excerpt:
+      'Irish planning authorities consistently request glint and glare assessments for solar projects, but when exactly is one required — and when can you submit without one? Here is a clear guide for solar developers.',
+    content: `
+## What Is a Glint and Glare Assessment?
+
+A glint and glare assessment is a reflectance impact study that predicts whether solar PV panels will cause problematic reflections at nearby locations — roads, dwellings, aviation flight paths, or rail corridors. It uses specialist software (most commonly ForgeSolar in Ireland) to model the angles at which reflected sunlight from panel surfaces could reach each receptor location.
+
+The output is a set of glare results classified as green (low impact, generally acceptable) or yellow (higher intensity, may require mitigation). The assessment report sets out the methodology, results at each receptor, and any recommended mitigation measures.
+
+## When Is It Required?
+
+There is no absolute legal requirement in Irish planning law for a glint and glare assessment in every case. However, in practice:
+
+### Always Required
+
+- **Ground-mounted solar farms near roads** — This is the most common trigger. If any public road is within approximately 500m of the proposed array, a glint and glare assessment will almost always be requested by the planning authority, either proactively or as Further Information.
+
+- **Sites near aviation infrastructure** — Any site within the study zones of airports, aerodromes, or instrument landing systems requires an aviation-specific glint assessment prepared in accordance with Irish Aviation Authority (IAA) guidance.
+
+- **Sites near rail corridors** — Iarnród Éireann infrastructure is a prescribed sensitive receptor. Sites within sight of railway lines should include a rail corridor glare assessment.
+
+- **An Bord Pleanála Strategic Infrastructure Development (SID) applications** — ABP applies a higher technical standard and consistently requires glint and glare assessments as part of the application pack.
+
+### Likely Required
+
+- **Commercial rooftop PV near roads** — Large commercial rooftop installations visible from public roads may require an assessment, particularly where panels face south-west and could cause afternoon glare toward road users.
+
+- **Sites near residential properties** — Where ground-mounted panels are within 300m of dwellings, most planning authorities will request evidence that glare impacts have been assessed.
+
+- **Sites in visually sensitive locations** — National Parks, Areas of Outstanding Natural Beauty, and Natura 2000 sites attract additional scrutiny, and a glint assessment may be required even for smaller installations.
+
+### May Not Be Required
+
+- **Rooftop solar on domestic dwellings** — Planning-exempt domestic solar typically does not require a glint and glare assessment unless specifically requested.
+
+- **Small commercial rooftop installations in urban areas** — Where the installation is not directly visible from roads or sensitive receptors, an assessment may not be necessary. A desktop review is advisable before deciding.
+
+## Why Submit Proactively?
+
+Many developers ask whether they should wait and submit a glint and glare report only if the planning authority requests one as Further Information. Our strong recommendation is to submit proactively. Here is why:
+
+A Further Information request typically adds 4–8 weeks to your planning determination timeline. In a competitive development environment, this delay can affect grid connection timelines, financial close, and project programme. Submitting proactively removes this risk at the cost of one report.
+
+Proactive submission also signals to the planning authority that your application is technically thorough — which can positively influence how the overall application is received.
+
+## How Long Does It Take?
+
+Our standard turnaround for a glint and glare assessment using ForgeSolar is **2–4 weeks** from receipt of complete site information (site layout drawings, panel specifications, and receptor survey). Expedited delivery in 7–10 working days is available for urgent planning submissions.
+
+## Get in Touch
+
+If you are unsure whether your project requires a glint and glare assessment, [contact us](/contact) with your site details and we will advise you within one business day — at no charge.
+
+See also: [Glint and Glare Analysis service](/services/glint-glare-analysis) | [Solar Glare Pre-Simulation](/solar-glare-pre-simulation)
+    `,
+    author: 'SolarPlan Ireland Team',
+    authorRole: 'Planning Consultants',
+    publishDate: '2024-05-10',
+    readTime: '7 min read',
+    category: 'Technical Guide',
+    tags: ['Glint & Glare', 'Planning Ireland', 'ForgeSolar', 'Solar Farm'],
+    image: '/images/blog-6.jpg',
+    featured: false,
+  },
+  {
+    id: 7,
+    slug: 'what-planning-drawings-does-a-solar-farm-need-ireland',
+    title: 'What Planning Drawings Does a Solar Farm Need in Ireland?',
+    excerpt:
+      'A complete, accurate drawing set is the foundation of a successful solar farm planning application in Ireland. This guide covers every drawing type required and what planners look for in each.',
+    content: `
+## Why Drawing Quality Matters
+
+Poorly prepared planning drawings are the single most common cause of Further Information requests in Irish solar planning applications. When a planning authority issues a Further Information request, your determination timeline extends — typically by 4–8 weeks per request. Submitting a complete, accurate drawing set from the outset eliminates this risk.
+
+This guide covers the drawings typically required for a ground-mounted solar farm planning application in Ireland.
+
+## Site Location Map
+
+**Scale:** 1:10,500 (OS Discovery Series) or site-specific mapping at a scale showing the development in context.
+
+The site location map identifies the application site within its broader landscape and planning context. It must show the red line boundary of the application site and the surrounding area. Most planning authorities require the OS Discovery Series sheet at 1:10,500.
+
+## Site Layout Plan
+
+**Scale:** 1:500 to 1:2,500 depending on site size.
+
+This is the primary planning drawing and the one most scrutinised by planners. It must show:
+
+- Accurate panel array layout with dimensions
+- Panel row spacing and orientation
+- Perimeter fence alignment
+- Access tracks and construction compound
+- Substation and inverter locations
+- Battery storage (BESS) if included
+- Proposed landscape planting and screening
+- Setbacks from site boundaries, roads, and dwellings
+
+The site layout plan must be consistent with all other technical reports — particularly the glint and glare assessment and Landscape Plan. Inconsistencies between documents are a common cause of FI requests.
+
+## Panel Elevation Drawings
+
+**Scale:** 1:20 to 1:100 depending on panel type.
+
+Elevation drawings show the physical appearance of the proposed solar panels and mounting structures from the front, side, and rear. They must show:
+
+- Panel dimensions and tilt angle
+- Ground clearance (important for agri-voltaic and grazing applications)
+- Mounting structure design and height
+- Material specification and colour
+
+## Cross-Sections
+
+**Scale:** 1:200 to 1:500.
+
+Cross-sections through the site show topography, panel heights, and the relationship of the development to surrounding land. They are particularly important where:
+
+- The site has significant slope or varied topography
+- Panels are near the site boundary and their visibility needs to be demonstrated
+- The section relates to a key viewpoint in the LVIA
+
+## Fence and Security Details
+
+**Scale:** 1:20 to 1:50.
+
+Drawings showing the proposed perimeter fence design, height, and material. Most Irish county councils require deer/badger underpasses in perimeter fences — this should be shown in the fence detail.
+
+## Photomontages
+
+Photomontages (visualisations) are not always mandatory, but are increasingly requested by Irish planning authorities — particularly in visually sensitive landscapes. They show the proposed development superimposed on photographs taken from agreed viewpoints.
+
+Photomontages are typically requested from:
+- Public roads near the site
+- Nearby residential properties
+- Viewpoints identified in the LVIA
+
+## Electrical Single-Line Diagrams
+
+Required for larger projects. The single-line diagram shows the electrical connection from panels to the grid connection point. Some local authorities require this; for SID applications to An Bord Pleanála it is standard.
+
+## Construction Layout Plan
+
+Shows the construction compound, haul routes, construction traffic management, and temporary works. Required for the Environmental Impact Assessment chapter on construction phase impacts, and increasingly requested in planning applications for larger sites.
+
+## Keeping Documents Consistent
+
+One of the most important things about your drawing set is internal consistency. The layout shown on the site plan must exactly match the layout used in the glint and glare assessment model. The planting shown on the site plan must match the Landscape Plan. The panel height shown in elevations must match the modelling parameters.
+
+We produce complete drawing packages that are cross-checked for consistency before delivery — significantly reducing the risk of FI requests on technical grounds.
+
+## Get a Quote
+
+[Contact us](/contact) with your site details for a fixed-fee proposal for your planning drawing package. See also: [PV Planning Drawings service](/services/pv-planning-drawings) | [Ground-Mounted Solar Design](/services/ground-mounted-solar-design)
+    `,
+    author: 'SolarPlan Ireland Team',
+    authorRole: 'Planning Consultants',
+    publishDate: '2024-04-22',
+    readTime: '9 min read',
+    category: 'Planning Guide',
+    tags: ['Planning Drawings', 'Solar Farm', 'Ireland', 'AutoCAD'],
+    image: '/images/blog-7.jpg',
+    featured: false,
+  },
+  {
+    id: 8,
+    slug: 'forgesolar-glint-glare-methodology-ireland',
+    title: 'ForgeSolar Glint and Glare Methodology Explained',
+    excerpt:
+      'ForgeSolar is the standard tool for glint and glare modelling in Irish solar planning. This guide explains how ForgeSolar works, what green and yellow glare mean, and how results are interpreted by planning authorities.',
+    content: `
+## What Is ForgeSolar?
+
+ForgeSolar is specialist software developed specifically for solar glare impact assessment. It is the most widely used tool for glint and glare modelling in Ireland and the UK, and its methodology is accepted by An Bord Pleanála, all 31 Irish county councils, and the Irish Aviation Authority.
+
+ForgeSolar models the reflection of sunlight from solar PV panel surfaces and predicts when and where reflected glare may be experienced at specified receptor locations. It accounts for sun path, panel geometry, array layout, and receptor positions to determine glare occurrence on a time-of-day and time-of-year basis.
+
+## How ForgeSolar Works
+
+### Inputs
+
+ForgeSolar requires the following site-specific inputs:
+
+- **Panel geometry**: tilt angle, azimuth orientation, panel dimensions, and height above ground
+- **Array layout**: the position and extent of each panel row in the array
+- **Site coordinates**: latitude and longitude for accurate sun-path calculation
+- **Receptor positions**: the precise locations and heights of all identified receptors (dwellings, roads, aviation, etc.)
+
+### Modelling Process
+
+ForgeSolar calculates the path of reflected sunlight from each panel surface using sun-path algorithms for the specific site latitude and longitude. For each receptor, it determines:
+
+- Whether reflected light from any panel in the array can physically reach that receptor
+- If so, when during the year and at what time of day reflected light would reach the receptor
+- The intensity of the glare (expressed as retinal irradiance or as a green/yellow classification)
+
+The modelling is carried out under worst-case clear-sky conditions — that is, assuming maximum available sunlight without cloud attenuation. This is conservative: real-world glare will occur less frequently than the model predicts due to cloud cover.
+
+### Green and Yellow Glare Classification
+
+ForgeSolar outputs glare results using a two-category classification system:
+
+**Green Glare**: Low-intensity reflected light that is below the threshold for significant discomfort. Green glare results are generally acceptable to Irish planning authorities without mitigation.
+
+**Yellow Glare**: Higher-intensity reflected light that exceeds the green glare threshold. Yellow glare at sensitive receptors (particularly road users and dwellings) requires consideration and potentially mitigation.
+
+### Important Note on Yellow Glare
+
+Yellow glare does not automatically mean a problem. The assessment must consider:
+
+- **Duration**: How long per day and how many days per year the glare occurs. Brief, infrequent glare events are treated differently from prolonged daily occurrences.
+- **Receptor type**: Yellow glare at a public road is more significant than yellow glare at a distant field boundary.
+- **Context**: Anti-reflective panel coatings, panel orientation adjustments, or landscape screening may reduce yellow glare below the threshold.
+
+## What Happens When Yellow Glare Is Identified?
+
+Where ForgeSolar identifies yellow glare at a sensitive receptor, the assessment report will include mitigation recommendations. Common mitigation measures include:
+
+- **Anti-reflective glass**: Panels with anti-reflective coatings reduce surface reflectance from approximately 8% (standard glass) to below 4%, which can eliminate or significantly reduce yellow glare results.
+- **Panel tilt adjustment**: Reducing or increasing tilt angle changes the angles at which reflected light is directed and can eliminate glare at specific receptors.
+- **Panel azimuth adjustment**: Rotating panels slightly from due south can redirect reflected light away from sensitive receptors.
+- **Landscape screening**: Hedgerow or tree planting between the array and receptor can screen reflected light at ground-level receptors.
+
+## Aviation Glare Assessment
+
+For sites near airports, aerodromes, or ILS (Instrument Landing System) approach paths, ForgeSolar includes aviation-specific receptor analysis. The Irish Aviation Authority (IAA) has published guidance on acceptable glare levels for aviation receptors, and our assessments are prepared in accordance with this guidance.
+
+Aviation glare is assessed at air traffic control tower viewpoints and along approach corridors. The assessment considers whether glare would occur during aircraft approach and departure — the most critical phases of flight.
+
+## Glare Pre-Simulation
+
+Before finalising a solar farm layout, we offer a glare pre-simulation service that tests different panel configurations to identify which design minimises glare risk. This is particularly valuable for sites near roads or dwellings where yellow glare is likely if the standard layout is used.
+
+See: [Solar Glare Pre-Simulation](/solar-glare-pre-simulation) | [Glint and Glare Assessment Ireland](/glint-and-glare-assessment-ireland)
+
+## Get a ForgeSolar Assessment
+
+[Contact us](/contact) with your site layout drawings and panel specification for a fixed-fee glint and glare assessment. We deliver within 2–4 weeks of receiving complete site information.
+    `,
+    author: 'SolarPlan Ireland Team',
+    authorRole: 'Planning Consultants',
+    publishDate: '2024-03-30',
+    readTime: '8 min read',
+    category: 'Technical Guide',
+    tags: ['ForgeSolar', 'Glint & Glare', 'Methodology', 'Solar Planning'],
+    image: '/images/blog-8.jpg',
+    featured: false,
+  },
+  {
+    id: 9,
+    slug: 'how-long-does-solar-pv-planning-application-take-ireland',
+    title: 'How Long Does a Solar PV Planning Application Take in Ireland?',
+    excerpt:
+      'Understanding the Irish solar planning timeline is critical for project programming. Here is a realistic guide to how long each stage takes — from pre-application to grant of permission.',
+    content: `
+## Overview of the Solar Planning Timeline in Ireland
+
+Solar planning timelines in Ireland vary significantly depending on project size, the receiving authority, and whether the application requires an Environmental Impact Assessment. Here is a realistic guide to what you should expect.
+
+## Local Authority Applications (Standard Permission)
+
+For solar farms that do not exceed EIA thresholds and are not designated as Strategic Infrastructure Development, a standard local authority planning application applies.
+
+### Pre-Application Stage: 4–12 weeks
+
+Before submitting a formal application, most developers engage in pre-application consultation with the planning authority. This is not mandatory but is strongly recommended for solar farms. The consultation:
+
+- Identifies key planning concerns before you spend on surveys and reports
+- Agrees the scope of technical documentation required
+- Reduces the risk of Further Information requests
+
+Pre-application meetings must be requested in writing. Some councils schedule them promptly; others have backlogs of 6–10 weeks. Budget 4–12 weeks for this stage.
+
+### Survey and Report Preparation: 8–24 weeks
+
+The technical reports required for a solar planning application typically include:
+
+- **Glint and glare assessment**: 2–4 weeks (from complete site information)
+- **Landscape Plan**: 2–3 weeks (from LVIA)
+- **LVIA**: 6–12 weeks (includes photomontages and site visits)
+- **Ecology**: 3–12 months (seasonal survey requirements for habitats and species)
+- **Planning and design statement**: 2–4 weeks
+- **Archaeological desk-based assessment**: 4–8 weeks
+
+The critical path is usually ecology — if bat surveys are required, these can only be conducted during specific seasons, potentially extending preparation by 6–12 months for projects that miss a survey window.
+
+### Application Validation: 1–3 weeks
+
+After submission, the planning authority validates the application — checking that all required documents have been submitted in the correct format. A properly prepared application is typically validated within 1–2 weeks. Missing documents cause delays; in some cases the application is returned.
+
+### Planning Determination: 8 weeks (statutory)
+
+The statutory determination period for a standard planning application in Ireland is 8 weeks from validation. In practice, this period is often extended by:
+
+**Further Information (FI) requests**: If the planning authority requires additional information, they issue an FI request. The clock stops when an FI is issued and restarts when a response is received and acknowledged. Each FI request typically adds 4–8 weeks.
+
+The most common FI triggers for solar applications are:
+- Missing or inadequate glint and glare assessment
+- Insufficient photomontages or visual impact assessment
+- Incomplete ecological information
+- Inconsistencies between technical documents
+
+**Third-party observations**: Public notices must be published and neighbour notification given. Third-party observations can be submitted and must be considered. This does not extend the statutory period but can influence determination.
+
+### Total Typical Timeline (Standard Application)
+
+| Stage | Duration |
+|---|---|
+| Pre-application | 4–12 weeks |
+| Surveys and report preparation | 12–24 weeks |
+| Application submission and validation | 1–3 weeks |
+| Planning determination (no FI) | 8 weeks |
+| **Total (best case)** | **25–47 weeks** |
+| Further Information (if required) | +4–8 weeks per request |
+
+## Strategic Infrastructure Development (SID) Applications
+
+Larger solar farms — and those designated as SID by An Bord Pleanála — follow a different process directly to ABP.
+
+- **Pre-application process at ABP**: 8–16 weeks (mandatory for SID)
+- **Application preparation**: 16–32 weeks (higher standard of documentation)
+- **ABP determination target**: 18 weeks from validation
+
+SID applications are more complex and expensive but provide national-level planning certainty without the risk of a local authority refusal followed by ABP appeal.
+
+## Tips for Reducing Timeline Risk
+
+1. **Commission technical reports early** — especially ecology. Missing a bat survey season can add 12 months to your programme.
+
+2. **Submit proactively** — include all commonly requested documents (glint and glare, LVIA, Landscape Plan) with the initial application, not in response to FI.
+
+3. **Ensure document consistency** — inconsistencies between drawings, glint reports, and landscape plans are a common FI trigger. Use consultants who work together.
+
+4. **Engage the planning authority early** — pre-application consultation is time well spent.
+
+Contact [SolarPlan Ireland](/contact) to discuss your project programme and get a clear picture of what documentation you need and when.
+
+See also: [PV Planning Drawings](/services/pv-planning-drawings) | [Glint & Glare Analysis](/services/glint-glare-analysis)
+    `,
+    author: 'SolarPlan Ireland Team',
+    authorRole: 'Planning Consultants',
+    publishDate: '2024-02-28',
+    readTime: '10 min read',
+    category: 'Planning Guide',
+    tags: ['Planning Timeline', 'Ireland', 'Solar Farm', 'Planning Permission'],
+    image: '/images/blog-9.jpg',
+    featured: false,
+  },
+  {
+    id: 10,
+    slug: 'landscape-plans-solar-farms-ireland-what-planners-expect',
+    title: 'Landscape Plans for Solar Farms: What Irish Planners Expect',
+    excerpt:
+      'A Landscape Plan is one of the most scrutinised documents in a solar farm planning application. This guide explains exactly what Irish planners want to see — and how to give them it.',
+    content: `
+## Why the Landscape Plan Matters
+
+In Ireland's predominantly rural landscape, visual impact is consistently one of the top concerns raised by planning authorities and objectors in solar farm applications. The Landscape Plan is your opportunity to demonstrate that the development has been designed with sensitivity to its surroundings — and that robust mitigation is in place.
+
+A well-prepared Landscape Plan does not just satisfy planners — it actively improves planning outcomes. Applications that include a clear, detailed planting scheme are more likely to be approved without conditions requiring revised landscaping post-consent.
+
+## What Is a Landscape Plan?
+
+A Landscape Plan is a planning-standard drawing (produced in AutoCAD) that shows:
+
+- Proposed perimeter planting — native hedgerows, shrubs, and trees
+- Retained existing vegetation — existing hedgerows and trees that will be retained or reinforced
+- New planting areas — wildflower meadows, native grassland, and habitat creation zones
+- Panel-free buffer zones — set-backs from site boundaries where planting occurs
+- Phasing — the sequence in which planting will be established
+
+The Landscape Plan is accompanied by a **Planting Schedule** — a table listing all proposed species, sizes, spacing, and numbers. This gives the planning authority (and conditions compliance officers) a clear reference for what was approved.
+
+## The Relationship Between the Landscape Plan and the LVIA
+
+In Ireland, it is standard practice for the Landscape and Visual Impact Assessment (LVIA) to be prepared by a qualified landscape architect, and for the Landscape Plan to reflect the mitigation measures recommended in that report.
+
+We do not prepare LVIAs ourselves. What we do is take the recommendations of your LVIA consultant and translate them into a planning-standard drawing set. This division of labour is efficient: your landscape architect focuses on the professional assessment and recommendations; we handle the AutoCAD production.
+
+This means you need to provide us with:
+1. The LVIA (or landscape assessment section of the EIAR)
+2. The site layout plan showing panel arrays, fencing, and access
+
+We work from these documents to produce a Landscape Plan that is consistent with both.
+
+## What Irish Planners Expect to See
+
+### Native Species Only
+
+Irish planning authorities strongly prefer native species in planting schemes. An Bord Pleanála applications in particular require native provenance planting. Typical species for Irish solar farm landscaping include:
+
+- **Hedgerow**: Hawthorn, Blackthorn, Holly, Hazel, Spindle, Guelder Rose
+- **Trees (where appropriate)**: Pedunculate Oak, Ash (where not at risk from dieback), Rowan, Crab Apple, Alder (in wet areas)
+- **Understory/scrub**: Elder, Bramble, Dog Rose
+- **Groundcover**: Native wildflower seed mixes, ryegrass-free grassland mixes
+
+Introduced ornamental species (leylandii hedging, laurel, non-native conifers) are typically discouraged and sometimes prohibited by planning condition.
+
+### Establishment Period and Management Commitments
+
+Planners want to see that planting will be properly maintained through to establishment. Our Landscape Plans include:
+
+- A minimum 5-year establishment maintenance schedule
+- Replacement planting commitments (any planting that fails within the establishment period must be replaced)
+- Details of rabbit/deer protection (guards and stakes) where required
+
+### Consistency With the Site Layout Plan
+
+The planting shown on the Landscape Plan must exactly match the planting shown on the site layout plan. Inconsistencies — even minor ones — lead to Further Information requests. We cross-check both documents before delivery.
+
+### Ecological Enhancement
+
+Many planning authorities now expect solar farm applications to demonstrate biodiversity net gain, not just landscape mitigation. Our planting schemes incorporate:
+
+- Connectivity with existing hedgerows and field boundaries
+- Habitat creation zones within and around the array
+- Pollinator-friendly wildflower areas
+
+This goes beyond minimum landscape mitigation and positions your application as environmentally positive.
+
+## Common Landscape Plan Mistakes to Avoid
+
+1. **Using non-native species** — even well-intentioned choices like cherry laurel or Portuguese laurel are often rejected.
+2. **Inconsistency with the LVIA recommendations** — if the LVIA recommends dense screening to the north, the plan must show it.
+3. **No planting schedule** — some applicants submit a drawing without a schedule. Planners will request one.
+4. **Unrealistic planting widths** — a single-row hawthorn hedge does not screen a 4m solar panel. Plans should show credible screening widths.
+5. **No establishment maintenance commitments** — without a maintenance commitment, the planning authority cannot be confident the planting will be achieved.
+
+## How We Can Help
+
+We prepare Landscape Plans from your LVIA or landscape assessment within **2–3 weeks** of receiving your documents. Our drawings are produced in AutoCAD and delivered as both PDF (for submission) and DWG (for your consultants' use).
+
+[Contact us](/contact) with your LVIA and site layout to discuss your Landscape Plan.
+
+See also: [Landscape Plans service](/services/landscape-plans) | [Ground-Mounted Solar Design](/services/ground-mounted-solar-design)
+    `,
+    author: 'SolarPlan Ireland Team',
+    authorRole: 'Planning Consultants',
+    publishDate: '2024-01-15',
+    readTime: '9 min read',
+    category: 'Technical Guide',
+    tags: ['Landscape Plans', 'LVIA', 'Solar Farm', 'Planning Ireland'],
+    image: '/images/blog-10.jpg',
+    featured: false,
+  },
 ];
 
 export const getBlogPostBySlug = (slug) => blogPosts.find((p) => p.slug === slug);
