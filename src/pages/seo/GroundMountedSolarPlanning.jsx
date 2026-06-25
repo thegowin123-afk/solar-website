@@ -45,14 +45,14 @@ export default function GroundMountedSolarPlanning() {
         <meta name="description" content="Planning support for ground-mounted solar PV projects in Ireland, including drawings, glare review, landscape coordination and submission documents." />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href={PAGE_URL} />
-        <meta property="og:title" content="Ground-Mounted Solar Planning Ireland | PV Planning Drawings &amp; Reports" />
-        <meta property="og:description" content="Planning drawing and report support for ground-mounted solar PV farms in Ireland. Site layouts, glint and glare assessments, landscape plans and planning pack coordination." />
+        <meta property="og:title" content="Ground-Mounted Solar Planning Ireland | PV Application Support" />
+        <meta property="og:description" content="Planning support for ground-mounted solar PV projects in Ireland, including drawings, glare review, landscape coordination and submission documents." />
         <meta property="og:url" content={PAGE_URL} />
         <meta property="og:type" content="website" />
         <meta property="og:image" content={DEFAULT_OG_IMAGE} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Ground-Mounted Solar Planning Ireland" />
-        <meta name="twitter:description" content="Planning drawing and report support for ground-mounted solar PV farms in Ireland." />
+        <meta name="twitter:title" content="Ground-Mounted Solar Planning Ireland | PV Application Support" />
+        <meta name="twitter:description" content="Planning support for ground-mounted solar PV projects in Ireland, including drawings, glare review, landscape coordination and submission documents." />
         <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
         <script type="application/ld+json">{JSON.stringify(serviceSchema)}</script>
         <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>

@@ -47,14 +47,14 @@ export default function SolarPVPlanningDrawings() {
         <meta name="description" content="Council-ready solar PV planning drawings for Ireland, including site layouts, elevations, sections, equipment plans and planning application packs." />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href={PAGE_URL} />
-        <meta property="og:title" content="Solar PV Planning Drawings Ireland | Council-Ready Application Packs" />
-        <meta property="og:description" content="Solar PV planning application drawings for rooftop and ground-mounted projects in Ireland. Site layouts, elevations, sections, notices, and council-ready planning packs." />
+        <meta property="og:title" content="Solar PV Planning Drawings Ireland | Council-Ready Packs" />
+        <meta property="og:description" content="Council-ready solar PV planning drawings for Ireland, including site layouts, elevations, sections, equipment plans and planning application packs." />
         <meta property="og:url" content={PAGE_URL} />
         <meta property="og:type" content="website" />
         <meta property="og:image" content={DEFAULT_OG_IMAGE} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Solar PV Planning Drawings Ireland" />
-        <meta name="twitter:description" content="Council-ready solar PV planning drawings for rooftop and ground-mounted projects in Ireland." />
+        <meta name="twitter:title" content="Solar PV Planning Drawings Ireland | Council-Ready Packs" />
+        <meta name="twitter:description" content="Council-ready solar PV planning drawings for Ireland, including site layouts, elevations, sections, equipment plans and planning application packs." />
         <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
         <script type="application/ld+json">{JSON.stringify(serviceSchema)}</script>
         <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>

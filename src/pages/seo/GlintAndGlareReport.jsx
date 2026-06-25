@@ -45,14 +45,14 @@ export default function GlintAndGlareReport() {
         <meta name="description" content="Council-ready glint and glare reports for solar PV planning applications in Ireland, including receptor review, modelling results and mitigation advice." />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href={PAGE_URL} />
-        <meta property="og:title" content="Glint and Glare Report Ireland | Council-Ready Solar PV Reports" />
-        <meta property="og:description" content="Council-ready glint and glare reports for solar PV planning applications in Ireland, including ForgeSolar modelling, receptor assessment, results and mitigation advice." />
+        <meta property="og:title" content="Glint and Glare Report Ireland | Council-Ready Reports" />
+        <meta property="og:description" content="Council-ready glint and glare reports for solar PV planning applications in Ireland, including receptor review, modelling results and mitigation advice." />
         <meta property="og:url" content={PAGE_URL} />
         <meta property="og:type" content="website" />
         <meta property="og:image" content={DEFAULT_OG_IMAGE} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Glint and Glare Report Ireland" />
-        <meta name="twitter:description" content="Council-ready glint and glare reports for solar PV planning applications in Ireland." />
+        <meta name="twitter:title" content="Glint and Glare Report Ireland | Council-Ready Reports" />
+        <meta name="twitter:description" content="Council-ready glint and glare reports for solar PV planning applications in Ireland, including receptor review, modelling results and mitigation advice." />
         <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
         <script type="application/ld+json">{JSON.stringify(serviceSchema)}</script>
         <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>

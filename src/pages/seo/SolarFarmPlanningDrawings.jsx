@@ -45,14 +45,14 @@ export default function SolarFarmPlanningDrawings() {
         <meta name="description" content="Solar farm planning drawings for Ireland, including PV array layouts, site plans, access, equipment locations and planning submission drawings." />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href={PAGE_URL} />
-        <meta property="og:title" content="Solar Farm Planning Drawings Ireland | Council-Ready Drawing Packs" />
-        <meta property="og:description" content="Solar farm planning drawings for planning applications in Ireland. Site layouts, PV array plans, elevations, sections, equipment layouts and full council-ready drawing packs." />
+        <meta property="og:title" content="Solar Farm Planning Drawings Ireland | Planning Packs" />
+        <meta property="og:description" content="Solar farm planning drawings for Ireland, including PV array layouts, site plans, access, equipment locations and planning submission drawings." />
         <meta property="og:url" content={PAGE_URL} />
         <meta property="og:type" content="website" />
         <meta property="og:image" content={DEFAULT_OG_IMAGE} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Solar Farm Planning Drawings Ireland" />
-        <meta name="twitter:description" content="Council-ready planning drawings for solar farm planning applications in Ireland." />
+        <meta name="twitter:title" content="Solar Farm Planning Drawings Ireland | Planning Packs" />
+        <meta name="twitter:description" content="Solar farm planning drawings for Ireland, including PV array layouts, site plans, access, equipment locations and planning submission drawings." />
         <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
         <script type="application/ld+json">{JSON.stringify(serviceSchema)}</script>
         <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>

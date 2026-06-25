@@ -45,14 +45,14 @@ export default function LandscapePlanSolarPV() {
         <meta name="description" content="Landscape plan support for solar PV planning applications in Ireland, including vegetation removal, mitigation planting, screening and drawing coordination." />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href={PAGE_URL} />
-        <meta property="og:title" content="Landscape Plan for Solar PV Ireland | Planning Application Support" />
-        <meta property="og:description" content="Landscape plan support for solar PV planning applications in Ireland, including vegetation removal, mitigation planting, screening and planning drawing coordination." />
+        <meta property="og:title" content="Landscape Plan for Solar PV Ireland | Planning Support" />
+        <meta property="og:description" content="Landscape plan support for solar PV planning applications in Ireland, including vegetation removal, mitigation planting, screening and drawing coordination." />
         <meta property="og:url" content={PAGE_URL} />
         <meta property="og:type" content="website" />
         <meta property="og:image" content={DEFAULT_OG_IMAGE} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Landscape Plan for Solar PV Ireland" />
-        <meta name="twitter:description" content="Landscape plan support for solar PV planning applications in Ireland." />
+        <meta name="twitter:title" content="Landscape Plan for Solar PV Ireland | Planning Support" />
+        <meta name="twitter:description" content="Landscape plan support for solar PV planning applications in Ireland, including vegetation removal, mitigation planting, screening and drawing coordination." />
         <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
         <script type="application/ld+json">{JSON.stringify(serviceSchema)}</script>
         <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>

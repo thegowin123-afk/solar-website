@@ -48,14 +48,14 @@ export default function GlintAndGlareAssessment() {
         <meta name="description" content="ForgeSolar-based glint and glare assessments for Irish solar PV projects, covering roads, dwellings, rail, aviation and sensitive receptors." />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href={PAGE_URL} />
-        <meta property="og:title" content="Glint and Glare Assessment Ireland | Solar PV ForgeSolar Reports" />
-        <meta property="og:description" content="Glint and glare assessments for solar PV planning applications in Ireland using ForgeSolar modelling for roads, dwellings, aviation, rail and sensitive receptors." />
+        <meta property="og:title" content="Glint and Glare Assessment Ireland | ForgeSolar Reports" />
+        <meta property="og:description" content="ForgeSolar-based glint and glare assessments for Irish solar PV projects, covering roads, dwellings, rail, aviation and sensitive receptors." />
         <meta property="og:url" content={PAGE_URL} />
         <meta property="og:type" content="website" />
         <meta property="og:image" content={DEFAULT_OG_IMAGE} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Glint and Glare Assessment Ireland" />
-        <meta name="twitter:description" content="ForgeSolar glint and glare assessments for solar PV planning applications in Ireland." />
+        <meta name="twitter:title" content="Glint and Glare Assessment Ireland | ForgeSolar Reports" />
+        <meta name="twitter:description" content="ForgeSolar-based glint and glare assessments for Irish solar PV projects, covering roads, dwellings, rail, aviation and sensitive receptors." />
         <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
         <script type="application/ld+json">{JSON.stringify(serviceSchema)}</script>
         <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>

@@ -49,15 +49,15 @@ export default function Contact() {
         <title>Contact SolarPlan Ireland | Solar PV Planning Support</title>
         <meta name="description" content="Contact SolarPlan Ireland for solar PV planning drawings, glint and glare reports, pre-simulation and landscape plan support across Ireland." />
         <link rel="canonical" href={PAGE_URL} />
-        <meta property="og:title" content="Contact SolarPlan Ireland | Free Solar Planning Quote" />
-        <meta property="og:description" content="Get a free solar planning application quote within one business day. Glint & glare, Landscape Plans, PV drawings for Irish solar projects." />
+        <meta property="og:title" content="Contact SolarPlan Ireland | Solar PV Planning Support" />
+        <meta property="og:description" content="Contact SolarPlan Ireland for solar PV planning drawings, glint and glare reports, pre-simulation and landscape plan support across Ireland." />
         <meta property="og:url" content={PAGE_URL} />
         <meta property="og:type" content="website" />
         <meta property="og:image" content={DEFAULT_OG_IMAGE} />
         <meta name="robots" content="index, follow" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Contact SolarPlan Ireland | Free Solar Planning Quote" />
-        <meta name="twitter:description" content="Get a free solar planning application quote within one business day. Glint & glare, Landscape Plans, PV drawings for Irish solar projects." />
+        <meta name="twitter:title" content="Contact SolarPlan Ireland | Solar PV Planning Support" />
+        <meta name="twitter:description" content="Contact SolarPlan Ireland for solar PV planning drawings, glint and glare reports, pre-simulation and landscape plan support across Ireland." />
         <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
       </Helmet>
 
