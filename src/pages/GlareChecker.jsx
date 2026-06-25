@@ -31,10 +31,9 @@ const RISK_CONFIG = {
 
 const STEPS = [
   { id: 1, label: 'Location' },
-  { id: 2, label: 'Draw Array' },
+  { id: 2, label: 'Site Map' },
   { id: 3, label: 'Parameters' },
-  { id: 4, label: 'Receptors' },
-  { id: 5, label: 'Results' },
+  { id: 4, label: 'Results' },
 ];
 
 // Load Google Maps via script tag — avoids bundler issues
@@ -199,7 +198,449 @@ function LocationStep({ location, onLocationSelect }) {
   );
 }
 
-// ─── Step 2: Draw Array ─────────────────────────────────────────────────────
+// ─── Step 2: Unified Site Map ───────────────────────────────────────────────
+const SITE_TOOLS = [
+  { id: 'move',       label: 'Move/Edit',      icon: '✋', color: '#6b7280', desc: 'Pan and select elements.' },
+  { id: 'pv',         label: 'PV Array',        icon: '⬠', color: '#2d6a4f', desc: 'Click to place polygon vertices. Click first point to close.' },
+  { id: 'vs',         label: 'Vuln. Site',      icon: '●',  color: '#3b82f6', desc: 'Click to place a vulnerable site point (residential, ATCT, other).' },
+  { id: 'fp',         label: '2-Mile FP',       icon: '✈', color: '#ef4444', desc: 'Draw fixed-wing flight path from runway threshold outward. Double-click to finish.' },
+  { id: 'heli',       label: 'Helicopter',      icon: '🚁', color: '#f97316', desc: 'Click helipad centre — 8 approach paths auto-drawn.' },
+  { id: 'route',      label: 'Road/Route',      icon: '⟶', color: '#f59e0b', desc: 'Click to trace road or railway. Double-click to finish.' },
+  { id: 'ob',         label: 'Obstruction',     icon: '⬢', color: '#78716c', desc: 'Click to draw obstruction polygon. Click first point to close.' },
+];
+
+const VS_SUBTYPES = [
+  { value: 'residential', label: 'Residential', color: '#3b82f6' },
+  { value: 'atct',        label: 'Air Traffic Control', color: '#dc2626' },
+  { value: 'railway',     label: 'Railway Station', color: '#8b5cf6' },
+  { value: 'other',       label: 'Other', color: '#6b7280' },
+];
+
+function SiteMapStep({ location, polygon, onPolygonChange, receptors, onReceptorsChange, obstructions, onObstructionsChange }) {
+  const mapDivRef = useRef(null);
+  const mapRef = useRef(null);
+  const pvOverlayRef = useRef(null);
+  const allOverlaysRef = useRef([]);     // persistent overlays (receptors, obstructions)
+  const tempOverlaysRef = useRef([]);    // in-progress drawing overlays
+  const clickListenerRef = useRef(null);
+  const dblClickListenerRef = useRef(null);
+  const pathPtsRef = useRef([]);
+
+  const [activeTool, setActiveTool] = useState('pv');
+  const [vsSubtype, setVsSubtype] = useState('residential');
+  const [routeSubtype, setRouteSubtype] = useState('road');
+  const [modeInfo, setModeInfo] = useState({ vertices: 0, length: 0 });
+  const [selectedId, setSelectedId] = useState(null);
+
+  const centre = polygon?.length
+    ? { lat: polygon.reduce((s,p)=>s+p.lat,0)/polygon.length, lng: polygon.reduce((s,p)=>s+p.lng,0)/polygon.length }
+    : location;
+
+  // ── Map init ──────────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (!location || !mapDivRef.current || mapRef.current) return;
+    loadGoogleMaps().then((google) => {
+      const map = new google.maps.Map(mapDivRef.current, {
+        center: { lat: location.lat, lng: location.lng },
+        zoom: 15, mapTypeId: 'hybrid', tilt: 0,
+        mapTypeControlOptions: { position: google.maps.ControlPosition.TOP_LEFT },
+      });
+      mapRef.current = map;
+    });
+  }, [location]);
+
+  // ── Render all persistent overlays ────────────────────────────────────────
+  const renderAll = () => {
+    const google = window.google; const map = mapRef.current;
+    if (!google || !map) return;
+    allOverlaysRef.current.forEach(o => o.setMap(null));
+    allOverlaysRef.current = [];
+
+    // PV polygon
+    if (polygon?.length >= 3) {
+      const pvPoly = new google.maps.Polygon({
+        paths: polygon, fillColor: '#2d6a4f', fillOpacity: 0.4,
+        strokeColor: '#2d6a4f', strokeWeight: 2, editable: false, map,
+      });
+      allOverlaysRef.current.push(pvPoly);
+    }
+
+    // Receptors
+    receptors.forEach(rec => {
+      const color = RECEPTOR_MODE_INFO[rec.type]?.color || '#6b7280';
+      if (rec.type === 'helicopter' && !rec.path) {
+        const m = new google.maps.Marker({ position: { lat: rec.lat, lng: rec.lng }, map, title: rec.name,
+          icon: { path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: color, fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 },
+          label: { text: 'H', color: '#fff', fontSize: '11px', fontWeight: 'bold' } });
+        allOverlaysRef.current.push(m);
+        helicopterPaths({ lat: rec.lat, lng: rec.lng }).forEach(({ label, path }) => {
+          const spoke = new google.maps.Polyline({ path, strokeColor: color, strokeWeight: 2, strokeOpacity: 0.7, map,
+            icons: [{ icon: { path: google.maps.SymbolPath.FORWARD_OPEN_ARROW, scale: 2.5, strokeColor: color }, offset: '100%' }] });
+          allOverlaysRef.current.push(spoke);
+        });
+      } else if (rec.path?.length >= 2) {
+        const line = new google.maps.Polyline({ path: rec.path, strokeColor: color, strokeWeight: 4, strokeOpacity: 0.9, map });
+        allOverlaysRef.current.push(line);
+        const mid = rec.path[Math.floor(rec.path.length/2)];
+        const m = new google.maps.Marker({ position: mid, map, title: rec.name,
+          icon: { path: google.maps.SymbolPath.CIRCLE, scale: 8, fillColor: color, fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 },
+          label: { text: rec.type[0].toUpperCase(), color: '#fff', fontSize: '10px', fontWeight: 'bold' } });
+        allOverlaysRef.current.push(m);
+        // aviation height labels every ~500m
+        if (rec.type === 'aviation' || rec.type === 'fp') {
+          samplePolyline(rec.path, 500).forEach(pt => {
+            const h = aviationGlideSlopeHeight(pt.distFromStart);
+            const lbl = new google.maps.Marker({ position: pt, map,
+              icon: { url: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', scaledSize: new google.maps.Size(0,0) },
+              label: { text: `${Math.round(h)}m`, color: '#fef2f2', fontSize: '9px', fontWeight: 'bold' } });
+            allOverlaysRef.current.push(lbl);
+          });
+        }
+      } else if (rec.lat != null) {
+        const m = new google.maps.Marker({ position: { lat: rec.lat, lng: rec.lng }, map, title: rec.name,
+          icon: { path: google.maps.SymbolPath.CIRCLE, scale: 9, fillColor: color, fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 },
+          label: { text: rec.type[0].toUpperCase(), color: '#fff', fontSize: '10px', fontWeight: 'bold' } });
+        allOverlaysRef.current.push(m);
+      }
+    });
+
+    // Obstructions
+    obstructions.forEach(ob => {
+      if (ob.path?.length >= 3) {
+        const poly = new google.maps.Polygon({ paths: ob.path, fillColor: '#78716c', fillOpacity: 0.4, strokeColor: '#78716c', strokeWeight: 2, map });
+        allOverlaysRef.current.push(poly);
+        const mid = ob.path[Math.floor(ob.path.length/2)];
+        const m = new google.maps.Marker({ position: mid, map, title: `${ob.name} (${ob.height}m)`,
+          icon: { path: google.maps.SymbolPath.CIRCLE, scale: 7, fillColor: '#78716c', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 },
+          label: { text: 'OB', color: '#fff', fontSize: '8px', fontWeight: 'bold' } });
+        allOverlaysRef.current.push(m);
+      }
+    });
+  };
+
+  useEffect(() => { renderAll(); }, [polygon, receptors, obstructions]);
+
+  // ── Clear temp drawing overlays ────────────────────────────────────────────
+  const clearTemp = () => {
+    tempOverlaysRef.current.forEach(o => o.setMap(null));
+    tempOverlaysRef.current = [];
+    pathPtsRef.current = [];
+    setModeInfo({ vertices: 0, length: 0 });
+  };
+
+  // ── Stop any active drawing ────────────────────────────────────────────────
+  const stopDrawing = () => {
+    const google = window.google; const map = mapRef.current;
+    if (google) {
+      if (clickListenerRef.current) { google.maps.event.removeListener(clickListenerRef.current); clickListenerRef.current = null; }
+      if (dblClickListenerRef.current) { google.maps.event.removeListener(dblClickListenerRef.current); dblClickListenerRef.current = null; }
+    }
+    if (map) map.setOptions({ draggableCursor: null });
+    clearTemp();
+  };
+
+  // ── Activate a tool ────────────────────────────────────────────────────────
+  const activateTool = (toolId) => {
+    stopDrawing();
+    setActiveTool(toolId);
+    const google = window.google; const map = mapRef.current;
+    if (!google || !map || toolId === 'move') return;
+    map.setOptions({ draggableCursor: 'crosshair' });
+
+    // ── PV Array (polygon) ──
+    if (toolId === 'pv') {
+      let pvPts = [];
+      let tempLine = null;
+      clickListenerRef.current = google.maps.event.addListener(map, 'click', (e) => {
+        const pt = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+        // Close if near first point
+        if (pvPts.length >= 3) {
+          const d = haversineDist(pvPts[0], pt);
+          if (d < 15) {
+            onPolygonChange([...pvPts]);
+            stopDrawing(); setActiveTool('move'); return;
+          }
+        }
+        pvPts = [...pvPts, pt];
+        const dot = new google.maps.Marker({ position: pt, map,
+          icon: { path: google.maps.SymbolPath.CIRCLE, scale: pvPts.length === 1 ? 8 : 5, fillColor: '#2d6a4f', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 } });
+        tempOverlaysRef.current.push(dot);
+        if (tempLine) tempLine.setMap(null);
+        if (pvPts.length >= 2) {
+          tempLine = new google.maps.Polyline({ path: [...pvPts, pvPts[0]], strokeColor: '#2d6a4f', strokeWeight: 2, strokeOpacity: 0.6, map });
+          tempOverlaysRef.current.push(tempLine);
+        }
+        setModeInfo({ vertices: pvPts.length, length: pvPts.length >= 2 ? Math.round(pvPts.reduce((s,p,i,a) => i===0?0:s+haversineDist(a[i-1],p),0)) : 0 });
+      });
+    }
+
+    // ── Vulnerable Site (point) ──
+    else if (toolId === 'vs') {
+      clickListenerRef.current = google.maps.event.addListener(map, 'click', (e) => {
+        const subConf = VS_SUBTYPES.find(t => t.value === vsSubtype);
+        const newRec = {
+          id: `rec-${Date.now()}`, type: vsSubtype,
+          name: `${subConf?.label} ${receptors.length + 1}`,
+          lat: e.latLng.lat(), lng: e.latLng.lng(),
+          height: DEFAULT_HEIGHTS[vsSubtype] ?? 1.5,
+        };
+        onReceptorsChange([...receptors, newRec]);
+        stopDrawing(); setActiveTool('move');
+      });
+    }
+
+    // ── Helicopter ──
+    else if (toolId === 'heli') {
+      clickListenerRef.current = google.maps.event.addListener(map, 'click', (e) => {
+        const newRec = {
+          id: `rec-${Date.now()}`, type: 'helicopter',
+          name: `Helipad ${receptors.filter(r=>r.type==='helicopter').length + 1}`,
+          lat: e.latLng.lat(), lng: e.latLng.lng(),
+          height: DEFAULT_HEIGHTS.helicopter,
+        };
+        onReceptorsChange([...receptors, newRec]);
+        stopDrawing(); setActiveTool('move');
+      });
+    }
+
+    // ── Path tools: Flight Path, Road/Route ──
+    else if (toolId === 'fp' || toolId === 'route') {
+      const color = toolId === 'fp' ? '#ef4444' : '#f59e0b';
+      let tempLine = null;
+      clickListenerRef.current = google.maps.event.addListener(map, 'click', (e) => {
+        const pt = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+        pathPtsRef.current = [...pathPtsRef.current, pt];
+        const dot = new google.maps.Marker({ position: pt, map,
+          icon: { path: google.maps.SymbolPath.CIRCLE, scale: pathPtsRef.current.length===1?8:5, fillColor: color, fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 } });
+        tempOverlaysRef.current.push(dot);
+        if (tempLine) tempLine.setMap(null);
+        if (pathPtsRef.current.length >= 2) {
+          tempLine = new google.maps.Polyline({ path: pathPtsRef.current, strokeColor: color, strokeWeight: 3, strokeOpacity: 0.7, map });
+          tempOverlaysRef.current.push(tempLine);
+        }
+        const totalLen = pathPtsRef.current.reduce((s,p,i,a)=>i===0?0:s+haversineDist(a[i-1],p),0);
+        setModeInfo({ vertices: pathPtsRef.current.length, length: Math.round(totalLen) });
+      });
+      dblClickListenerRef.current = google.maps.event.addListener(map, 'dblclick', () => {
+        const pts = pathPtsRef.current.slice(0, -1);
+        if (pts.length < 2) { stopDrawing(); return; }
+        const type = toolId === 'fp' ? 'aviation' : (routeSubtype === 'railway' ? 'railway' : 'road');
+        const typeConf = RECEPTOR_TYPES.find(t => t.value === type);
+        const newRec = {
+          id: `rec-${Date.now()}`, type,
+          name: `${typeConf?.label} ${receptors.filter(r=>r.type===type).length + 1}`,
+          path: pts, lat: pts[0].lat, lng: pts[0].lng,
+          height: DEFAULT_HEIGHTS[type] ?? 1.5,
+        };
+        onReceptorsChange([...receptors, newRec]);
+        stopDrawing(); setActiveTool('move');
+      });
+    }
+
+    // ── Obstruction (polygon) ──
+    else if (toolId === 'ob') {
+      let obPts = [];
+      let tempLine = null;
+      clickListenerRef.current = google.maps.event.addListener(map, 'click', (e) => {
+        const pt = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+        if (obPts.length >= 3 && haversineDist(obPts[0], pt) < 15) {
+          const newOb = { id: `ob-${Date.now()}`, name: `Obstruction ${obstructions.length+1}`, path: [...obPts], height: 12 };
+          onObstructionsChange([...obstructions, newOb]);
+          stopDrawing(); setActiveTool('move'); return;
+        }
+        obPts = [...obPts, pt];
+        const dot = new google.maps.Marker({ position: pt, map,
+          icon: { path: google.maps.SymbolPath.CIRCLE, scale: obPts.length===1?8:5, fillColor: '#78716c', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 } });
+        tempOverlaysRef.current.push(dot);
+        if (tempLine) tempLine.setMap(null);
+        if (obPts.length >= 2) {
+          tempLine = new google.maps.Polyline({ path: [...obPts, obPts[0]], strokeColor: '#78716c', strokeWeight: 2, strokeOpacity: 0.7, map });
+          tempOverlaysRef.current.push(tempLine);
+        }
+        setModeInfo({ vertices: obPts.length, length: 0 });
+      });
+    }
+  };
+
+  const updateReceptor = (id, field, value) =>
+    onReceptorsChange(receptors.map(r => r.id===id ? {...r,[field]: field==='height'?parseFloat(value)||0:value} : r));
+  const removeReceptor = (id) => onReceptorsChange(receptors.filter(r => r.id!==id));
+  const updateObstruction = (id, field, value) =>
+    onObstructionsChange(obstructions.map(o => o.id===id ? {...o,[field]: field==='height'?parseFloat(value)||0:value} : o));
+  const removeObstruction = (id) => onObstructionsChange(obstructions.filter(o => o.id!==id));
+  const clearPV = () => { onPolygonChange([]); };
+
+  const toolInfo = SITE_TOOLS.find(t => t.id === activeTool);
+  const pvDrawn = polygon?.length >= 3;
+
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-heading font-bold text-forest-900">Site Configuration</h2>
+          <p className="text-sm text-gray-500">Draw your PV array, receptors, and obstructions on the map.</p>
+        </div>
+        {pvDrawn && <span className="text-xs bg-green-100 text-green-700 px-2.5 py-1 rounded-full font-medium">PV array drawn ✓</span>}
+      </div>
+
+      {/* Toolbar */}
+      <div className="flex flex-wrap items-center gap-1.5 p-2 bg-gray-100 rounded-xl border border-gray-200">
+        {SITE_TOOLS.map(tool => (
+          <button key={tool.id} onClick={() => activateTool(tool.id)}
+            title={tool.desc}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border ${
+              activeTool === tool.id
+                ? 'text-white border-transparent shadow-sm'
+                : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'
+            }`}
+            style={activeTool === tool.id ? { backgroundColor: tool.color, borderColor: tool.color } : {}}
+          >
+            <span>{tool.icon}</span> {tool.label}
+          </button>
+        ))}
+
+        {/* Sub-type selectors */}
+        {activeTool === 'vs' && (
+          <select value={vsSubtype} onChange={e=>setVsSubtype(e.target.value)}
+            className="ml-1 text-xs border border-gray-300 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-1 focus:ring-blue-400">
+            {VS_SUBTYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+          </select>
+        )}
+        {activeTool === 'route' && (
+          <select value={routeSubtype} onChange={e=>setRouteSubtype(e.target.value)}
+            className="ml-1 text-xs border border-gray-300 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-1 focus:ring-yellow-400">
+            <option value="road">Road</option>
+            <option value="railway">Railway</option>
+          </select>
+        )}
+
+        {/* Mode info */}
+        {(modeInfo.vertices > 0 || activeTool !== 'move') && (
+          <div className="ml-auto text-xs text-gray-500 bg-white border border-gray-200 rounded-lg px-2.5 py-1.5 flex gap-3">
+            {modeInfo.vertices > 0 && <span>Vertices: <strong>{modeInfo.vertices}</strong></span>}
+            {modeInfo.length > 0 && <span>Length: <strong>{modeInfo.length >= 1000 ? `${(modeInfo.length/1000).toFixed(2)} km` : `${modeInfo.length} m`}</strong></span>}
+            {activeTool !== 'move' && <span className="text-gray-400 italic">{toolInfo?.desc}</span>}
+          </div>
+        )}
+      </div>
+
+      {/* Map + Right panel */}
+      <div className="flex gap-3" style={{ height: '520px' }}>
+        {/* Map */}
+        <div ref={mapDivRef} className="flex-1 rounded-xl overflow-hidden border border-gray-200" />
+
+        {/* Right panel */}
+        <div className="w-72 flex flex-col gap-2 overflow-y-auto">
+          {/* PV Array */}
+          <div className="bg-white border border-gray-200 rounded-xl p-3">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-bold text-forest-900 flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-sm bg-forest-600 inline-block" /> PV Array
+              </p>
+              {pvDrawn && <button onClick={clearPV} className="text-xs text-red-400 hover:text-red-600"><RotateCcw className="w-3 h-3" /></button>}
+            </div>
+            {pvDrawn ? (
+              <p className="text-xs text-green-700 font-medium">{polygon.length} vertices drawn</p>
+            ) : (
+              <p className="text-xs text-gray-400">Click <strong>⬠ PV Array</strong> tool and trace the array boundary on the map.</p>
+            )}
+          </div>
+
+          {/* Receptors */}
+          <div className="bg-white border border-gray-200 rounded-xl p-3 flex-1 overflow-y-auto">
+            <p className="text-xs font-bold text-forest-900 mb-2 flex items-center gap-1.5">
+              <Eye className="w-3 h-3 text-blue-500" /> Receptors ({receptors.length})
+            </p>
+            {receptors.length === 0
+              ? <p className="text-xs text-gray-400">Use VS, FP, Route, or Heli tools to add receptors.</p>
+              : <div className="space-y-2">
+                  {receptors.map(rec => {
+                    const color = RECEPTOR_MODE_INFO[rec.type]?.color || '#6b7280';
+                    const isSelected = selectedId === rec.id;
+                    return (
+                      <div key={rec.id}
+                        onClick={() => setSelectedId(isSelected ? null : rec.id)}
+                        className={`rounded-lg border p-2 cursor-pointer transition-colors ${isSelected ? 'border-blue-300 bg-blue-50' : 'border-gray-200 hover:border-gray-300'}`}>
+                        <div className="flex items-center gap-1.5">
+                          <span className="w-5 h-5 rounded-full flex items-center justify-center text-white text-[9px] font-bold flex-shrink-0"
+                            style={{ backgroundColor: color }}>{rec.type[0].toUpperCase()}</span>
+                          <span className="flex-1 text-xs font-medium text-gray-800 truncate">{rec.name}</span>
+                          <button onClick={e=>{e.stopPropagation();removeReceptor(rec.id)}} className="text-gray-300 hover:text-red-500 flex-shrink-0">
+                            <Trash2 className="w-3 h-3" />
+                          </button>
+                        </div>
+                        {isSelected && (
+                          <div className="mt-2 space-y-1.5 pt-1.5 border-t border-gray-100">
+                            <input value={rec.name} onChange={e=>updateReceptor(rec.id,'name',e.target.value)}
+                              className="w-full text-xs border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-gold-400" />
+                            {rec.type === 'aviation' && rec.path ? (
+                              <p className="text-xs text-red-600 font-medium">Heights auto: 3° glide slope</p>
+                            ) : rec.type === 'helicopter' ? (
+                              <p className="text-xs text-orange-600 font-medium">8 directions · 8° slope · auto-heights</p>
+                            ) : (
+                              <label className="flex items-center gap-1 text-xs">
+                                <span className="text-gray-600">Height:</span>
+                                <input type="number" min="0" step="0.1" value={rec.height ?? DEFAULT_HEIGHTS[rec.type] ?? 1.5}
+                                  onChange={e=>updateReceptor(rec.id,'height',e.target.value)}
+                                  className="w-14 border border-gray-300 rounded px-1.5 py-0.5 text-xs focus:outline-none" />
+                                <span className="text-gray-500">m</span>
+                              </label>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+            }
+          </div>
+
+          {/* Obstructions */}
+          <div className="bg-white border border-gray-200 rounded-xl p-3">
+            <p className="text-xs font-bold text-forest-900 mb-2 flex items-center gap-1.5">
+              <span className="text-stone-500">⬢</span> Obstructions ({obstructions.length})
+            </p>
+            {obstructions.length === 0
+              ? <p className="text-xs text-gray-400">Use <strong>⬢ Obstruction</strong> tool to draw hedgerows, buildings, etc.</p>
+              : <div className="space-y-2">
+                  {obstructions.map(ob => {
+                    const isSelected = selectedId === ob.id;
+                    return (
+                      <div key={ob.id} onClick={()=>setSelectedId(isSelected?null:ob.id)}
+                        className={`rounded-lg border p-2 cursor-pointer transition-colors ${isSelected?'border-stone-300 bg-stone-50':'border-gray-200 hover:border-gray-300'}`}>
+                        <div className="flex items-center gap-1.5">
+                          <span className="w-5 h-5 rounded bg-stone-400 flex items-center justify-center text-white text-[9px] font-bold">OB</span>
+                          <span className="flex-1 text-xs font-medium text-gray-800 truncate">{ob.name}</span>
+                          <button onClick={e=>{e.stopPropagation();removeObstruction(ob.id)}} className="text-gray-300 hover:text-red-500">
+                            <Trash2 className="w-3 h-3" />
+                          </button>
+                        </div>
+                        {isSelected && (
+                          <div className="mt-2 space-y-1.5 pt-1.5 border-t border-gray-100">
+                            <input value={ob.name} onChange={e=>updateObstruction(ob.id,'name',e.target.value)}
+                              className="w-full text-xs border border-gray-300 rounded px-2 py-1 focus:outline-none" />
+                            <label className="flex items-center gap-1 text-xs">
+                              <span className="text-gray-600">Upper edge height:</span>
+                              <input type="number" min="0" step="0.5" value={ob.height}
+                                onChange={e=>updateObstruction(ob.id,'height',e.target.value)}
+                                className="w-14 border border-gray-300 rounded px-1.5 py-0.5 text-xs focus:outline-none" />
+                              <span className="text-gray-500">m</span>
+                            </label>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── OLD DrawingStep (kept as dead code placeholder — replaced by SiteMapStep)
 function DrawingStep({ location, polygon, onPolygonChange }) {
   const mapDivRef = useRef(null);
   const mapRef = useRef(null);
@@ -1270,6 +1711,7 @@ export default function GlareChecker() {
   const [polygon, setPolygon] = useState([]);
   const [params, setParams] = useState(DEFAULT_PARAMS);
   const [receptors, setReceptors] = useState([]);
+  const [obstructions, setObstructions] = useState([]);
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -1278,9 +1720,8 @@ export default function GlareChecker() {
 
   const canNext = () => {
     if (step === 1) return !!location;
-    if (step === 2) return polygon.length >= 3;
+    if (step === 2) return polygon.length >= 3 && receptors.length >= 1;
     if (step === 3) return true;
-    if (step === 4) return receptors.length >= 1;
     return false;
   };
 
@@ -1311,7 +1752,7 @@ export default function GlareChecker() {
       }
       const data = await res.json();
       setResults(data);
-      setStep(5);
+      setStep(4);
     } catch (err) {
       setError(err.message || 'Failed to run glare check. Please try again.');
     } finally {
@@ -1362,7 +1803,7 @@ export default function GlareChecker() {
 
       {/* Main content */}
       <div className="bg-gray-50 min-h-screen py-10 px-4">
-        <div className="container-custom max-w-5xl">
+        <div className={`container-custom ${step === 2 ? 'max-w-7xl' : 'max-w-5xl'}`}>
           <StepBar current={step} />
 
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 md:p-10">
@@ -1370,18 +1811,17 @@ export default function GlareChecker() {
               <LocationStep location={location} onLocationSelect={setLocation} />
             )}
             {step === 2 && (
-              <DrawingStep location={location} polygon={polygon} onPolygonChange={setPolygon} />
+              <SiteMapStep
+                location={location}
+                polygon={polygon} onPolygonChange={setPolygon}
+                receptors={receptors} onReceptorsChange={setReceptors}
+                obstructions={obstructions} onObstructionsChange={setObstructions}
+              />
             )}
             {step === 3 && (
               <ParamsStep params={params} onChange={setParams} />
             )}
-            {step === 4 && (
-              <ReceptorsStep
-                location={location} polygon={polygon}
-                receptors={receptors} onReceptorsChange={setReceptors}
-              />
-            )}
-            {step === 5 && results && (
+            {step === 4 && results && (
               <ResultsDisplay results={results} onRequestReport={() => setShowLead(true)} />
             )}
 
@@ -1399,7 +1839,7 @@ export default function GlareChecker() {
             )}
 
             {/* Nav buttons */}
-            {step < 5 && (
+            {step < 4 && (
               <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-100">
                 <button
                   onClick={() => setStep(s => Math.max(1, s - 1))}
@@ -1409,18 +1849,25 @@ export default function GlareChecker() {
                   <ChevronLeft className="w-4 h-4" /> Back
                 </button>
 
-                {step < 4 ? (
-                  <button
-                    onClick={() => setStep(s => s + 1)}
-                    disabled={!canNext()}
-                    className="btn-primary px-7 py-2.5 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Next <ChevronRight className="w-4 h-4" />
-                  </button>
+                {step < 3 ? (
+                  <div className="flex flex-col items-end gap-1">
+                    {step === 2 && !canNext() && (
+                      <p className="text-xs text-amber-600">
+                        {polygon.length < 3 ? 'Draw the PV array first.' : 'Add at least one receptor.'}
+                      </p>
+                    )}
+                    <button
+                      onClick={() => setStep(s => s + 1)}
+                      disabled={!canNext()}
+                      className="btn-primary px-7 py-2.5 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Next <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
                 ) : (
                   <button
                     onClick={runCheck}
-                    disabled={loading || !canNext()}
+                    disabled={loading}
                     className="btn-primary px-7 py-2.5 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {loading ? (
