@@ -42,7 +42,7 @@ export default function Footer() {
             </p>
             <div className="flex gap-3">
               {[
-                { icon: LinkedInIcon, href: '#', label: 'LinkedIn' },
+                { icon: LinkedInIcon, href: 'https://www.linkedin.com/company/solar-planning-ireland/', label: 'LinkedIn' },
                 { icon: XIcon, href: '#', label: 'X (Twitter)' },
                 { icon: FacebookIcon, href: '#', label: 'Facebook' },
               ].map(({ icon: Icon, href, label }) => (
@@ -50,6 +50,8 @@ export default function Footer() {
                   key={label}
                   href={href}
                   aria-label={label}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-9 h-9 rounded-lg bg-forest-800 hover:bg-gold-600 flex items-center justify-center transition-colors"
                 >
                   <Icon className="w-4 h-4" />
