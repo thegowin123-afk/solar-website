@@ -94,7 +94,7 @@ export default function Home() {
     <>
       <Helmet>
         <title>Solar PV Planning Drawings &amp; Glint and Glare Reports Ireland | SolarPlan Ireland</title>
-        <meta name="description" content="Council-ready solar PV planning drawings, ForgeSolar glint and glare assessments, glare pre-simulation and landscape plan support for rooftop and ground-mounted solar PV projects across Ireland." />
+        <meta name="description" content="Solar PV planning drawings, glint and glare reports, pre-simulation and landscape plan support for rooftop and ground-mounted solar projects in Ireland." />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href={PAGE_URL} />
         <meta property="og:title" content="Solar PV Planning Drawings &amp; Glint and Glare Reports Ireland | SolarPlan Ireland" />

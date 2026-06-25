@@ -42,7 +42,7 @@ export default function SolarFarmPlanningDrawings() {
     <>
       <Helmet>
         <title>Solar Farm Planning Drawings Ireland | Council-Ready Drawing Packs</title>
-        <meta name="description" content="Solar farm planning drawings for planning applications in Ireland. Site layouts, PV array plans, elevations, sections, equipment layouts and full council-ready drawing packs." />
+        <meta name="description" content="Solar farm planning drawings for Ireland, including PV array layouts, site plans, access, equipment locations and planning submission drawings." />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href={PAGE_URL} />
         <meta property="og:title" content="Solar Farm Planning Drawings Ireland | Council-Ready Drawing Packs" />

@@ -42,7 +42,7 @@ export default function GlintAndGlareReport() {
     <>
       <Helmet>
         <title>Glint and Glare Report Ireland | Council-Ready Solar PV Reports</title>
-        <meta name="description" content="Council-ready glint and glare reports for solar PV planning applications in Ireland, including ForgeSolar modelling, receptor assessment, results and mitigation advice." />
+        <meta name="description" content="Council-ready glint and glare reports for solar PV planning applications in Ireland, including receptor review, modelling results and mitigation advice." />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href={PAGE_URL} />
         <meta property="og:title" content="Glint and Glare Report Ireland | Council-Ready Solar PV Reports" />

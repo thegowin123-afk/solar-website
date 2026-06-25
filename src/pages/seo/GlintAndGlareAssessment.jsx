@@ -45,7 +45,7 @@ export default function GlintAndGlareAssessment() {
     <>
       <Helmet>
         <title>Glint and Glare Assessment Ireland | Solar PV ForgeSolar Reports</title>
-        <meta name="description" content="Glint and glare assessments for solar PV planning applications in Ireland using ForgeSolar modelling for roads, dwellings, aviation, rail and sensitive receptors." />
+        <meta name="description" content="ForgeSolar-based glint and glare assessments for Irish solar PV projects, covering roads, dwellings, rail, aviation and sensitive receptors." />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href={PAGE_URL} />
         <meta property="og:title" content="Glint and Glare Assessment Ireland | Solar PV ForgeSolar Reports" />

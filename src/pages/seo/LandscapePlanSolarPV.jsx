@@ -42,7 +42,7 @@ export default function LandscapePlanSolarPV() {
     <>
       <Helmet>
         <title>Landscape Plan for Solar PV Ireland | Planning Application Support</title>
-        <meta name="description" content="Landscape plan support for solar PV planning applications in Ireland, including vegetation removal, mitigation planting, screening and planning drawing coordination." />
+        <meta name="description" content="Landscape plan support for solar PV planning applications in Ireland, including vegetation removal, mitigation planting, screening and drawing coordination." />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href={PAGE_URL} />
         <meta property="og:title" content="Landscape Plan for Solar PV Ireland | Planning Application Support" />
