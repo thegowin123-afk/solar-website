@@ -403,9 +403,59 @@ function SiteMapStep({ location, polygon, onPolygonChange, receptors, onReceptor
       });
     }
 
-    // ── Path tools: Flight Path, Road/Route ──
-    else if (toolId === 'fp' || toolId === 'route') {
-      const color = toolId === 'fp' ? '#ef4444' : '#f59e0b';
+    // ── Flight Path: click threshold, click direction → auto-extend to 2 NM ──
+    else if (toolId === 'fp') {
+      let tempLine = null;
+      clickListenerRef.current = google.maps.event.addListener(map, 'click', (e) => {
+        const pt = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+        pathPtsRef.current = [...pathPtsRef.current, pt];
+
+        // Place marker for this click
+        const dot = new google.maps.Marker({ position: pt, map,
+          icon: { path: google.maps.SymbolPath.CIRCLE, scale: pathPtsRef.current.length===1?9:6,
+            fillColor: '#ef4444', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 },
+          label: pathPtsRef.current.length===1 ? { text:'T', color:'#fff', fontSize:'10px', fontWeight:'bold' } : undefined,
+          title: pathPtsRef.current.length===1 ? 'Threshold' : 'Direction point',
+        });
+        tempOverlaysRef.current.push(dot);
+
+        if (pathPtsRef.current.length === 2) {
+          // Two clicks — compute bearing and auto-extend to exactly 2 NM from threshold
+          const threshold = pathPtsRef.current[0];
+          const dir = pathPtsRef.current[1];
+          const TWO_NM = 3704; // metres
+          // Compute bearing from threshold to dir click
+          const φ1 = threshold.lat * Math.PI/180, φ2 = dir.lat * Math.PI/180;
+          const dλ = (dir.lng - threshold.lng) * Math.PI/180;
+          const y = Math.sin(dλ)*Math.cos(φ2);
+          const x = Math.cos(φ1)*Math.sin(φ2) - Math.sin(φ1)*Math.cos(φ2)*Math.cos(dλ);
+          const bearing = (Math.atan2(y,x) * 180/Math.PI + 360) % 360;
+          // Sample path every 200m along the 2-NM bearing
+          const steps = 12;
+          const fullPath = Array.from({ length: steps+1 }, (_,k) => destinationPoint(threshold, bearing, (k/steps)*TWO_NM));
+          // Remove temp line/dots and commit
+          clearTemp();
+          const type = 'aviation';
+          const typeConf = RECEPTOR_TYPES.find(t => t.value === type);
+          const newRec = {
+            id: `rec-${Date.now()}`, type,
+            name: `Flight Path ${receptors.filter(r=>r.type===type).length + 1} (${Math.round(bearing)}°)`,
+            path: fullPath, lat: fullPath[0].lat, lng: fullPath[0].lng,
+            height: DEFAULT_HEIGHTS[type],
+            direction: Math.round(bearing),
+          };
+          onReceptorsChange([...receptors, newRec]);
+          stopDrawing(); setActiveTool('move');
+        } else {
+          setModeInfo({ vertices: 1, length: 0 });
+          if (tempLine) tempLine.setMap(null);
+        }
+      });
+    }
+
+    // ── Road/Route: multi-click, double-click to finish ──
+    else if (toolId === 'route') {
+      const color = '#f59e0b';
       let tempLine = null;
       clickListenerRef.current = google.maps.event.addListener(map, 'click', (e) => {
         const pt = { lat: e.latLng.lat(), lng: e.latLng.lng() };
@@ -424,7 +474,7 @@ function SiteMapStep({ location, polygon, onPolygonChange, receptors, onReceptor
       dblClickListenerRef.current = google.maps.event.addListener(map, 'dblclick', () => {
         const pts = pathPtsRef.current.slice(0, -1);
         if (pts.length < 2) { stopDrawing(); return; }
-        const type = toolId === 'fp' ? 'aviation' : (routeSubtype === 'railway' ? 'railway' : 'road');
+        const type = routeSubtype === 'railway' ? 'railway' : 'road';
         const typeConf = RECEPTOR_TYPES.find(t => t.value === type);
         const newRec = {
           id: `rec-${Date.now()}`, type,
