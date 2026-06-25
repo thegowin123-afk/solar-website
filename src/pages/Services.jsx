@@ -21,7 +21,7 @@ export default function Services() {
     <>
       <Helmet>
         <title>Solar Planning Services Ireland | Glint & Glare, Landscape Plans, PV Drawings | SolarPlan Ireland</title>
-        <meta name="description" content="Expert solar planning services across Ireland: glint & glare analysis, PV planning drawings, ground and roof-mounted solar design, and Landscape Plans. Accepted by An Bord Pleanála and all 31 county councils." />
+        <meta name="description" content="Browse SolarPlan Ireland's solar planning services: ForgeSolar glint and glare assessments, AutoCAD PV planning drawings, ground-mounted and rooftop solar design, and landscape plans — all accepted by An Bord Pleanála and the 31 county councils." />
         <link rel="canonical" href={PAGE_URL} />
         <meta property="og:title" content="Solar Planning Services Ireland | SolarPlan Ireland" />
         <meta property="og:description" content="Expert solar planning services across Ireland: glint & glare analysis, PV planning drawings, ground and roof-mounted solar design, and Landscape Plans." />

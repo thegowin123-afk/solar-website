@@ -10,10 +10,12 @@ export default function PVDrawingsSample() {
     <>
       <Helmet>
         <title>Sample Solar PV Planning Drawing Pack | SolarPlan Ireland</title>
-        <meta name="description" content="Sample solar PV planning drawing pack for a ground-mounted solar farm planning application in Ireland — site layout, elevations, cross-sections." />
+        <meta name="description" content="View a sample solar PV planning drawing pack produced by SolarPlan Ireland for a ground-mounted solar farm planning application — includes site layout plan, panel elevations and cross-sections." />
         <link rel="canonical" href={PAGE_URL} />
         <meta name="robots" content="index, follow" />
       </Helmet>
+
+      <h1 className="sr-only print:hidden">Sample Solar PV Planning Drawing Pack — SolarPlan Ireland</h1>
 
       {/* Toolbar */}
       <div className="print:hidden sticky top-0 z-50 bg-forest-950 text-white px-6 py-3 flex items-center justify-between gap-4">

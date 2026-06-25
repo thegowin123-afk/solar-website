@@ -52,6 +52,16 @@ export default function BlogPost() {
     keywords: post.tags.join(', '),
   };
 
+  const faqSchema = post.faqs?.length ? {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: post.faqs.map(({ q, a }) => ({
+      '@type': 'Question',
+      name: q,
+      acceptedAnswer: { '@type': 'Answer', text: a },
+    })),
+  } : null;
+
   return (
     <>
       <Helmet>
@@ -69,6 +79,7 @@ export default function BlogPost() {
         <meta name="twitter:description" content={post.excerpt} />
         <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
         <script type="application/ld+json">{JSON.stringify(articleSchema)}</script>
+        {faqSchema && <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>}
       </Helmet>
 
       {/* Article hero */}
@@ -105,6 +116,40 @@ export default function BlogPost() {
               <div className="prose-custom">
                 {renderContent(post.content)}
               </div>
+
+              {/* Related services — internal links */}
+              {post.relatedServices?.length > 0 && (
+                <div className="mt-10 p-5 bg-forest-50 border border-forest-100 rounded-2xl">
+                  <p className="text-xs font-bold text-forest-700 uppercase tracking-wide mb-3">Related Services</p>
+                  <div className="flex flex-wrap gap-2">
+                    {post.relatedServices.map(({ label, href }) => (
+                      <Link key={href} to={href}
+                        className="inline-flex items-center gap-1.5 text-sm font-medium text-forest-800 bg-white border border-forest-200 hover:border-gold-400 hover:text-gold-700 rounded-lg px-3 py-1.5 transition-colors">
+                        {label} <ArrowRight className="w-3 h-3" />
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* FAQs */}
+              {post.faqs?.length > 0 && (
+                <div className="mt-10">
+                  <h2 className="text-2xl font-heading font-bold text-forest-900 mb-6">Frequently Asked Questions</h2>
+                  <div className="space-y-4">
+                    {post.faqs.map(({ q, a }) => (
+                      <details key={q} className="group border border-gray-200 rounded-xl overflow-hidden">
+                        <summary className="flex items-center justify-between gap-3 px-5 py-4 cursor-pointer font-semibold text-forest-900 text-sm select-none list-none hover:bg-gray-50">
+                          {q}
+                          <span className="text-gold-500 text-lg leading-none group-open:rotate-45 transition-transform flex-shrink-0">+</span>
+                        </summary>
+                        <div className="px-5 pb-4 text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-3">{a}</div>
+                      </details>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Tags */}
               <div className="flex flex-wrap gap-2 mt-10 pt-8 border-t border-gray-200">
                 {post.tags.map((tag) => (

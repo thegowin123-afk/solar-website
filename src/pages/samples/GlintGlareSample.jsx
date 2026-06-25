@@ -10,7 +10,7 @@ export default function GlintGlareSample() {
     <>
       <Helmet>
         <title>Sample Glint and Glare Report | SolarPlan Ireland</title>
-        <meta name="description" content="Sample glint and glare assessment report for a ground-mounted solar PV planning application in Ireland using ForgeSolar methodology." />
+        <meta name="description" content="Download and view a real sample glint and glare assessment report produced by SolarPlan Ireland for a ground-mounted solar PV planning application, using ForgeSolar methodology." />
         <link rel="canonical" href={PAGE_URL} />
         <meta name="robots" content="index, follow" />
       </Helmet>
@@ -28,6 +28,9 @@ export default function GlintGlareSample() {
           <Printer className="w-4 h-4" /> Print / Save as PDF
         </button>
       </div>
+
+      {/* SR-only H1 for SEO — hidden visually and on print */}
+      <h1 className="sr-only print:hidden">Sample Glint and Glare Assessment Report — SolarPlan Ireland</h1>
 
       {/* Report document */}
       <div className="max-w-4xl mx-auto px-6 py-12 print:px-0 print:py-0 font-serif text-gray-900">

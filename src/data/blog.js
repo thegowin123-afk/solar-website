@@ -107,6 +107,17 @@ Contact SolarPlan Ireland to discuss your project and get a tailored quote for t
     tags: ['Planning Permission', 'Ireland', 'Solar Farm', 'Guide'],
     image: '/images/blog-1.jpg',
     featured: true,
+    relatedServices: [
+      { label: 'PV Planning Drawings', href: '/services/pv-planning-drawings' },
+      { label: 'Glint & Glare Analysis', href: '/services/glint-glare-analysis' },
+      { label: 'Landscape Plans', href: '/services/landscape-plans' },
+    ],
+    faqs: [
+      { q: 'Do I need planning permission for solar panels in Ireland?', a: 'Small domestic rooftop systems are generally exempt from planning permission. Ground-mounted solar farms above 0.5 hectares and most commercial installations require full planning permission from the local authority.' },
+      { q: 'What planning documents does a solar farm need in Ireland?', a: 'A solar farm planning application typically requires site layout plans, elevation drawings, a glint and glare assessment, a landscape plan, a planning statement, and depending on scale, an EIAR.' },
+      { q: 'How long does solar farm planning permission take in Ireland?', a: 'Standard planning decisions take 8 weeks from validation. With pre-application consultations and potential further information requests, 4–6 months is a realistic end-to-end timeline.' },
+      { q: 'What is an EIAR and when is it required for a solar farm?', a: 'An Environmental Impact Assessment Report (EIAR) is required for solar farms above 500kW in certain categories, or where the project is in a sensitive area. An Bord Pleanála handles strategic development applications above 100MW.' },
+    ],
   },
   {
     id: 2,
@@ -159,6 +170,16 @@ Typically 2–4 weeks from receipt of full site drawings. Expedited delivery ava
     tags: ['Glint & Glare', 'Planning', 'Technical', 'FAQ'],
     image: '/images/blog-2.jpg',
     featured: false,
+    relatedServices: [
+      { label: 'Glint & Glare Assessment', href: '/services/glint-glare-analysis' },
+      { label: 'Solar Glare Pre-Simulation', href: '/solar-glare-pre-simulation' },
+    ],
+    faqs: [
+      { q: 'What is glint and glare from solar panels?', a: 'Glint is a momentary flash of reflected sunlight from a PV panel surface. Glare is a more sustained reflection causing visual discomfort. Irish planning authorities require assessment of both for solar farm applications.' },
+      { q: 'What tool is used for glint and glare assessment in Ireland?', a: 'ForgeSolar is the industry-standard software for glint and glare modelling in Irish solar planning. It uses ray-tracing to simulate reflections from PV panels at every minute of the year.' },
+      { q: 'Can landscaping mitigate solar glare?', a: 'Yes. Hedgerow and tree planting can screen residential receptors from reflected light. Mitigation planting schemes are often designed alongside the glint and glare assessment.' },
+      { q: 'How long does a glint and glare assessment take?', a: 'Typically 2–4 weeks from receipt of full site drawings. Expedited delivery is available for time-sensitive applications.' },
+    ],
   },
   {
     id: 3,
@@ -436,6 +457,15 @@ See also: [Glint and Glare Analysis service](/services/glint-glare-analysis) | [
     tags: ['Glint & Glare', 'Planning Ireland', 'ForgeSolar', 'Solar Farm'],
     image: '/images/blog-6.jpg',
     featured: false,
+    relatedServices: [
+      { label: 'Glint & Glare Assessment', href: '/services/glint-glare-analysis' },
+      { label: 'Glint & Glare Report', href: '/glint-and-glare-report-ireland' },
+    ],
+    faqs: [
+      { q: 'Is a glint and glare assessment always required for solar planning in Ireland?', a: 'Not always, but most local authorities and An Bord Pleanála request one for ground-mounted solar farms. Even where not mandatory, submitting a glint and glare assessment proactively reduces the risk of further information requests.' },
+      { q: 'What receptors are assessed in a glint and glare report?', a: 'Assessments typically cover residential dwellings, public roads, railways, aviation flight paths, Air Traffic Control Towers, and other sensitive locations within the site\'s zone of theoretical visibility.' },
+      { q: 'What happens if glare is predicted at a receptor?', a: 'Where glare is predicted, the report will recommend mitigation measures — typically anti-reflective coatings, adjusted panel tilt or orientation, or screening planting — and a revised assessment is submitted.' },
+    ],
   },
   {
     id: 7,
@@ -535,6 +565,16 @@ We produce complete drawing packages that are cross-checked for consistency befo
     tags: ['Planning Drawings', 'Solar Farm', 'Ireland', 'AutoCAD'],
     image: '/images/blog-7.jpg',
     featured: false,
+    relatedServices: [
+      { label: 'PV Planning Drawings', href: '/services/pv-planning-drawings' },
+      { label: 'Ground-Mounted Solar Design', href: '/services/ground-mounted-solar-design' },
+      { label: 'Solar Farm Planning Drawings', href: '/solar-farm-planning-drawings-ireland' },
+    ],
+    faqs: [
+      { q: 'What drawings are required for a solar farm planning application in Ireland?', a: 'A typical solar farm planning pack requires a site location map, site layout plan, panel elevation drawings, cross-sections, equipment layout, and a site notice drawing. AutoCAD-produced drawings to scale are required by most councils.' },
+      { q: 'What scale should solar farm planning drawings be?', a: 'Site location maps are typically 1:1,000 or 1:2,500. Site layout plans are usually 1:500 or 1:1,000. Detail drawings of panels and mounting structures are typically 1:50 or 1:100.' },
+      { q: 'Can I reuse planning drawings for multiple counties in Ireland?', a: 'The base drawings can often be adapted, but each application requires county-specific site location maps, project-specific details, and compliance with local development plan requirements.' },
+    ],
   },
   {
     id: 8,
@@ -619,6 +659,16 @@ See: [Solar Glare Pre-Simulation](/solar-glare-pre-simulation) | [Glint and Glar
     tags: ['ForgeSolar', 'Glint & Glare', 'Methodology', 'Solar Planning'],
     image: '/images/blog-8.jpg',
     featured: false,
+    relatedServices: [
+      { label: 'Glint & Glare Assessment', href: '/services/glint-glare-analysis' },
+      { label: 'Glint & Glare Report Ireland', href: '/glint-and-glare-report-ireland' },
+      { label: 'Solar Glare Pre-Simulation', href: '/solar-glare-pre-simulation' },
+    ],
+    faqs: [
+      { q: 'What is ForgeSolar and why is it used in Ireland?', a: 'ForgeSolar is specialist ray-tracing software for solar glare assessment. It is the accepted standard tool for glint and glare modelling by An Bord Pleanála, all 31 Irish county councils, and the Irish Aviation Authority.' },
+      { q: 'What does "green glare" mean in a ForgeSolar report?', a: 'In ForgeSolar output, green indicates glare that is below the threshold of concern — equivalent to or less intense than blue sky. Yellow or red indicates glare that may require mitigation or further consideration.' },
+      { q: 'Do I need ForgeSolar for a rooftop solar application?', a: 'ForgeSolar is primarily used for ground-mounted solar farm applications. Small rooftop solar installations on commercial buildings may not require full ForgeSolar modelling, depending on the planning authority\'s requirements.' },
+    ],
   },
   {
     id: 9,
@@ -719,6 +769,16 @@ See also: [PV Planning Drawings](/services/pv-planning-drawings) | [Glint & Glar
     tags: ['Planning Timeline', 'Ireland', 'Solar Farm', 'Planning Permission'],
     image: '/images/blog-9.jpg',
     featured: false,
+    relatedServices: [
+      { label: 'PV Planning Drawings', href: '/services/pv-planning-drawings' },
+      { label: 'Glint & Glare Analysis', href: '/services/glint-glare-analysis' },
+      { label: 'Ground-Mounted Solar Planning', href: '/ground-mounted-solar-planning-ireland' },
+    ],
+    faqs: [
+      { q: 'How long does a solar farm planning application take in Ireland?', a: 'From initial brief to grant of permission, allow 4–8 months: 2–4 weeks for documentation preparation, 8 weeks statutory decision period, plus potential further information rounds of 4–8 weeks each.' },
+      { q: 'Can I speed up a solar planning application in Ireland?', a: 'Pre-application consultation with the local authority, a complete documentation pack at first submission, and prompt responses to further information requests all reduce overall timeline significantly.' },
+      { q: 'What causes delays in solar farm planning in Ireland?', a: 'The most common causes of delay are incomplete drawing packs, missing supporting reports (especially glint and glare or landscape plans), Appropriate Assessment screening, and third-party appeals to An Bord Pleanála.' },
+    ],
   },
   {
     id: 10,
@@ -816,6 +876,16 @@ See also: [Landscape Plans service](/services/landscape-plans) | [Ground-Mounted
     tags: ['Landscape Plans', 'LVIA', 'Solar Farm', 'Planning Ireland'],
     image: '/images/blog-10.jpg',
     featured: false,
+    relatedServices: [
+      { label: 'Landscape Plans for Solar PV', href: '/services/landscape-plans' },
+      { label: 'Landscape Plan Ireland', href: '/landscape-plan-solar-pv-ireland' },
+      { label: 'Ground-Mounted Solar Design', href: '/services/ground-mounted-solar-design' },
+    ],
+    faqs: [
+      { q: 'What should a solar farm landscape plan include in Ireland?', a: 'A solar farm landscape plan should include existing vegetation survey, proposed boundary treatment, mitigation planting schedule (species, sizes, spacing), maintenance plan, and site cross-sections showing screening effectiveness.' },
+      { q: 'Who prepares a landscape plan for a solar farm in Ireland?', a: 'Landscape plans are typically prepared by landscape architects or specialist solar planning consultants. The plan is usually coordinated with the LVIA (Landscape and Visual Impact Assessment) prepared by the project team.' },
+      { q: 'Is a landscape plan always required for solar farm planning in Ireland?', a: 'Most county councils and An Bord Pleanála require a landscape plan for ground-mounted solar farms. Even where not explicitly required, submitting one proactively demonstrates good design and reduces the risk of objections.' },
+    ],
   },
 ];
 

@@ -10,10 +10,12 @@ export default function LandscapePlanSample() {
     <>
       <Helmet>
         <title>Sample Landscape Plan — Solar PV Ireland | SolarPlan Ireland</title>
-        <meta name="description" content="Sample landscape plan and planting schedule for a ground-mounted solar farm planning application in Ireland, prepared to An Bord Pleanála and county council standards." />
+        <meta name="description" content="View a sample solar farm landscape plan and planting schedule prepared by SolarPlan Ireland to An Bord Pleanála and county council standards — including screening, boundary treatment and mitigation planting." />
         <link rel="canonical" href={PAGE_URL} />
         <meta name="robots" content="index, follow" />
       </Helmet>
+
+      <h1 className="sr-only print:hidden">Sample Solar Farm Landscape Plan — SolarPlan Ireland</h1>
 
       {/* Toolbar */}
       <div className="print:hidden sticky top-0 z-50 bg-forest-950 text-white px-6 py-3 flex items-center justify-between gap-4">
