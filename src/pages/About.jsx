@@ -85,7 +85,7 @@ export default function About() {
     <>
       <Helmet>
         <title>About SolarPlan Ireland | Solar Planning Application Specialists Since 2016</title>
-        <meta name="description" content="SolarPlan Ireland — India-based (Mumbai) solar planning application specialists. Expert glint & glare, Landscape Plans, and PV planning drawings for Irish solar projects. 150+ projects, 94% approval rate." />
+        <meta name="description" content="SolarPlan Ireland — India-based solar planning specialists delivering glint and glare assessments, PV planning drawings and landscape plans for Irish solar projects. 150+ projects across 15+ counties." />
         <link rel="canonical" href={PAGE_URL} />
         <meta property="og:title" content="About SolarPlan Ireland | Solar Planning Application Specialists" />
         <meta property="og:description" content="India-based (Mumbai) solar planning specialists. Expert glint & glare, Landscape Plans, and PV planning drawings for Irish solar projects, at outsourcing rates." />
@@ -124,7 +124,7 @@ export default function About() {
               <div className="grid grid-cols-2 gap-4">
                 {[
                   { value: '150+', label: 'Projects Completed' },
-                  { value: '94%', label: 'First-Application Approval' },
+                  { value: '400MW+', label: 'Capacity Supported' },
                   { value: '30–50%', label: 'Client Cost Saving' },
                   { value: '15+', label: 'Irish Counties Served' },
                 ].map(({ value, label }) => (

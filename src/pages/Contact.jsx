@@ -166,7 +166,7 @@ export default function Contact() {
               <div className="bg-white border border-gray-200 rounded-2xl p-6">
                 <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-4">Why clients choose us</p>
                 {[
-                  '94% first-application approval rate',
+                  'Council-ready solar planning documentation',
                   'India-based team (Mumbai) — 30–50% cheaper than Dublin agencies',
                   'Dedicated named consultant on every project',
                   'Fixed fees — no surprise invoices',

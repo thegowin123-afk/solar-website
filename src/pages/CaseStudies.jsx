@@ -95,7 +95,7 @@ export default function CaseStudies() {
               { value: '150+', label: 'Projects Completed' },
               { value: '400MW+', label: 'Capacity Approved' },
               { value: '15+', label: 'Counties Served' },
-              { value: '94%', label: 'First-Application Success' },
+              { value: '400MW+', label: 'Capacity Supported' },
             ].map(({ value, label }) => (
               <div key={label}>
                 <p className="text-4xl font-heading font-bold mb-1">{value}</p>

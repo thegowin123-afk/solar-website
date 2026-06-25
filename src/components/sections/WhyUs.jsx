@@ -15,7 +15,7 @@ const reasons = [
   },
   {
     icon: FileCheck,
-    title: '94% First-Submission Approval',
+    title: 'Council-Ready Documentation',
     desc: 'Our reports are written to satisfy Irish planning authorities at first submission — protecting your reputation and your clients\' timelines.',
   },
   {
@@ -38,7 +38,7 @@ const reasons = [
 const stats = [
   { value: '150+', label: 'Projects Completed' },
   { value: '6+yrs', label: 'Irish Planning Experience' },
-  { value: '94%', label: 'First-Application Approval Rate' },
+  { value: '400MW+', label: 'Capacity Supported' },
   { value: '15+', label: 'Counties Served' },
 ];
 
