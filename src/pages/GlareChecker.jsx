@@ -206,14 +206,15 @@ const SITE_TOOLS = [
   { id: 'fp',         label: '2-Mile FP',       icon: '✈', color: '#ef4444', desc: 'Draw fixed-wing flight path from runway threshold outward. Double-click to finish.' },
   { id: 'heli',       label: 'Helicopter',      icon: '🚁', color: '#f97316', desc: 'Click helipad centre — 8 approach paths auto-drawn.' },
   { id: 'route',      label: 'Road/Route',      icon: '⟶', color: '#f59e0b', desc: 'Click to trace road or railway. Double-click to finish.' },
-  { id: 'ob',         label: 'Obstruction',     icon: '⬢', color: '#78716c', desc: 'Click to draw obstruction polygon. Click first point to close.' },
+  { id: 'ob',         label: 'Obstruction',     icon: '⬢', color: '#78716c', desc: 'Click to trace hedge/building edge (polyline). Double-click to finish.' },
 ];
 
 const VS_SUBTYPES = [
-  { value: 'residential', label: 'Residential', color: '#3b82f6' },
-  { value: 'atct',        label: 'Air Traffic Control', color: '#dc2626' },
-  { value: 'railway',     label: 'Railway Station', color: '#8b5cf6' },
-  { value: 'other',       label: 'Other', color: '#6b7280' },
+  { value: 'residential',      label: 'Residential',          color: '#3b82f6' },
+  { value: 'atct',             label: 'Air Traffic Control',  color: '#dc2626' },
+  { value: 'railway',          label: 'Railway Station',      color: '#8b5cf6' },
+  { value: 'vertical_surface', label: 'Vertical Surface',     color: '#0ea5e9' },
+  { value: 'other',            label: 'Other',                color: '#6b7280' },
 ];
 
 function SiteMapStep({ location, polygon, onPolygonChange, receptors, onReceptorsChange, obstructions, onObstructionsChange }) {
@@ -304,11 +305,12 @@ function SiteMapStep({ location, polygon, onPolygonChange, receptors, onReceptor
       }
     });
 
-    // Obstructions
+    // Obstructions — rendered as dashed polylines (ForgeSolar style)
     obstructions.forEach(ob => {
-      if (ob.path?.length >= 3) {
-        const poly = new google.maps.Polygon({ paths: ob.path, fillColor: '#78716c', fillOpacity: 0.4, strokeColor: '#78716c', strokeWeight: 2, map });
-        allOverlaysRef.current.push(poly);
+      if (ob.path?.length >= 2) {
+        const line = new google.maps.Polyline({ path: ob.path, strokeColor: '#78716c', strokeWeight: 3, strokeOpacity: 0.9, map,
+          icons: [{ icon: { path: 'M 0,-1 0,1', strokeOpacity: 1, scale: 3 }, offset: '0', repeat: '12px' }] });
+        allOverlaysRef.current.push(line);
         const mid = ob.path[Math.floor(ob.path.length/2)];
         const m = new google.maps.Marker({ position: mid, map, title: `${ob.name} (${ob.height}m)`,
           icon: { path: google.maps.SymbolPath.CIRCLE, scale: 7, fillColor: '#78716c', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 },
@@ -443,6 +445,7 @@ function SiteMapStep({ location, polygon, onPolygonChange, receptors, onReceptor
             path: fullPath, lat: fullPath[0].lat, lng: fullPath[0].lng,
             height: DEFAULT_HEIGHTS[type],
             direction: Math.round(bearing),
+            glideSlope: 3,
           };
           onReceptorsChange([...receptors, newRec]);
           stopDrawing(); setActiveTool('move');
@@ -487,27 +490,30 @@ function SiteMapStep({ location, polygon, onPolygonChange, receptors, onReceptor
       });
     }
 
-    // ── Obstruction (polygon) ──
+    // ── Obstruction (polyline — ForgeSolar style: hedge/fence/building edge) ──
     else if (toolId === 'ob') {
-      let obPts = [];
       let tempLine = null;
       clickListenerRef.current = google.maps.event.addListener(map, 'click', (e) => {
         const pt = { lat: e.latLng.lat(), lng: e.latLng.lng() };
-        if (obPts.length >= 3 && haversineDist(obPts[0], pt) < 15) {
-          const newOb = { id: `ob-${Date.now()}`, name: `Obstruction ${obstructions.length+1}`, path: [...obPts], height: 12 };
-          onObstructionsChange([...obstructions, newOb]);
-          stopDrawing(); setActiveTool('move'); return;
-        }
-        obPts = [...obPts, pt];
+        pathPtsRef.current = [...pathPtsRef.current, pt];
         const dot = new google.maps.Marker({ position: pt, map,
-          icon: { path: google.maps.SymbolPath.CIRCLE, scale: obPts.length===1?8:5, fillColor: '#78716c', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 } });
+          icon: { path: google.maps.SymbolPath.CIRCLE, scale: pathPtsRef.current.length===1?8:5, fillColor: '#78716c', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 } });
         tempOverlaysRef.current.push(dot);
         if (tempLine) tempLine.setMap(null);
-        if (obPts.length >= 2) {
-          tempLine = new google.maps.Polyline({ path: [...obPts, obPts[0]], strokeColor: '#78716c', strokeWeight: 2, strokeOpacity: 0.7, map });
+        if (pathPtsRef.current.length >= 2) {
+          tempLine = new google.maps.Polyline({ path: pathPtsRef.current, strokeColor: '#78716c', strokeWeight: 3, strokeOpacity: 0.8, strokeDashArray: '8 4', map,
+            icons: [{ icon: { path: 'M 0,-1 0,1', strokeOpacity: 1, scale: 3 }, offset: '0', repeat: '12px' }] });
           tempOverlaysRef.current.push(tempLine);
         }
-        setModeInfo({ vertices: obPts.length, length: 0 });
+        const totalLen = pathPtsRef.current.reduce((s,p,i,a)=>i===0?0:s+haversineDist(a[i-1],p),0);
+        setModeInfo({ vertices: pathPtsRef.current.length, length: Math.round(totalLen) });
+      });
+      dblClickListenerRef.current = google.maps.event.addListener(map, 'dblclick', () => {
+        const pts = pathPtsRef.current.slice(0, -1);
+        if (pts.length < 2) { stopDrawing(); return; }
+        const newOb = { id: `ob-${Date.now()}`, name: `Obstruction ${obstructions.length+1}`, path: pts, height: 3 };
+        onObstructionsChange([...obstructions, newOb]);
+        stopDrawing(); setActiveTool('move');
       });
     }
   };
@@ -624,16 +630,27 @@ function SiteMapStep({ location, polygon, onPolygonChange, receptors, onReceptor
                             <input value={rec.name} onChange={e=>updateReceptor(rec.id,'name',e.target.value)}
                               className="w-full text-xs border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-gold-400" />
                             {rec.type === 'aviation' && rec.path ? (
-                              <p className="text-xs text-red-600 font-medium">Heights auto: 3° glide slope</p>
+                              <div className="space-y-1">
+                                <p className="text-xs text-gray-500">Direction: <strong>{rec.direction ?? '—'}°</strong> · Pilot FOV filter: ±50°</p>
+                                <label className="flex items-center gap-1 text-xs">
+                                  <span className="text-gray-600">Glide slope:</span>
+                                  <input type="number" min="1" max="10" step="0.5" value={rec.glideSlope ?? 3}
+                                    onChange={e=>updateReceptor(rec.id,'glideSlope',parseFloat(e.target.value)||3)}
+                                    className="w-12 border border-gray-300 rounded px-1.5 py-0.5 text-xs focus:outline-none" />
+                                  <span className="text-gray-500">°</span>
+                                </label>
+                                <p className="text-xs text-red-500">Heights auto-calculated from glide slope</p>
+                              </div>
                             ) : rec.type === 'helicopter' ? (
                               <p className="text-xs text-orange-600 font-medium">8 directions · 8° slope · auto-heights</p>
                             ) : (
                               <label className="flex items-center gap-1 text-xs">
-                                <span className="text-gray-600">Height:</span>
+                                <span className="text-gray-600">{rec.type === 'vertical_surface' ? 'Eye height:' : 'Height:'}</span>
                                 <input type="number" min="0" step="0.1" value={rec.height ?? DEFAULT_HEIGHTS[rec.type] ?? 1.5}
                                   onChange={e=>updateReceptor(rec.id,'height',e.target.value)}
                                   className="w-14 border border-gray-300 rounded px-1.5 py-0.5 text-xs focus:outline-none" />
                                 <span className="text-gray-500">m</span>
+                                {rec.type === 'vertical_surface' && <span className="text-sky-500 text-[10px]">glass/façade</span>}
                               </label>
                             )}
                           </div>
@@ -651,7 +668,7 @@ function SiteMapStep({ location, polygon, onPolygonChange, receptors, onReceptor
               <span className="text-stone-500">⬢</span> Obstructions ({obstructions.length})
             </p>
             {obstructions.length === 0
-              ? <p className="text-xs text-gray-400">Use <strong>⬢ Obstruction</strong> tool to draw hedgerows, buildings, etc.</p>
+              ? <p className="text-xs text-gray-400">Use <strong>⬢ Obstruction</strong> to trace hedgerows, trees, or building edges (polyline). Double-click to finish.</p>
               : <div className="space-y-2">
                   {obstructions.map(ob => {
                     const isSelected = selectedId === ob.id;
@@ -1096,11 +1113,18 @@ function expandReceptors(receptors) {
     }
     const intervalM = rec.type === 'aviation' ? 200 : 50;
     const samples = samplePolyline(rec.path, intervalM);
+    const glideSlopeDeg = rec.glideSlope ?? 3;
     samples.forEach((pt, idx) => {
       const height = rec.type === 'aviation'
-        ? aviationGlideSlopeHeight(pt.distFromStart)
+        ? Math.max(2, pt.distFromStart * Math.tan(glideSlopeDeg * Math.PI / 180))
         : (rec.height ?? DEFAULT_HEIGHTS[rec.type] ?? 1.5);
-      out.push({ id: `${rec.id}_${idx}`, type: rec.type, name: `${rec.name} (pt ${idx + 1})`, lat: pt.lat, lng: pt.lng, height });
+      out.push({
+        id: `${rec.id}_${idx}`, type: rec.type,
+        name: `${rec.name} (pt ${idx + 1})`,
+        lat: pt.lat, lng: pt.lng, height,
+        // pilot FOV: glare only valid within ±50° of approach bearing
+        ...(rec.type === 'aviation' && rec.direction != null ? { pilot_bearing: rec.direction, pilot_fov_deg: 50 } : {}),
+      });
     });
   }
   return out;
