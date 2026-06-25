@@ -503,22 +503,100 @@ function ParamsStep({ params, onChange }) {
 // Default eye heights (m) by receptor type
 const DEFAULT_HEIGHTS = { road: 1.2, residential: 1.5, railway: 1.8, aviation: 100, atct: 10, other: 1.5 };
 
+// Which types use path drawing (vs single point)
+const PATH_RECEPTOR_TYPES = new Set(['road', 'railway', 'aviation', 'atct']);
+
+// Haversine distance in metres between two {lat,lng} points
+function haversineDist(a, b) {
+  const R = 6371000;
+  const φ1 = a.lat * Math.PI / 180, φ2 = b.lat * Math.PI / 180;
+  const dφ = (b.lat - a.lat) * Math.PI / 180;
+  const dλ = (b.lng - a.lng) * Math.PI / 180;
+  const x = Math.sin(dφ/2)**2 + Math.cos(φ1)*Math.cos(φ2)*Math.sin(dλ/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1-x));
+}
+
+// Interpolate point along great circle at fraction t between a and b
+function lerpLatLng(a, b, t) {
+  return { lat: a.lat + (b.lat - a.lat) * t, lng: a.lng + (b.lng - a.lng) * t };
+}
+
+// Sample a polyline path at every intervalM metres; returns [{lat,lng,distFromStart}]
+function samplePolyline(path, intervalM) {
+  if (path.length < 2) return path.map(p => ({ ...p, distFromStart: 0 }));
+  const samples = [];
+  let cumDist = 0, segStart = 0, segDist = haversineDist(path[0], path[1]);
+  samples.push({ ...path[0], distFromStart: 0 });
+  let targetDist = intervalM;
+  for (let i = 0; i < path.length - 1; i++) {
+    const A = path[i], B = path[i + 1];
+    const d = haversineDist(A, B);
+    while (targetDist <= cumDist + d) {
+      const t = (targetDist - cumDist) / d;
+      samples.push({ ...lerpLatLng(A, B, t), distFromStart: targetDist });
+      targetDist += intervalM;
+    }
+    cumDist += d;
+  }
+  samples.push({ ...path[path.length - 1], distFromStart: cumDist });
+  return samples;
+}
+
+// Aviation 3° glide-slope height at distM from threshold (near end of drawn path)
+function aviationGlideSlopeHeight(distM) {
+  const GLIDE_DEG = 3.0;
+  const THRESHOLD_HEIGHT = 15; // aircraft height at threshold (m)
+  return Math.max(THRESHOLD_HEIGHT, distM * Math.tan(GLIDE_DEG * Math.PI / 180) + THRESHOLD_HEIGHT);
+}
+
+// Expand path-based receptors into per-point receptors for API
+function expandReceptors(receptors) {
+  const out = [];
+  for (const rec of receptors) {
+    if (!rec.path || rec.path.length < 2) {
+      out.push({ id: rec.id, type: rec.type, name: rec.name, lat: rec.lat, lng: rec.lng, height: rec.height ?? DEFAULT_HEIGHTS[rec.type] ?? 1.5 });
+      continue;
+    }
+    const intervalM = rec.type === 'aviation' ? 200 : 50;
+    const samples = samplePolyline(rec.path, intervalM);
+    samples.forEach((pt, idx) => {
+      const height = rec.type === 'aviation'
+        ? aviationGlideSlopeHeight(pt.distFromStart)
+        : (rec.height ?? DEFAULT_HEIGHTS[rec.type] ?? 1.5);
+      out.push({ id: `${rec.id}_${idx}`, type: rec.type, name: `${rec.name} (pt ${idx + 1})`, lat: pt.lat, lng: pt.lng, height });
+    });
+  }
+  return out;
+}
+
 // ─── Step 4: Receptors ──────────────────────────────────────────────────────
+const RECEPTOR_MODE_INFO = {
+  road:        { draw: 'path',  hint: 'Click to trace the road path. Double-click to finish. Height = 1.2 m (driver eye level).', color: '#f59e0b' },
+  residential: { draw: 'point', hint: 'Click on the map to place a residential receptor point.', color: '#3b82f6' },
+  railway:     { draw: 'path',  hint: 'Click to trace the railway line. Double-click to finish. Height = 1.8 m (passenger eye level).', color: '#8b5cf6' },
+  aviation:    { draw: 'path',  hint: 'Draw from runway threshold outward along approach path. Double-click to finish. Heights calculated automatically from 3° glide slope.', color: '#ef4444' },
+  atct:        { draw: 'point', hint: 'Click to place the Air Traffic Control Tower. Set the cab height.', color: '#dc2626' },
+  other:       { draw: 'point', hint: 'Click to place a custom receptor point.', color: '#6b7280' },
+};
+
 function ReceptorsStep({ location, polygon, receptors, onReceptorsChange }) {
   const mapDivRef = useRef(null);
   const mapRef = useRef(null);
-  const markersRef = useRef([]);
+  const overlaysRef = useRef([]);
+  const tempOverlaysRef = useRef([]);
   const clickListenerRef = useRef(null);
-  const [addingType, setAddingType] = useState('road');
-  const [placingOnMap, setPlacingOnMap] = useState(false);
+  const dblClickListenerRef = useRef(null);
+  const pathPtsRef = useRef([]);
+
+  const [activeType, setActiveType] = useState(null); // null = idle
   const [autoDetecting, setAutoDetecting] = useState(false);
   const [editingId, setEditingId] = useState(null);
 
-  // Centre of polygon for search
   const centre = polygon?.length
     ? { lat: polygon.reduce((s, p) => s + p.lat, 0) / polygon.length, lng: polygon.reduce((s, p) => s + p.lng, 0) / polygon.length }
     : location;
 
+  // ── Map init ──
   useEffect(() => {
     if (!location || !mapDivRef.current || mapRef.current) return;
     loadGoogleMaps().then((google) => {
@@ -528,75 +606,142 @@ function ReceptorsStep({ location, polygon, receptors, onReceptorsChange }) {
       const map = new google.maps.Map(mapDivRef.current, { mapTypeId: 'hybrid', tilt: 0 });
       map.fitBounds(bounds, 100);
       mapRef.current = map;
-      if (polygon?.length >= 3) {
+      if (polygon?.length >= 3)
         new google.maps.Polygon({ paths: polygon, fillColor: '#2d6a4f', fillOpacity: 0.35, strokeColor: '#2d6a4f', strokeWeight: 2, map });
-      }
-      renderMarkers(google, map, receptors);
     });
   }, [location, polygon]);
 
-  const renderMarkers = (google, map, recs) => {
-    markersRef.current.forEach(m => m.setMap(null));
-    markersRef.current = [];
+  // ── Render all receptor overlays ──
+  const renderOverlays = (google, map, recs) => {
+    overlaysRef.current.forEach(o => o.setMap(null));
+    overlaysRef.current = [];
     recs.forEach(rec => {
-      const typeConf = RECEPTOR_TYPES.find(t => t.value === rec.type);
-      const m = new google.maps.Marker({
-        position: { lat: rec.lat, lng: rec.lng }, map, title: rec.name,
-        icon: { path: google.maps.SymbolPath.CIRCLE, scale: 9, fillColor: typeConf?.color || '#6b7280', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 },
-        label: { text: rec.type[0].toUpperCase(), color: '#fff', fontSize: '10px', fontWeight: 'bold' },
-      });
-      markersRef.current.push(m);
+      const color = RECEPTOR_MODE_INFO[rec.type]?.color || '#6b7280';
+      if (rec.path?.length >= 2) {
+        const line = new google.maps.Polyline({ path: rec.path, strokeColor: color, strokeWeight: 4, strokeOpacity: 0.9, map });
+        overlaysRef.current.push(line);
+        // Label at midpoint
+        const mid = rec.path[Math.floor(rec.path.length / 2)];
+        const m = new google.maps.Marker({ position: mid, map, title: rec.name,
+          icon: { path: google.maps.SymbolPath.CIRCLE, scale: 9, fillColor: color, fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 },
+          label: { text: rec.type[0].toUpperCase(), color: '#fff', fontSize: '10px', fontWeight: 'bold' } });
+        overlaysRef.current.push(m);
+        // For aviation: draw small height labels along path
+        if (rec.type === 'aviation') {
+          samplePolyline(rec.path, 400).forEach(pt => {
+            const h = aviationGlideSlopeHeight(pt.distFromStart);
+            const label = new google.maps.Marker({ position: pt, map,
+              icon: { url: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', scaledSize: new google.maps.Size(0,0) },
+              label: { text: `${Math.round(h)}m`, color: '#fff', fontSize: '9px', fontWeight: 'bold', className: 'aviation-label' } });
+            overlaysRef.current.push(label);
+          });
+        }
+      } else if (rec.lat != null) {
+        const m = new google.maps.Marker({ position: { lat: rec.lat, lng: rec.lng }, map, title: rec.name,
+          icon: { path: google.maps.SymbolPath.CIRCLE, scale: 9, fillColor: color, fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 },
+          label: { text: rec.type[0].toUpperCase(), color: '#fff', fontSize: '10px', fontWeight: 'bold' } });
+        overlaysRef.current.push(m);
+      }
     });
   };
 
   useEffect(() => {
-    if (mapRef.current && window.google) renderMarkers(window.google, mapRef.current, receptors);
+    if (mapRef.current && window.google) renderOverlays(window.google, mapRef.current, receptors);
   }, [receptors]);
 
-  const startPlacing = () => {
-    const map = mapRef.current; if (!map || !window.google) return;
-    if (clickListenerRef.current) window.google.maps.event.removeListener(clickListenerRef.current);
-    map.setOptions({ draggableCursor: 'crosshair' });
-    setPlacingOnMap(true);
-    clickListenerRef.current = window.google.maps.event.addListener(map, 'click', (e) => {
-      const typeConf = RECEPTOR_TYPES.find(t => t.value === addingType);
-      const newRec = {
-        id: `rec-${Date.now()}`, type: addingType,
-        name: `${typeConf?.label} ${receptors.length + 1}`,
-        lat: e.latLng.lat(), lng: e.latLng.lng(),
-        height: DEFAULT_HEIGHTS[addingType] ?? 1.5,
-      };
-      onReceptorsChange([...receptors, newRec]);
-      window.google.maps.event.removeListener(clickListenerRef.current);
-      map.setOptions({ draggableCursor: null });
-      setPlacingOnMap(false);
-    });
+  // ── Clear temp drawing overlays ──
+  const clearTemp = () => {
+    tempOverlaysRef.current.forEach(o => o.setMap(null));
+    tempOverlaysRef.current = [];
+    pathPtsRef.current = [];
   };
 
+  // ── Stop drawing mode ──
+  const stopDrawing = () => {
+    const google = window.google; const map = mapRef.current;
+    if (google) {
+      if (clickListenerRef.current) { google.maps.event.removeListener(clickListenerRef.current); clickListenerRef.current = null; }
+      if (dblClickListenerRef.current) { google.maps.event.removeListener(dblClickListenerRef.current); dblClickListenerRef.current = null; }
+    }
+    if (map) map.setOptions({ draggableCursor: null });
+    clearTemp();
+    setActiveType(null);
+  };
+
+  // ── Start drawing a receptor type ──
+  const startDrawing = (type) => {
+    const google = window.google; const map = mapRef.current;
+    if (!google || !map) return;
+    stopDrawing();
+    setActiveType(type);
+    map.setOptions({ draggableCursor: 'crosshair' });
+    const mode = RECEPTOR_MODE_INFO[type]?.draw;
+    const color = RECEPTOR_MODE_INFO[type]?.color || '#6b7280';
+    const typeConf = RECEPTOR_TYPES.find(t => t.value === type);
+
+    if (mode === 'point') {
+      clickListenerRef.current = google.maps.event.addListener(map, 'click', (e) => {
+        const newRec = {
+          id: `rec-${Date.now()}`, type,
+          name: `${typeConf?.label} ${receptors.length + 1}`,
+          lat: e.latLng.lat(), lng: e.latLng.lng(),
+          height: DEFAULT_HEIGHTS[type] ?? 1.5,
+        };
+        onReceptorsChange([...receptors, newRec]);
+        stopDrawing();
+      });
+    } else {
+      // Path drawing
+      let tempLine = null;
+      clickListenerRef.current = google.maps.event.addListener(map, 'click', (e) => {
+        const pt = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+        pathPtsRef.current = [...pathPtsRef.current, pt];
+        const dot = new google.maps.Marker({ position: pt, map,
+          icon: { path: google.maps.SymbolPath.CIRCLE, scale: pathPtsRef.current.length === 1 ? 8 : 5,
+            fillColor: color, fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 } });
+        tempOverlaysRef.current.push(dot);
+        if (tempLine) tempLine.setMap(null);
+        if (pathPtsRef.current.length >= 2) {
+          tempLine = new google.maps.Polyline({ path: pathPtsRef.current, strokeColor: color, strokeWeight: 3, strokeOpacity: 0.7, map });
+          tempOverlaysRef.current.push(tempLine);
+        }
+      });
+
+      dblClickListenerRef.current = google.maps.event.addListener(map, 'dblclick', (e) => {
+        // dblclick also fires click twice — remove the last duplicate point
+        const pts = pathPtsRef.current.slice(0, -1);
+        if (pts.length < 2) { stopDrawing(); return; }
+        const newRec = {
+          id: `rec-${Date.now()}`, type,
+          name: `${typeConf?.label} ${receptors.length + 1}`,
+          path: pts, lat: pts[0].lat, lng: pts[0].lng,
+          height: DEFAULT_HEIGHTS[type] ?? 1.5,
+        };
+        onReceptorsChange([...receptors, newRec]);
+        stopDrawing();
+      });
+    }
+  };
+
+  // ── Auto-detect ──
   const autoDetect = async () => {
     if (!window.google || !mapRef.current) return;
     setAutoDetecting(true);
     const google = window.google;
     const service = new google.maps.places.PlacesService(mapRef.current);
-    const searchRadius = 500;
-
     const searches = [
-      { keyword: 'road', type: 'road' },
-      { keyword: 'residential house', type: 'residential' },
-      { keyword: 'airport', type: 'aviation' },
-      { keyword: 'railway station', type: 'railway' },
+      { keyword: 'residential', type: 'residential' },
+      { keyword: 'airport runway', type: 'aviation' },
+      { keyword: 'train station', type: 'railway' },
     ];
-
     const found = [];
     await Promise.all(searches.map(s => new Promise(resolve => {
-      service.nearbySearch({ location: centre, radius: searchRadius, keyword: s.keyword }, (results, status) => {
+      service.nearbySearch({ location: centre, radius: 1000, keyword: s.keyword }, (results, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK && results?.length) {
-          const top = results.slice(0, s.type === 'aviation' ? 2 : 1);
-          top.forEach(r => {
-            const typeConf = RECEPTOR_TYPES.find(t => t.value === s.type);
+          results.slice(0, 2).forEach(r => {
             found.push({
               id: `rec-${Date.now()}-${Math.random()}`, type: s.type,
-              name: r.name || typeConf?.label,
+              name: r.name,
               lat: r.geometry.location.lat(), lng: r.geometry.location.lng(),
               height: DEFAULT_HEIGHTS[s.type] ?? 1.5,
             });
@@ -605,85 +750,96 @@ function ReceptorsStep({ location, polygon, receptors, onReceptorsChange }) {
         resolve();
       });
     })));
-
-    // Deduplicate by type keeping first
-    const seen = new Set(receptors.map(r => r.type));
-    const newRecs = found.filter(r => !seen.has(r.type));
-    onReceptorsChange([...receptors, ...newRecs]);
+    const seen = new Set(receptors.map(r => r.name));
+    onReceptorsChange([...receptors, ...found.filter(r => !seen.has(r.name))]);
     setAutoDetecting(false);
   };
 
   const updateReceptor = (id, field, value) => {
-    onReceptorsChange(receptors.map(r => r.id === id ? { ...r, [field]: field === 'height' ? parseFloat(value) || 0 : value } : r));
+    onReceptorsChange(receptors.map(r => r.id === id
+      ? { ...r, [field]: field === 'height' ? parseFloat(value) || 0 : value } : r));
   };
+  const removeReceptor = (id) => onReceptorsChange(receptors.filter(r => r.id !== id));
 
-  const removeReceptor = (id) => {
-    onReceptorsChange(receptors.filter(r => r.id !== id));
-  };
+  const modeInfo = activeType ? RECEPTOR_MODE_INFO[activeType] : null;
 
   return (
     <div className="space-y-4">
       <div>
         <h2 className="text-xl font-heading font-bold text-forest-900 mb-1">Add Receptors</h2>
-        <p className="text-sm text-gray-600">Add nearby sensitive receptors — roads, residential buildings, airports, railways. Set the eye/sensor height for each.</p>
+        <p className="text-sm text-gray-600">Add nearby sensitive receptors. Roads, railways and flight paths are drawn as lines. Click the type button, then draw on the map.</p>
       </div>
 
-      <div className="grid lg:grid-cols-[1fr_380px] gap-4">
-        {/* Map */}
-        <div>
-          <div ref={mapDivRef} className="w-full rounded-xl overflow-hidden border border-gray-200" style={{ height: '380px' }} />
-          <div className="mt-3 flex flex-wrap gap-2">
-            <button
-              onClick={autoDetect}
-              disabled={autoDetecting}
-              className="flex items-center gap-1.5 text-sm font-medium px-4 py-2 rounded-lg border bg-gold-500 text-white border-gold-500 hover:bg-gold-600 transition-colors disabled:opacity-60"
-            >
-              {autoDetecting ? <RotateCcw className="w-4 h-4 animate-spin" /> : <Sun className="w-4 h-4" />}
-              {autoDetecting ? 'Detecting…' : 'Auto-detect nearby'}
+      <div className="grid lg:grid-cols-[1fr_360px] gap-4">
+        {/* Left: toolbar + map */}
+        <div className="space-y-3">
+          {/* Type buttons */}
+          <div className="flex flex-wrap gap-2">
+            {RECEPTOR_TYPES.map(t => {
+              const isActive = activeType === t.value;
+              const mInfo = RECEPTOR_MODE_INFO[t.value];
+              return (
+                <button key={t.value}
+                  onClick={() => isActive ? stopDrawing() : startDrawing(t.value)}
+                  className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border transition-colors ${
+                    isActive ? 'text-white border-transparent' : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'
+                  }`}
+                  style={isActive ? { backgroundColor: mInfo?.color } : {}}
+                >
+                  <span className="w-2 h-2 rounded-full" style={{ backgroundColor: isActive ? '#fff' : mInfo?.color }} />
+                  {t.label}
+                  <span className="opacity-60 text-[10px]">{mInfo?.draw === 'path' ? '(line)' : '(point)'}</span>
+                </button>
+              );
+            })}
+            <button onClick={autoDetect} disabled={autoDetecting}
+              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border bg-gold-500 text-white border-gold-500 hover:bg-gold-600 disabled:opacity-60 transition-colors ml-auto">
+              {autoDetecting ? <RotateCcw className="w-3.5 h-3.5 animate-spin" /> : <Sun className="w-3.5 h-3.5" />}
+              Auto-detect
             </button>
-            <div className="flex items-center gap-2">
-              <select value={addingType} onChange={e => setAddingType(e.target.value)}
-                className="text-sm border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold-400">
-                {RECEPTOR_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
-              </select>
-              <button onClick={startPlacing} disabled={placingOnMap}
-                className={`flex items-center gap-1.5 text-sm font-medium px-4 py-2 rounded-lg border transition-colors ${placingOnMap ? 'bg-forest-900 text-white border-forest-900' : 'bg-white text-forest-900 border-forest-300 hover:bg-forest-50'}`}>
-                <MapPin className="w-4 h-4" />{placingOnMap ? 'Click map…' : 'Place on map'}
-              </button>
-            </div>
           </div>
-          {placingOnMap && (
-            <p className="text-xs text-forest-700 mt-2 bg-forest-50 border border-forest-200 rounded-lg px-3 py-2">
-              Click on the map to place a <strong>{RECEPTOR_TYPES.find(t => t.value === addingType)?.label}</strong> receptor.
-            </p>
+
+          {/* Drawing hint */}
+          {modeInfo && (
+            <div className="rounded-lg px-3 py-2 text-xs font-medium flex items-center gap-2" style={{ backgroundColor: modeInfo.color + '18', color: modeInfo.color, border: `1px solid ${modeInfo.color}40` }}>
+              <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
+              {modeInfo.hint}
+              {activeType === 'aviation' && (
+                <span className="ml-1 font-normal opacity-80">Threshold height: 15 m → 2 NM out: ~{Math.round(aviationGlideSlopeHeight(3704))} m</span>
+              )}
+            </div>
           )}
+
+          {/* Map */}
+          <div ref={mapDivRef} className="w-full rounded-xl overflow-hidden border border-gray-200" style={{ height: '400px' }} />
         </div>
 
-        {/* Receptor list */}
+        {/* Right: receptor list */}
         <div className="flex flex-col gap-3">
           <p className="text-sm font-semibold text-gray-700">Receptors ({receptors.length})</p>
           {receptors.length === 0 ? (
             <div className="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center text-gray-400 text-sm">
-              No receptors yet. Click <strong>Auto-detect</strong> or place manually.
+              No receptors yet.<br />Select a type above and draw on the map.
             </div>
           ) : (
-            <div className="space-y-2 max-h-[360px] overflow-y-auto pr-1">
+            <div className="space-y-2 max-h-[430px] overflow-y-auto pr-1">
               {receptors.map(rec => {
-                const typeConf = RECEPTOR_TYPES.find(t => t.value === rec.type);
+                const mInfo = RECEPTOR_MODE_INFO[rec.type];
+                const color = mInfo?.color || '#6b7280';
                 const isEditing = editingId === rec.id;
+                const isPath = !!rec.path;
                 return (
                   <div key={rec.id} className="bg-white border border-gray-200 rounded-xl p-3 space-y-2">
                     <div className="flex items-center gap-2">
                       <span className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
-                        style={{ backgroundColor: typeConf?.color || '#6b7280' }}>
+                        style={{ backgroundColor: color }}>
                         {rec.type[0].toUpperCase()}
                       </span>
-                      {isEditing ? (
-                        <input value={rec.name} onChange={e => updateReceptor(rec.id, 'name', e.target.value)}
-                          className="flex-1 text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-gold-400" />
-                      ) : (
-                        <p className="flex-1 text-sm font-medium text-gray-800 truncate">{rec.name}</p>
-                      )}
+                      {isEditing
+                        ? <input value={rec.name} onChange={e => updateReceptor(rec.id, 'name', e.target.value)}
+                            className="flex-1 text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-gold-400" />
+                        : <p className="flex-1 text-sm font-medium text-gray-800 truncate">{rec.name}</p>
+                      }
                       <button onClick={() => setEditingId(isEditing ? null : rec.id)} className="text-gray-400 hover:text-gray-600 text-xs px-1">
                         {isEditing ? 'Done' : 'Edit'}
                       </button>
@@ -691,16 +847,38 @@ function ReceptorsStep({ location, polygon, receptors, onReceptorsChange }) {
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
-                    <div className="flex items-center gap-3 text-xs text-gray-500">
-                      <span>{rec.lat.toFixed(4)}, {rec.lng.toFixed(4)}</span>
-                      <label className="flex items-center gap-1 ml-auto">
-                        <span className="text-gray-600 font-medium">Eye height:</span>
-                        <input type="number" min="0" step="0.1" value={rec.height ?? DEFAULT_HEIGHTS[rec.type] ?? 1.5}
-                          onChange={e => updateReceptor(rec.id, 'height', e.target.value)}
-                          className="w-16 border border-gray-300 rounded px-1.5 py-0.5 text-xs focus:outline-none focus:ring-1 focus:ring-gold-400" />
-                        <span>m</span>
-                      </label>
-                    </div>
+
+                    {isPath ? (
+                      <div className="text-xs text-gray-500 space-y-1">
+                        <span className="inline-block bg-gray-100 rounded px-1.5 py-0.5">{rec.path.length} pts drawn</span>
+                        {rec.type === 'aviation' && (
+                          <p className="text-red-600 font-medium">
+                            Heights auto: {Math.round(aviationGlideSlopeHeight(0))} m → {Math.round(aviationGlideSlopeHeight(haversineDist(rec.path[0], rec.path[rec.path.length-1])))} m (3° glide slope)
+                          </p>
+                        )}
+                        {rec.type !== 'aviation' && (
+                          <label className="flex items-center gap-1">
+                            <span className="text-gray-600 font-medium">Eye height:</span>
+                            <input type="number" min="0" step="0.1" value={rec.height ?? DEFAULT_HEIGHTS[rec.type] ?? 1.5}
+                              onChange={e => updateReceptor(rec.id, 'height', e.target.value)}
+                              className="w-16 border border-gray-300 rounded px-1.5 py-0.5 text-xs focus:outline-none focus:ring-1 focus:ring-gold-400" />
+                            <span>m</span>
+                          </label>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-3 text-xs text-gray-500">
+                        <span>{rec.lat?.toFixed(4)}, {rec.lng?.toFixed(4)}</span>
+                        <label className="flex items-center gap-1 ml-auto">
+                          <span className="text-gray-600 font-medium">Height:</span>
+                          <input type="number" min="0" step="0.1" value={rec.height ?? DEFAULT_HEIGHTS[rec.type] ?? 1.5}
+                            onChange={e => updateReceptor(rec.id, 'height', e.target.value)}
+                            className="w-16 border border-gray-300 rounded px-1.5 py-0.5 text-xs focus:outline-none focus:ring-1 focus:ring-gold-400" />
+                          <span>m</span>
+                        </label>
+                      </div>
+                    )}
+
                     {isEditing && (
                       <select value={rec.type} onChange={e => updateReceptor(rec.id, 'type', e.target.value)}
                         className="w-full text-xs border border-gray-300 rounded px-2 py-1 focus:outline-none">
@@ -712,14 +890,12 @@ function ReceptorsStep({ location, polygon, receptors, onReceptorsChange }) {
               })}
             </div>
           )}
-          <div className="bg-gray-50 rounded-xl p-3">
-            <p className="text-xs font-semibold text-gray-600 mb-2">Default eye heights</p>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-1">
-              {RECEPTOR_TYPES.map(t => (
-                <div key={t.value} className="flex items-center gap-1.5 text-xs text-gray-500">
-                  <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: t.color }} />
-                  {t.label}: {DEFAULT_HEIGHTS[t.value]}m
-                </div>
+
+          <div className="bg-gray-50 rounded-xl p-3 text-xs text-gray-500 space-y-1">
+            <p className="font-semibold text-gray-600 mb-1">Aviation glide slope (3°)</p>
+            <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
+              {[0, 500, 1000, 1852, 3704].map(d => (
+                <span key={d}>{d === 0 ? 'Threshold' : d >= 1852 ? `${d/1852} NM` : `${d} m`}: <strong>{Math.round(aviationGlideSlopeHeight(d))} m</strong></span>
               ))}
             </div>
           </div>
@@ -1047,7 +1223,7 @@ export default function GlareChecker() {
           lower_height: params.lowerHeight,
           upper_height: params.upperHeight,
           surface_type: params.surfaceType,
-          receptors,
+          receptors: expandReceptors(receptors),
         }),
       });
       if (!res.ok) {
