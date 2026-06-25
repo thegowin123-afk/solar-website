@@ -46,8 +46,8 @@ export default function Contact() {
   return (
     <>
       <Helmet>
-        <title>Contact Us | Free Solar Planning Application Quote | SolarPlan Ireland</title>
-        <meta name="description" content="Contact SolarPlan Ireland for a free solar planning application quote. Glint & glare, Landscape Plans, planning drawings — tell us about your Irish solar project and we'll respond within one business day." />
+        <title>Contact SolarPlan Ireland | Solar PV Planning Support</title>
+        <meta name="description" content="Contact SolarPlan Ireland for solar PV planning drawings, glint and glare reports, pre-simulation and landscape plan support across Ireland." />
         <link rel="canonical" href={PAGE_URL} />
         <meta property="og:title" content="Contact SolarPlan Ireland | Free Solar Planning Quote" />
         <meta property="og:description" content="Get a free solar planning application quote within one business day. Glint & glare, Landscape Plans, PV drawings for Irish solar projects." />

@@ -43,7 +43,7 @@ export default function SolarPVPlanningDrawings() {
   return (
     <>
       <Helmet>
-        <title>Solar PV Planning Drawings Ireland | Council-Ready Application Packs</title>
+        <title>Solar PV Planning Drawings Ireland | Council-Ready Packs</title>
         <meta name="description" content="Council-ready solar PV planning drawings for Ireland, including site layouts, elevations, sections, equipment plans and planning application packs." />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href={PAGE_URL} />

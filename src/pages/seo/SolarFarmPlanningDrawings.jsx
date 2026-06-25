@@ -41,7 +41,7 @@ export default function SolarFarmPlanningDrawings() {
   return (
     <>
       <Helmet>
-        <title>Solar Farm Planning Drawings Ireland | Council-Ready Drawing Packs</title>
+        <title>Solar Farm Planning Drawings Ireland | Planning Packs</title>
         <meta name="description" content="Solar farm planning drawings for Ireland, including PV array layouts, site plans, access, equipment locations and planning submission drawings." />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href={PAGE_URL} />

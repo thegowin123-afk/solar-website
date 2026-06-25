@@ -41,7 +41,7 @@ export default function GroundMountedSolarPlanning() {
   return (
     <>
       <Helmet>
-        <title>Ground-Mounted Solar Planning Ireland | PV Planning Drawings &amp; Reports</title>
+        <title>Ground-Mounted Solar Planning Ireland | PV Application Support</title>
         <meta name="description" content="Planning support for ground-mounted solar PV projects in Ireland, including drawings, glare review, landscape coordination and submission documents." />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href={PAGE_URL} />

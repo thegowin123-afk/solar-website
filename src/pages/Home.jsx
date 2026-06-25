@@ -93,7 +93,7 @@ export default function Home() {
   return (
     <>
       <Helmet>
-        <title>Solar PV Planning Drawings &amp; Glint and Glare Reports Ireland | SolarPlan Ireland</title>
+        <title>Solar PV Planning Drawings &amp; Glint and Glare Reports Ireland</title>
         <meta name="description" content="Solar PV planning drawings, glint and glare reports, pre-simulation and landscape plan support for rooftop and ground-mounted solar projects in Ireland." />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href={PAGE_URL} />
