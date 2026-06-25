@@ -18,6 +18,7 @@ const RECEPTOR_TYPES = [
   { value: 'residential', label: 'Residential',         color: '#3b82f6' },
   { value: 'railway',     label: 'Railway',             color: '#8b5cf6' },
   { value: 'aviation',    label: 'Aviation (aircraft)', color: '#ef4444' },
+  { value: 'helicopter',  label: 'Helicopter',          color: '#f97316' },
   { value: 'atct',        label: 'Air Traffic Control', color: '#dc2626' },
   { value: 'other',       label: 'Other',               color: '#6b7280' },
 ];
@@ -501,7 +502,7 @@ function ParamsStep({ params, onChange }) {
 }
 
 // Default eye heights (m) by receptor type
-const DEFAULT_HEIGHTS = { road: 1.2, residential: 1.5, railway: 1.8, aviation: 100, atct: 10, other: 1.5 };
+const DEFAULT_HEIGHTS = { road: 1.2, residential: 1.5, railway: 1.8, aviation: 100, helicopter: 2, atct: 10, other: 1.5 };
 
 // Which types use path drawing (vs single point)
 const PATH_RECEPTOR_TYPES = new Set(['road', 'railway', 'aviation', 'atct']);
@@ -549,10 +550,55 @@ function aviationGlideSlopeHeight(distM) {
   return Math.max(THRESHOLD_HEIGHT, distM * Math.tan(GLIDE_DEG * Math.PI / 180) + THRESHOLD_HEIGHT);
 }
 
+// Helicopter 8° approach slope height at distM from helipad
+function helicopterApproachHeight(distM) {
+  const GLIDE_DEG = 8.0;
+  const HOVER_HEIGHT = 2; // height at helipad (m)
+  return Math.max(HOVER_HEIGHT, distM * Math.tan(GLIDE_DEG * Math.PI / 180) + HOVER_HEIGHT);
+}
+
+// Generate a point at distM and bearingDeg from origin {lat,lng}
+function destinationPoint(origin, bearingDeg, distM) {
+  const R = 6371000;
+  const δ = distM / R;
+  const θ = bearingDeg * Math.PI / 180;
+  const φ1 = origin.lat * Math.PI / 180;
+  const λ1 = origin.lng * Math.PI / 180;
+  const φ2 = Math.asin(Math.sin(φ1)*Math.cos(δ) + Math.cos(φ1)*Math.sin(δ)*Math.cos(θ));
+  const λ2 = λ1 + Math.atan2(Math.sin(θ)*Math.sin(δ)*Math.cos(φ1), Math.cos(δ)-Math.sin(φ1)*Math.sin(φ2));
+  return { lat: φ2 * 180/Math.PI, lng: λ2 * 180/Math.PI };
+}
+
+// Build 8 radial approach paths from helipad centre (1 NM = 1852 m each direction)
+const HELI_BEARINGS = [0, 45, 90, 135, 180, 225, 270, 315];
+const HELI_BEARING_LABELS = ['N','NE','E','SE','S','SW','W','NW'];
+const HELI_PATH_DIST = 1852; // 1 NM
+function helicopterPaths(centre) {
+  return HELI_BEARINGS.map((bearing, i) => {
+    const steps = 10;
+    const path = Array.from({ length: steps + 1 }, (_, k) => destinationPoint(centre, bearing, (k / steps) * HELI_PATH_DIST));
+    return { bearing, label: HELI_BEARING_LABELS[i], path };
+  });
+}
+
 // Expand path-based receptors into per-point receptors for API
 function expandReceptors(receptors) {
   const out = [];
   for (const rec of receptors) {
+    // Helicopter: expand into 8 radial approach paths
+    if (rec.type === 'helicopter' && !rec.path) {
+      helicopterPaths({ lat: rec.lat, lng: rec.lng }).forEach(({ label, path }) => {
+        samplePolyline(path, 100).forEach((pt, idx) => {
+          out.push({
+            id: `${rec.id}_${label}_${idx}`, type: 'helicopter',
+            name: `${rec.name} ${label} approach (pt ${idx + 1})`,
+            lat: pt.lat, lng: pt.lng,
+            height: helicopterApproachHeight(pt.distFromStart),
+          });
+        });
+      });
+      continue;
+    }
     if (!rec.path || rec.path.length < 2) {
       out.push({ id: rec.id, type: rec.type, name: rec.name, lat: rec.lat, lng: rec.lng, height: rec.height ?? DEFAULT_HEIGHTS[rec.type] ?? 1.5 });
       continue;
@@ -575,6 +621,7 @@ const RECEPTOR_MODE_INFO = {
   residential: { draw: 'point', hint: 'Click on the map to place a residential receptor point.', color: '#3b82f6' },
   railway:     { draw: 'path',  hint: 'Click to trace the railway line. Double-click to finish. Height = 1.8 m (passenger eye level).', color: '#8b5cf6' },
   aviation:    { draw: 'path',  hint: 'Draw from runway threshold outward along approach path. Double-click to finish. Heights calculated automatically from 3° glide slope.', color: '#ef4444' },
+  helicopter:  { draw: 'point', hint: 'Click to place the helipad. 8 approach paths (N, NE, E, SE, S, SW, W, NW) are drawn automatically at 8° slope up to 1 NM.', color: '#f97316' },
   atct:        { draw: 'point', hint: 'Click to place the Air Traffic Control Tower. Set the cab height.', color: '#dc2626' },
   other:       { draw: 'point', hint: 'Click to place a custom receptor point.', color: '#6b7280' },
 };
@@ -636,6 +683,23 @@ function ReceptorsStep({ location, polygon, receptors, onReceptorsChange }) {
             overlaysRef.current.push(label);
           });
         }
+      } else if (rec.type === 'helicopter' && rec.lat != null) {
+        // Draw helipad marker + 8 radial spokes
+        const centre = { lat: rec.lat, lng: rec.lng };
+        const m = new google.maps.Marker({ position: centre, map, title: rec.name,
+          icon: { path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: color, fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 },
+          label: { text: 'H', color: '#fff', fontSize: '11px', fontWeight: 'bold' } });
+        overlaysRef.current.push(m);
+        helicopterPaths(centre).forEach(({ label, path }) => {
+          const spoke = new google.maps.Polyline({ path, strokeColor: color, strokeWeight: 2, strokeOpacity: 0.7, map,
+            icons: [{ icon: { path: google.maps.SymbolPath.FORWARD_OPEN_ARROW, scale: 2.5, strokeColor: color }, offset: '100%' }] });
+          overlaysRef.current.push(spoke);
+          const tip = path[path.length - 1];
+          const lbl = new google.maps.Marker({ position: tip, map,
+            icon: { url: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', scaledSize: new google.maps.Size(0,0) },
+            label: { text: label, color: color, fontSize: '10px', fontWeight: 'bold' } });
+          overlaysRef.current.push(lbl);
+        });
       } else if (rec.lat != null) {
         const m = new google.maps.Marker({ position: { lat: rec.lat, lng: rec.lng }, map, title: rec.name,
           icon: { path: google.maps.SymbolPath.CIRCLE, scale: 9, fillColor: color, fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 },
@@ -848,7 +912,12 @@ function ReceptorsStep({ location, polygon, receptors, onReceptorsChange }) {
                       </button>
                     </div>
 
-                    {isPath ? (
+                    {rec.type === 'helicopter' && !isPath ? (
+                      <div className="text-xs space-y-0.5" style={{ color: '#f97316' }}>
+                        <p className="font-medium">8 approach paths auto-generated (N, NE, E, SE, S, SW, W, NW)</p>
+                        <p className="text-gray-500">8° slope · 1 NM · Heights: {Math.round(helicopterApproachHeight(0))} m → {Math.round(helicopterApproachHeight(HELI_PATH_DIST))} m</p>
+                      </div>
+                    ) : isPath ? (
                       <div className="text-xs text-gray-500 space-y-1">
                         <span className="inline-block bg-gray-100 rounded px-1.5 py-0.5">{rec.path.length} pts drawn</span>
                         {rec.type === 'aviation' && (
@@ -891,12 +960,22 @@ function ReceptorsStep({ location, polygon, receptors, onReceptorsChange }) {
             </div>
           )}
 
-          <div className="bg-gray-50 rounded-xl p-3 text-xs text-gray-500 space-y-1">
-            <p className="font-semibold text-gray-600 mb-1">Aviation glide slope (3°)</p>
-            <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
-              {[0, 500, 1000, 1852, 3704].map(d => (
-                <span key={d}>{d === 0 ? 'Threshold' : d >= 1852 ? `${d/1852} NM` : `${d} m`}: <strong>{Math.round(aviationGlideSlopeHeight(d))} m</strong></span>
-              ))}
+          <div className="bg-gray-50 rounded-xl p-3 text-xs text-gray-500 space-y-2">
+            <div>
+              <p className="font-semibold text-gray-600 mb-1">Fixed-wing approach heights (3° slope)</p>
+              <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
+                {[0, 500, 1000, 1852, 3704].map(d => (
+                  <span key={d}>{d === 0 ? 'Threshold' : d >= 1852 ? `${d/1852} NM` : `${d} m`}: <strong>{Math.round(aviationGlideSlopeHeight(d))} m</strong></span>
+                ))}
+              </div>
+            </div>
+            <div>
+              <p className="font-semibold text-gray-600 mb-1">Helicopter approach heights (8° slope)</p>
+              <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
+                {[0, 200, 500, 926, 1852].map(d => (
+                  <span key={d}>{d === 0 ? 'Helipad' : d >= 926 ? `${(d/1852).toFixed(1)} NM` : `${d} m`}: <strong>{Math.round(helicopterApproachHeight(d))} m</strong></span>
+                ))}
+              </div>
             </div>
           </div>
         </div>
