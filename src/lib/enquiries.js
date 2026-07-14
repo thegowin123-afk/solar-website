@@ -33,23 +33,21 @@ export async function submitEnquiry(formData, sourcePage = '') {
     utm_campaign: searchParams.get('utm_campaign') || null,
   };
 
-  const { data, error } = await supabase
-    .from('enquiries')
-    .insert(payload)
-    .select('id')
-    .single();
+  // Insert without reading the row back — the anon key has insert-only
+  // access so enquiry data can never be read from the public site.
+  const { error } = await supabase.from('enquiries').insert(payload);
 
   if (error) {
     console.error('[submitEnquiry] Supabase error:', error.message);
   }
 
-  return { data, error };
+  return { data: null, error };
 }
 
 /**
  * Subscribe an email address to the newsletter.
- * Uses upsert so re-subscribing an existing address doesn't error.
- * On insert, the database trigger sends the welcome email automatically.
+ * Insert-only: the anon key cannot read the subscriber list, so a duplicate
+ * is detected via the unique-violation error rather than a lookup.
  *
  * @param {string} email
  * @param {string} sourcePage
@@ -58,37 +56,18 @@ export async function submitEnquiry(formData, sourcePage = '') {
 export async function subscribeNewsletter(email, sourcePage = '') {
   const normalised = email.toLowerCase().trim();
 
-  // Check if already subscribed
-  const { data: existing } = await supabase
+  const { error } = await supabase
     .from('newsletter_subscribers')
-    .select('id, status')
-    .eq('email', normalised)
-    .maybeSingle();
+    .insert({ email: normalised, source_page: sourcePage || window.location.pathname });
 
-  if (existing) {
-    if (existing.status === 'active') {
-      return { data: existing, error: null, alreadySubscribed: true };
-    }
-    // Re-activate if previously unsubscribed
-    const { data, error } = await supabase
-      .from('newsletter_subscribers')
-      .update({ status: 'active', unsubscribed_at: null })
-      .eq('id', existing.id)
-      .select('id')
-      .single();
-    return { data, error, alreadySubscribed: false };
+  // 23505 = unique_violation → this email is already subscribed
+  if (error?.code === '23505') {
+    return { data: null, error: null, alreadySubscribed: true };
   }
-
-  // New subscriber
-  const { data, error } = await supabase
-    .from('newsletter_subscribers')
-    .insert({ email: normalised, source_page: sourcePage || window.location.pathname })
-    .select('id')
-    .single();
 
   if (error) {
     console.error('[subscribeNewsletter] Supabase error:', error.message);
   }
 
-  return { data, error, alreadySubscribed: false };
+  return { data: null, error, alreadySubscribed: false };
 }
