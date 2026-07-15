@@ -14,10 +14,8 @@
 --
 --   3. Then run this whole script.
 --
--- Until you verify the solarplanningireland.com domain in Resend, emails are
--- sent from onboarding@resend.dev and can ONLY be delivered to the email
--- address you signed up to Resend with — so sign up with the address below,
--- or change NOTIFY_EMAIL after verifying your domain.
+-- Sender is enquiries@solarplanningireland.com — this requires the
+-- solarplanningireland.com domain to show as "Verified" in Resend → Domains.
 -- ─────────────────────────────────────────────────────────────────────────────
 
 create extension if not exists pg_net;
@@ -43,7 +41,7 @@ declare
   api_key text;
   request_id bigint;
   notify_email constant text := 'govindtupsoundare@gmail.com';
-  from_addr    constant text := 'SolarPlan Ireland <onboarding@resend.dev>';
+  from_addr    constant text := 'SolarPlan Ireland <enquiries@solarplanningireland.com>';
 begin
   select decrypted_secret into api_key
   from vault.decrypted_secrets
