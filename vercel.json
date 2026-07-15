@@ -5,7 +5,15 @@
       "has": [{ "type": "host", "value": "solarplanningireland.com" }],
       "destination": "https://www.solarplanningireland.com/$1",
       "permanent": true
-    }
+    },
+    { "source": "/pricing", "destination": "/contact", "permanent": true },
+    { "source": "/upload", "destination": "/contact", "permanent": true },
+    { "source": "/upload-pv-layout", "destination": "/contact", "permanent": true },
+    { "source": "/pv-planning-drawings", "destination": "/solar-pv-planning-drawings-ireland", "permanent": true },
+    { "source": "/glint-and-glare", "destination": "/glint-and-glare-assessment-ireland", "permanent": true },
+    { "source": "/landscape-plans", "destination": "/landscape-plan-solar-pv-ireland", "permanent": true },
+    { "source": "/privacy", "destination": "/", "permanent": false },
+    { "source": "/terms", "destination": "/", "permanent": false }
   ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
