@@ -4,6 +4,7 @@ import { CheckCircle, Send, Loader2, AlertCircle } from 'lucide-react';
 import { services } from '../../data/services';
 import { counties } from '../../data/counties';
 import { submitEnquiry } from '../../lib/enquiries';
+import { trackEvent } from '../../lib/analytics';
 
 export default function ContactForm({
   preselectedService = '',
@@ -34,11 +35,16 @@ export default function ContactForm({
     if (error) {
       setStatus('error');
       setErrorMsg(
-        'Sorry, there was a problem sending your enquiry. Please try again or call us on 01 234 5678.'
+        'Sorry, there was a problem sending your enquiry. Please try again, or email us directly at info@solarplanningireland.com.'
       );
       return;
     }
 
+    trackEvent('enquiry_submitted', {
+      service: data.service,
+      county: data.county,
+      scale: data.scale || 'unspecified',
+    });
     setStatus('success');
   };
 
@@ -51,8 +57,8 @@ export default function ContactForm({
         </div>
         <h3 className="text-xl font-heading font-bold text-forest-900 mb-2">Enquiry Received!</h3>
         <p className="text-gray-600 max-w-sm leading-relaxed">
-          Thank you for getting in touch. One of our consultants will respond within one business day.
-          A confirmation has been sent to your email.
+          Thank you for getting in touch. One of our consultants will review your project
+          and respond within one business day.
         </p>
       </div>
     );

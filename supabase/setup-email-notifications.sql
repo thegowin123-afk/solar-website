@@ -40,7 +40,7 @@ as $$
 declare
   api_key text;
   request_id bigint;
-  notify_email constant text := 'govindtupsoundare@gmail.com';
+  notify_email constant text := 'govind@svaero.com';
   from_addr    constant text := 'SolarPlan Ireland <enquiries@solarplanningireland.com>';
 begin
   select decrypted_secret into api_key

@@ -1,6 +1,7 @@
-import { lazy, Suspense } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { lazy, Suspense, useEffect } from 'react';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Layout from './components/layout/Layout';
+import { initAnalytics, trackPageview } from './lib/analytics';
 
 // Lazy-load all pages for optimal code splitting
 const Home         = lazy(() => import('./pages/Home'));
@@ -45,9 +46,24 @@ function PageLoader() {
   );
 }
 
+function AnalyticsTracker() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    initAnalytics();
+  }, []);
+
+  useEffect(() => {
+    trackPageview(pathname);
+  }, [pathname]);
+
+  return null;
+}
+
 export default function App() {
   return (
     <Layout>
+      <AnalyticsTracker />
       <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route path="/"                       element={<Home />} />
