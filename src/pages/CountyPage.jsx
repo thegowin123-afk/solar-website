@@ -71,8 +71,15 @@ export default function CountyPage() {
                   Solar Planning in County {page.county}
                 </h2>
                 <p className="text-gray-600 leading-relaxed mb-4">{page.snippet}</p>
-                <p className="text-gray-600 leading-relaxed">
+                <p className="text-gray-600 leading-relaxed mb-4">
                   SolarPlan Ireland has prepared planning documentation for solar projects across County {page.county}, working with local developers, planning consultants, and energy companies to navigate {page.county} County Council's planning requirements — and, where needed, An Bord Pleanála proceedings.
+                </p>
+                <p className="text-gray-600 leading-relaxed">
+                  For {page.county} solar projects we most often prepare a{' '}
+                  <Link to="/glint-and-glare-assessment-ireland" className="text-gold-600 hover:underline font-medium">glint and glare assessment</Link>,{' '}
+                  <Link to="/solar-pv-planning-drawings-ireland" className="text-gold-600 hover:underline font-medium">solar PV planning drawings</Link>{' '}
+                  and, where landscape sensitivity requires it, a{' '}
+                  <Link to="/landscape-plan-solar-pv-ireland" className="text-gold-600 hover:underline font-medium">landscape plan</Link>.
                 </p>
               </div>
 

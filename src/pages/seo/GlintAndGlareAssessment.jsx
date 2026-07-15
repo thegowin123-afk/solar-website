@@ -16,6 +16,10 @@ const serviceSchema = {
 
 const faqs = [
   { q: 'When is a glint and glare assessment required in Ireland?', a: 'A glint and glare assessment is typically required for ground-mounted solar farms, commercial rooftop PV near roads or airports, sites near dwellings, sites near rail or transport corridors, and whenever a planning authority requests one. Requirements vary by local authority and site context.' },
+  { q: 'How much does a glint and glare assessment cost in Ireland?', a: 'The fee depends on the scale of the array and the number of receptors that need to be modelled — a domestic rooftop near a road is a much smaller study than a multi-field solar farm near an airport. We quote a fixed fee for every project before any work begins, usually within one business day of receiving your site layout, so there are no surprise costs.' },
+  { q: 'How long does a glint and glare assessment take?', a: 'Once we have the site layout, panel specifications and permission to proceed, most standard assessments are completed within a few working days. Larger solar farms with many receptors or aviation modelling can take longer — we confirm the delivery date alongside the fixed-fee quotation.' },
+  { q: 'What is included in the assessment report?', a: 'The report includes a description of the methodology, a receptor map identifying dwellings, roads, rail and aviation receptors around the site, ForgeSolar modelling results for each receptor with green and yellow glare classifications, glare occurrence charts showing when in the year and day any glare occurs, mitigation recommendations where needed, and a conclusion written for planning officers. It is delivered as a PDF ready to submit with your planning application.' },
+  { q: 'Will Irish planning authorities accept the assessment?', a: 'Our assessments are prepared specifically for Irish planning applications and follow the ForgeSolar methodology, which is based on the internationally recognised FAA Solar Glare Hazard Analysis Tool approach. The reports are structured to address the questions local authority planners and An Bord Pleanála inspectors raise about reflected sunlight impacts.' },
   { q: 'What is ForgeSolar?', a: 'ForgeSolar is specialist software used to model potential glint and glare impacts from solar PV arrays. It analyses panel tilt, azimuth, array geometry and receptor locations to predict when and where glare may occur, outputting green and yellow glare results under worst-case clear-sky conditions.' },
   { q: 'What is green glare?', a: 'Green glare is a temporary, low-impact solar reflection that does not cause significant discomfort. ForgeSolar categorises glare results, and green glare is generally acceptable to Irish planning authorities.' },
   { q: 'What is yellow glare?', a: 'Yellow glare indicates a higher intensity reflection that may require assessment and potentially mitigation. Where yellow glare is identified at sensitive receptors, we provide mitigation recommendations in our report.' },
@@ -96,6 +100,23 @@ export default function GlintAndGlareAssessment() {
       </section>
 
       <section className="py-14 bg-white">
+        <div className="container-custom max-w-4xl">
+          <h2 className="text-2xl font-heading font-bold text-forest-900 mb-4">What&rsquo;s Included in the Report</h2>
+          <ul className="grid sm:grid-cols-2 gap-3 text-gray-700 text-sm mb-4">
+            {['Receptor map of dwellings, roads, rail and aviation points', 'ForgeSolar modelling results for every receptor', 'Green and yellow glare classifications', 'Glare occurrence charts by time of day and year', 'Mitigation recommendations where glare is identified', 'Planning-ready PDF with methodology and conclusions'].map(item => (
+              <li key={item} className="flex items-start gap-2"><span className="text-gold-500 mt-0.5">✓</span>{item}</li>
+            ))}
+          </ul>
+          <p className="text-gray-600 leading-relaxed text-sm">
+            You can view an example of the format in our{' '}
+            <Link to="/samples/glint-and-glare-report" className="text-gold-600 hover:underline font-medium">sample glint and glare report</Link>, or check
+            your site&rsquo;s risk in minutes with the free{' '}
+            <Link to="/solar-glare-risk-checker" className="text-gold-600 hover:underline font-medium">solar glare risk checker</Link>.
+          </p>
+        </div>
+      </section>
+
+      <section className="py-14 bg-gray-50">
         <div className="container-custom max-w-4xl">
           <h2 className="text-2xl font-heading font-bold text-forest-900 mb-4">When Is an Assessment Required?</h2>
           <ul className="space-y-3 text-gray-600 text-sm">
