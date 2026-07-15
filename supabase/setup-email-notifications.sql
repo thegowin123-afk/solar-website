@@ -22,6 +22,17 @@
 
 create extension if not exists pg_net;
 
+-- Audit trail: one row per notification attempt, so silent failures
+-- are visible in the dashboard (Table Editor → notification_log).
+create table if not exists public.notification_log (
+  id         bigint generated always as identity primary key,
+  created_at timestamptz not null default now(),
+  enquiry_id uuid,
+  step       text,
+  detail     text
+);
+alter table public.notification_log enable row level security;
+
 create or replace function public.notify_new_enquiry()
 returns trigger
 language plpgsql
@@ -30,6 +41,7 @@ set search_path = public
 as $$
 declare
   api_key text;
+  request_id bigint;
   notify_email constant text := 'govindtupsoundare@gmail.com';
   from_addr    constant text := 'SolarPlan Ireland <onboarding@resend.dev>';
 begin
@@ -38,12 +50,13 @@ begin
   where name = 'resend_api_key'
   limit 1;
 
-  -- No key configured — skip silently rather than blocking the enquiry
   if api_key is null then
+    insert into public.notification_log (enquiry_id, step, detail)
+    values (new.id, 'skipped', 'no secret named resend_api_key found in vault');
     return new;
   end if;
 
-  perform net.http_post(
+  select net.http_post(
     url     := 'https://api.resend.com/emails',
     headers := jsonb_build_object(
       'Authorization', 'Bearer ' || api_key,
@@ -72,11 +85,22 @@ begin
         || '</table>'
         || '<p>Reply directly to the enquirer at: ' || new.email || '</p>'
     )
-  );
+  ) into request_id;
+
+  insert into public.notification_log (enquiry_id, step, detail)
+  values (new.id, 'sent', 'pg_net request id ' || request_id ||
+          ' — check net._http_response for Resend''s reply');
 
   return new;
 exception when others then
-  -- Never let a notification failure block the enquiry itself
+  -- Never let a notification failure block the enquiry itself,
+  -- but record what went wrong.
+  begin
+    insert into public.notification_log (enquiry_id, step, detail)
+    values (new.id, 'error', sqlerrm);
+  exception when others then
+    null;
+  end;
   return new;
 end;
 $$;
