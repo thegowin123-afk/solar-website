@@ -16,6 +16,9 @@
     { "source": "/terms", "destination": "/", "permanent": false }
   ],
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
+  ],
+  "crons": [
+    { "path": "/api/keepalive", "schedule": "0 6 * * *" }
   ]
 }
